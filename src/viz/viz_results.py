@@ -1,11 +1,24 @@
 import os, glob
 from igraph import *
 
+# Assume .gml files are named as: "description.cluster_count.time_step.gml"
+def viz_results_seq(directory):
+    for filePath in glob.glob(os.path.join(directory, '*.gml')):
+        file = os.path.basename(filePath)
+        fileName = os.path.splitext(file)[0]
+        fileExtension = os.path.splitext(file)[1]
+        fileNumber = os.path.splitext(fileName)[1].split(".")[1]
+        newFileName = fileNumber.rjust(4, "0")
+        print "found .gml file:", file
+        print "file name:", fileName 
+        print "file extension:", fileExtension 
+        print "file number:", fileNumber 
+        print "new file name:", newFileName 
+        viz_result_colored(filePath, newFileName)        
+
 def viz_results(directory, colored=False): 
     for file in glob.glob(os.path.join(directory, '*.gml')):
         print "found .gml file:", os.path.basename(file)
-        print "file name:", os.path.splitext(os.path.basename(file))[0]
-        print "file type:", os.path.splitext(file)[1]
         viz_result_colored(file, os.path.splitext(file)[0])        
 
 def viz_result_colored(gmlFile, imgFile, imgLayout="fr"):
