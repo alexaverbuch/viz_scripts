@@ -66,7 +66,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     visual_style = {}
     
     print "\tvertex sizes..."
-    visual_style["vertex_size"] = [5] * g.vcount()
+    visual_style["vertex_size"] = [3] * g.vcount()
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -79,8 +79,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     if colored == True:        
         visual_style["vertex_color"] = [color_dict[color] for color in g.vs["color"]]
     else:
-#        visual_style["vertex_color"] = ["#000000"] * g.vcount()
-        visual_style["vertex_color"] = ["#00ff00"] * g.vcount()
+        visual_style["vertex_color"] = ["#000000"] * g.vcount()
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
         
@@ -93,46 +92,21 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     elapsedTime = time()
           
     print "\tedge width..."
-    visual_style["edge_width"] = 2
+    visual_style["edge_width"] = 1
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
     if default_layout == False:
         if coords == True:
             print "\tlayout from coords..."
-
-            print "\t\tget lat_coord bounds..."
-            min_lat_coord = 180;
-            max_lat_coord = 0;                        
-            for a_lat_coord in g.vs["lat"]:
-                if a_lat_coord < min_lat_coord and a_lat_coord != 0 :
-                    min_lat_coord = a_lat_coord
-                if a_lat_coord > max_lat_coord and a_lat_coord != 0 :
-                    max_lat_coord = a_lat_coord
-            med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
-            print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)             
-                    
-            print "\t\tget lon_coord bounds..."
-            min_lon_coord = 180;
-            max_lon_coord = 0;                        
-            for a_lon_coord in g.vs["lon"]:
-                if a_lon_coord < min_lon_coord and a_lon_coord != 0 :
-                    min_lon_coord = a_lon_coord
-                if a_lon_coord > max_lon_coord and a_lon_coord != 0 :
-                    max_lon_coord = a_lon_coord
-            med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
-            print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
                     
             print "\t\tget lat_coords..."
-#            lat_coords = [lat_coord for lat_coord in g.vs["lat"]]
-            lat_coords = [fixCoordY(lat_coord, med_lat_coord) for lat_coord in g.vs["lat"]]
+            lat_coords = [lat_coord * 10 for lat_coord in g.vs["lat"]]
             print "\t\t", timeToStr(time() - elapsedTime)
-            
             elapsedTime = time()
             
             print "\t\tget lon_coords..."
-#            lon_coords = [lon_coord for lon_coord in g.vs["lon"]]
-            lon_coords = [fixCoordX(lon_coord, med_lon_coord) for lon_coord in g.vs["lon"]]
+            lon_coords = [lon_coord * 10 for lon_coord in g.vs["lon"]]
             print "\t\t", timeToStr(time() - elapsedTime)
             elapsedTime = time()
             
@@ -157,13 +131,13 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
         print "\treuse previous layout..."        
     visual_style["layout"] = default_layout
     
-    print "\twindow size..."
-    visual_style["bbox"] = (10000, 10000)
-    print "\t", timeToStr(time() - elapsedTime)
-    elapsedTime = time()
+#    print "\twindow size..."
+#    visual_style["bbox"] = (5000, 5000)
+#    print "\t", timeToStr(time() - elapsedTime)
+#    elapsedTime = time()
     
     print "\twindow margin..."
-    visual_style["margin"] = 10
+    visual_style["margin"] = 20
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -176,22 +150,14 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     
 #    print "saving svg:" + imgFile + ".svg..."
 #    plot(g, imgFile + ".svg", **visual_style)
+
+
 #    print timeToStr(time() - elapsedTime)
 #    elapsedTime = time()
     
     print "done"
     print "---"
     return default_layout
-
-def fixCoordX(coord, default):
-    if coord == 0:
-        coord = default
-    return coord
-
-def fixCoordY(coord, default):
-    if coord == 0:
-        coord = default
-    return coord
 
 def timeToStr(elapsedTime=0.0):
     s = elapsedTime % 60
