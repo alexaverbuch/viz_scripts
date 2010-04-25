@@ -23,8 +23,7 @@ def rename_to_seq(directory, ext="gml"):
         os.rename(old, new)        
 
 # Assume .GML files are named as: "description.cluster_count.time_step.GML"
-def viz_results_seq(directory, colored=False, coords=False):
-    layout = False
+def viz_results_seq(directory, default_layout=False, colored=False, coords=False):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -37,10 +36,9 @@ def viz_results_seq(directory, colored=False, coords=False):
         print "file number:", fileNumber 
         print "new file name:", newFileName
         imgFilePath = os.path.join(os.path.dirname(filePath), newFileName)
-        layout = viz_result(filePath, imgFilePath, default_layout=layout, colored=colored, coords=coords)
+        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords)
 
-def viz_results(directory, colored=False, coords=False):
-    layout = False 
+def viz_results(directory, default_layout=False, colored=False, coords=False):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -49,7 +47,7 @@ def viz_results(directory, colored=False, coords=False):
         print "file name:", fileName 
         print "file extension:", fileExtension                         
         imgFilePath = os.path.join(os.path.dirname(filePath), fileName)
-        layout = viz_result(filePath, imgFilePath, default_layout=layout, colored=colored, coords=coords)
+        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords)
 
 def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False):
     elapsedTime = time()
@@ -77,7 +75,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     
     print "\tvertex colors..."
     if colored == True:        
-        visual_style["vertex_color"] = [color_dict[color] for color in g.vs["color"]]
+        visual_style["vertex_color"] = [color_dict[color] for color in g.vs["_color"]]
     else:
 #        visual_style["vertex_color"] = ["#000000"] * g.vcount()
         visual_style["vertex_color"] = ["#00ff00"] * g.vcount()
@@ -86,9 +84,9 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
         
     print "\tedge colors..."
     if colored == True:        
-        visual_style["edge_color"] = [color_dict[color] for color in g.es["color"]]
+        visual_style["edge_color"] = [color_dict[color] for color in g.es["_color"]]
     else:
-        visual_style["edge_color"] = ["#ff0000"] * g.vcount()
+        visual_style["edge_color"] = ["#ff0000"] * g.ecount()
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
           
@@ -103,25 +101,33 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
 
             print "\t\tget lat_coord bounds..."
             min_lat_coord = 180;
-            max_lat_coord = 0;                        
+            max_lat_coord = 0;                 
+            zero_lat_points = 0       
             for a_lat_coord in g.vs["lat"]:
+                if a_lat_coord == 0:
+                    zero_lat_points += 1
                 if a_lat_coord < min_lat_coord and a_lat_coord != 0 :
                     min_lat_coord = a_lat_coord
                 if a_lat_coord > max_lat_coord and a_lat_coord != 0 :
                     max_lat_coord = a_lat_coord
             med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
-            print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)             
+            print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)
+            print "\t\t%d zero_lat_coords found" % (zero_lat_points)             
                     
             print "\t\tget lon_coord bounds..."
             min_lon_coord = 180;
-            max_lon_coord = 0;                        
+            max_lon_coord = 0;                      
+            zero_lon_points = 0  
             for a_lon_coord in g.vs["lon"]:
+                if a_lon_coord == 0:
+                    zero_lon_points += 1
                 if a_lon_coord < min_lon_coord and a_lon_coord != 0 :
                     min_lon_coord = a_lon_coord
                 if a_lon_coord > max_lon_coord and a_lon_coord != 0 :
                     max_lon_coord = a_lon_coord
             med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
             print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
+            print "\t\t%d zero_lon_coords found" % (zero_lon_points)             
                     
             print "\t\tget lat_coords..."
 #            lat_coords = [lat_coord for lat_coord in g.vs["lat"]]
