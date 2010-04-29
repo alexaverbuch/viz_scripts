@@ -49,7 +49,7 @@ def viz_results(directory, default_layout=False, colored=False, coords=False):
         imgFilePath = os.path.join(os.path.dirname(filePath), fileName)
         default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords)
 
-def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False):
+def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False):
     elapsedTime = time()
     
     print "loading ", gmlFile, "..."    
@@ -64,12 +64,16 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     visual_style = {}
     
     print "\tvertex sizes..."
-    visual_style["vertex_size"] = [5] * g.vcount()
+#    visual_style["vertex_size"] = [5] * g.vcount()
+    visual_style["vertex_size"] = [fixSize(color) for color in g.vs["_color"]]
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
     print "\tvertex labels..."
-    visual_style["vertex_label"] = [""] * g.vcount()
+    if vLabel == False:
+        visual_style["vertex_label"] = [""] * g.vcount()
+    else:
+        visual_style["vertex_label"] = [name for name in g.vs[vLabel]]
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -101,7 +105,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
 
             print "\t\tget lat_coord bounds..."
             min_lat_coord = 180;
-            max_lat_coord = 0;                 
+            max_lat_coord = -180;                 
             zero_lat_points = 0       
             for a_lat_coord in g.vs["lat"]:
                 if a_lat_coord == 0:
@@ -111,12 +115,13 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
                 if a_lat_coord > max_lat_coord and a_lat_coord != 0 :
                     max_lat_coord = a_lat_coord
             med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
+            imgH = (max_lat_coord - min_lat_coord) * 100
             print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)
             print "\t\t%d zero_lat_coords found" % (zero_lat_points)             
                     
             print "\t\tget lon_coord bounds..."
             min_lon_coord = 180;
-            max_lon_coord = 0;                      
+            max_lon_coord = -180;                      
             zero_lon_points = 0  
             for a_lon_coord in g.vs["lon"]:
                 if a_lon_coord == 0:
@@ -126,6 +131,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
                 if a_lon_coord > max_lon_coord and a_lon_coord != 0 :
                     max_lon_coord = a_lon_coord
             med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
+            imgW = (max_lon_coord - min_lon_coord) * 100
             print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
             print "\t\t%d zero_lon_coords found" % (zero_lon_points)             
                     
@@ -143,7 +149,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
             elapsedTime = time()
             
             print "\t\tcombine lat_coords & lon_coords..."
-            def combine(x, y): return [x, y]            
+            def combine(lon, lat): return [lon + 180, (lat + 90) * -1]            
             default_layout = map(combine, lon_coords, lat_coords)
             print "\t\t", timeToStr(time() - elapsedTime)
             elapsedTime = time()
@@ -164,7 +170,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     visual_style["layout"] = default_layout
     
     print "\twindow size..."
-    visual_style["bbox"] = (10000, 10000)
+    visual_style["bbox"] = (imgW, imgH)
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -199,6 +205,12 @@ def fixCoordY(coord, default):
         coord = default
     return coord
 
+def fixSize(color):
+    if color > 1:
+        return 20
+    else:
+        return 0
+    
 def timeToStr(elapsedTime=0.0):
     s = elapsedTime % 60
     m = elapsedTime / 60
