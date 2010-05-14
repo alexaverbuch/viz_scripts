@@ -23,7 +23,7 @@ def rename_to_seq(directory, ext="gml"):
         os.rename(old, new)        
 
 # Assume .GML files are named as: "description.cluster_count.time_step.GML"
-def viz_results_seq(directory, default_layout=False, colored=False, coords=False):
+def viz_results_seq(directory, default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -36,9 +36,9 @@ def viz_results_seq(directory, default_layout=False, colored=False, coords=False
         print "file number:", fileNumber 
         print "new file name:", newFileName
         imgFilePath = os.path.join(os.path.dirname(filePath), newFileName)
-        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords)
+        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH)
 
-def viz_results(directory, default_layout=False, colored=False, coords=False):
+def viz_results(directory, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -47,7 +47,7 @@ def viz_results(directory, default_layout=False, colored=False, coords=False):
         print "file name:", fileName 
         print "file extension:", fileExtension                         
         imgFilePath = os.path.join(os.path.dirname(filePath), fileName)
-        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords)
+        default_layout = viz_result(filePath, imgFilePath, imgLayout=imgLayout, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH, vLabel=vLabel)
 
 def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False):
     elapsedTime = time()
@@ -62,10 +62,13 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     color_dict = {-1: "#000000", 0: "#0000ff", 1: "#ff0000", 2: "#00ff00", 3: "#ffc0cb", 4: "#ffff00", 5: "#d2691e", 6: "#ff8c00", 7: "#a9a9a9", 8: "#b03060", 9: "#9370db", 10: "#00ffff", 11: "#a52a2a", 12: "#008b8b", 13: "#006400", 14: "#8b008b", 15: "#ff00ff"}
     
     visual_style = {}
-    
+        
     print "\tvertex sizes..."
+    def isOtherSizeFun(color): return color > 10
+    default_size = 5
+    other_size = 20
 #    visual_style["vertex_size"] = [5] * g.vcount()
-    visual_style["vertex_size"] = [fixSize(color) for color in g.vs["_color"]]
+    visual_style["vertex_size"] = [fixSize(color, isOtherSizeFun, default_size, other_size) for color in g.vs["_color"]]
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -205,11 +208,11 @@ def fixCoordY(coord, default):
         coord = default
     return coord
 
-def fixSize(color):
-    if color > 1:
-        return 20
+def fixSize(color, isOtherFun, defaultColor, otherColor):
+    if isOtherFun(color) == True:
+        return otherColor
     else:
-        return 0
+        return defaultColor 
     
 def timeToStr(elapsedTime=0.0):
     s = elapsedTime % 60
