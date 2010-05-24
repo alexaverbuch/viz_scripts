@@ -38,7 +38,7 @@ def viz_results_seq(directory, default_layout=False, colored=False, coords=False
         imgFilePath = os.path.join(os.path.dirname(filePath), newFileName)
         default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH)
 
-def viz_results(directory, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False):
+def viz_results(directory, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False, default_v_size=5, default_e_size=1):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -47,9 +47,9 @@ def viz_results(directory, imgLayout="fr", default_layout=False, colored=False, 
         print "file name:", fileName 
         print "file extension:", fileExtension                         
         imgFilePath = os.path.join(os.path.dirname(filePath), fileName)
-        default_layout = viz_result(filePath, imgFilePath, imgLayout=imgLayout, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH, vLabel=vLabel)
+        default_layout = viz_result(filePath, imgFilePath, imgLayout=imgLayout, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH, vLabel=vLabel, default_v_size=default_v_size, default_e_size=default_e_size)
 
-def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False):
+def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False, default_v_size=5, default_e_size=1):
     elapsedTime = time()
     
     print "loading ", gmlFile, "..."    
@@ -65,10 +65,9 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
         
     print "\tvertex sizes..."
     def isOtherSizeFun(color): return color > 10
-    default_size = 5
-    other_size = 20
+    other_v_size = default_v_size * 5;
 #    visual_style["vertex_size"] = [5] * g.vcount()
-    visual_style["vertex_size"] = [fixSize(color, isOtherSizeFun, default_size, other_size) for color in g.vs["_color"]]
+    visual_style["vertex_size"] = [fixSize(color, isOtherSizeFun, default_v_size, other_v_size) for color in g.vs["_color"]]
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -98,7 +97,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     elapsedTime = time()
           
     print "\tedge width..."
-    visual_style["edge_width"] = 2
+    visual_style["edge_width"] = default_e_size
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -118,7 +117,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
                 if a_lat_coord > max_lat_coord and a_lat_coord != 0 :
                     max_lat_coord = a_lat_coord
             med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
-            imgH = (max_lat_coord - min_lat_coord) * 100
+            imgH = (max_lat_coord - min_lat_coord) * 1000
             print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)
             print "\t\t%d zero_lat_coords found" % (zero_lat_points)             
                     
@@ -134,7 +133,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
                 if a_lon_coord > max_lon_coord and a_lon_coord != 0 :
                     max_lon_coord = a_lon_coord
             med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
-            imgW = (max_lon_coord - min_lon_coord) * 100
+            imgW = (max_lon_coord - min_lon_coord) * 1000
             print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
             print "\t\t%d zero_lon_coords found" % (zero_lon_points)             
                     
