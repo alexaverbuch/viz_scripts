@@ -23,8 +23,7 @@ def rename_to_seq(directory, ext="gml"):
         os.rename(old, new)        
 
 # Assume .GML files are named as: "description.cluster_count.time_step.GML"
-def viz_results_seq(directory, colored=False, coords=False):
-    layout = False
+def viz_results_seq(directory, default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -37,10 +36,9 @@ def viz_results_seq(directory, colored=False, coords=False):
         print "file number:", fileNumber 
         print "new file name:", newFileName
         imgFilePath = os.path.join(os.path.dirname(filePath), newFileName)
-        layout = viz_result(filePath, imgFilePath, default_layout=layout, colored=colored, coords=coords)
+        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH)
 
-def viz_results(directory, colored=False, coords=False):
-    layout = False 
+def viz_results(directory, default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False, vSize=2, eWidth=10, eWidthMulti=False):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -49,9 +47,9 @@ def viz_results(directory, colored=False, coords=False):
         print "file name:", fileName 
         print "file extension:", fileExtension                         
         imgFilePath = os.path.join(os.path.dirname(filePath), fileName)
-        layout = viz_result(filePath, imgFilePath, default_layout=layout, colored=colored, coords=coords)
+        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH, vLabel=vLabel, vSize=vSize, eWidth=eWidth, eWidthMulti=eWidthMulti)
 
-def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False):
+def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False, vSize=10, eWidth=2, eWidthMulti=False):
     elapsedTime = time()
     
     print "loading ", gmlFile, "..."    
@@ -66,52 +64,98 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     visual_style = {}
     
     print "\tvertex sizes..."
-    visual_style["vertex_size"] = [3] * g.vcount()
+    visual_style["vertex_size"] = [vSize] * g.vcount()
+#    visual_style["vertex_size"] = [fixSize(color) for color in g.vs["_color"]]
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
     print "\tvertex labels..."
-    visual_style["vertex_label"] = [""] * g.vcount()
+    if vLabel == False:
+        visual_style["vertex_label"] = [""] * g.vcount()
+    else:
+        visual_style["vertex_label"] = [name for name in g.vs[vLabel]]
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
     print "\tvertex colors..."
     if colored == True:        
-        visual_style["vertex_color"] = [color_dict[color] for color in g.vs["color"]]
+        visual_style["vertex_color"] = [color_dict[color] for color in g.vs["_color"]]
     else:
-        visual_style["vertex_color"] = ["#000000"] * g.vcount()
+#        visual_style["vertex_color"] = ["#000000"] * g.vcount()
+        visual_style["vertex_color"] = ["#00ff00"] * g.vcount()
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
         
     print "\tedge colors..."
     if colored == True:        
-        visual_style["edge_color"] = [color_dict[color] for color in g.es["color"]]
+        visual_style["edge_color"] = [color_dict[color] for color in g.es["_color"]]
     else:
-        visual_style["edge_color"] = ["#ff0000"] * g.vcount()
+        visual_style["edge_color"] = ["#ff0000"] * g.ecount()
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
-          
+                    
     print "\tedge width..."
-    visual_style["edge_width"] = 1
+    temps = [eWidth * multi * multi for multi in g.es[eWidthMulti]]
+    for temp in temps:
+        print temp
+    if eWidthMulti == False:
+        visual_style["edge_width"] = eWidth
+    else:
+        visual_style["edge_width"] = [eWidth * multi for multi in g.es[eWidthMulti]]
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
     if default_layout == False:
         if coords == True:
             print "\tlayout from coords..."
+
+            print "\t\tget lat_coord bounds..."
+            min_lat_coord = 180
+            max_lat_coord = -180                 
+            zero_lat_points = 0       
+            for a_lat_coord in g.vs["lat"]:
+                if a_lat_coord == 0:
+                    zero_lat_points += 1
+                if a_lat_coord < min_lat_coord and a_lat_coord != 0 :
+                    min_lat_coord = a_lat_coord
+                if a_lat_coord > max_lat_coord and a_lat_coord != 0 :
+                    max_lat_coord = a_lat_coord
+            med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
+#            imgH = (max_lat_coord - min_lat_coord) * 100
+            print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)
+            print "\t\t%d zero_lat_coords found" % (zero_lat_points)             
+                    
+            print "\t\tget lon_coord bounds..."
+            min_lon_coord = 180
+            max_lon_coord = -180                      
+            zero_lon_points = 0  
+            for a_lon_coord in g.vs["lon"]:
+                if a_lon_coord == 0:
+                    zero_lon_points += 1
+                if a_lon_coord < min_lon_coord and a_lon_coord != 0 :
+                    min_lon_coord = a_lon_coord
+                if a_lon_coord > max_lon_coord and a_lon_coord != 0 :
+                    max_lon_coord = a_lon_coord
+            med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
+#            imgW = (max_lon_coord - min_lon_coord) * 100
+            print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
+            print "\t\t%d zero_lon_coords found" % (zero_lon_points)             
                     
             print "\t\tget lat_coords..."
-            lat_coords = [lat_coord * 10 for lat_coord in g.vs["lat"]]
+#            lat_coords = [lat_coord for lat_coord in g.vs["lat"]]
+            lat_coords = [fixCoordY(lat_coord, med_lat_coord) for lat_coord in g.vs["lat"]]
             print "\t\t", timeToStr(time() - elapsedTime)
+            
             elapsedTime = time()
             
             print "\t\tget lon_coords..."
-            lon_coords = [lon_coord * 10 for lon_coord in g.vs["lon"]]
+#            lon_coords = [lon_coord for lon_coord in g.vs["lon"]]
+            lon_coords = [fixCoordX(lon_coord, med_lon_coord) for lon_coord in g.vs["lon"]]
             print "\t\t", timeToStr(time() - elapsedTime)
             elapsedTime = time()
             
             print "\t\tcombine lat_coords & lon_coords..."
-            def combine(x, y): return [x, y]            
+            def combine(lon, lat): return [lon + 180, (lat + 90) * -1]            
             default_layout = map(combine, lon_coords, lat_coords)
             print "\t\t", timeToStr(time() - elapsedTime)
             elapsedTime = time()
@@ -131,13 +175,13 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
         print "\treuse previous layout..."        
     visual_style["layout"] = default_layout
     
-#    print "\twindow size..."
-#    visual_style["bbox"] = (5000, 5000)
-#    print "\t", timeToStr(time() - elapsedTime)
-#    elapsedTime = time()
+    print "\twindow size..."
+    visual_style["bbox"] = (imgW, imgH)
+    print "\t", timeToStr(time() - elapsedTime)
+    elapsedTime = time()
     
     print "\twindow margin..."
-    visual_style["margin"] = 20
+    visual_style["margin"] = 10
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
@@ -150,8 +194,6 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     
 #    print "saving svg:" + imgFile + ".svg..."
 #    plot(g, imgFile + ".svg", **visual_style)
-
-
 #    print timeToStr(time() - elapsedTime)
 #    elapsedTime = time()
     
@@ -159,6 +201,22 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     print "---"
     return default_layout
 
+def fixCoordX(coord, default):
+    if coord == 0:
+        coord = default
+    return coord
+
+def fixCoordY(coord, default):
+    if coord == 0:
+        coord = default
+    return coord
+
+def fixSize(color):
+    if color > 1:
+        return 20
+    else:
+        return 0
+    
 def timeToStr(elapsedTime=0.0):
     s = elapsedTime % 60
     m = elapsedTime / 60
