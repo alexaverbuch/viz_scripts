@@ -1,5 +1,5 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import pylab as plb
 from matplotlib.lines import Line2D
@@ -605,5 +605,39 @@ def example_arrows():
 
     draw()
 
+    show()
+
+def example_line_charts():
+    fname = 'test.txt'
+    fname2 = 'test2.txt'
+    
+#    # test 1; use ints
+#    plotfile(fname, (0, 1, 2))
+#    
+#    # test 2; use names
+#    plotfile(fname, ('column0', 'column1', 'column2'))
+#    
+#    # test 3; use semilogy for volume
+#    plotfile(fname, ('column0', 'column1', 'column2'), plotfuncs={'column1': 'semilogy'})
+    
+#    # test 4; use semilogy for volume
+#    plotfile(fname, (0, 1, 2), plotfuncs={1:'semilogy'})
+    
+    #test 5; single subplot
+    plotfile(fname, ('column0', 'column1', 'column2'), subplots=False)
+    
+    # test 6; labeling, if no names in csv-file
+    plotfile(fname2, cols=(0, 1, 2), delimiter=',',
+             names=['$x$', '$f(x)=x^2$', '$f(x)=x^3$'])
+    
+    # test 7; more than one file per figure--illustrated here with a single file
+    plotfile(fname, cols=(0, 1), delimiter=',')
+    plotfile(fname, cols=(0, 2), newfig=False, delimiter=',') # use current figure
+    gca().set_xlabel(r'$x$')
+    gca().set_ylabel(r'$f(x) = x^2, x^3$')
+    
+#    # test 8; use bar for volume
+#    plotfile(fname, (0, 1, 2), plotfuncs={1:'bar'})
+    
     show()
 
