@@ -75,6 +75,8 @@ def example_two_plots():
     t2 = np.arange(0.0, 5.0, 0.02)
     
     plt.figure(1)
+    #  subplot(numrows, numcols, fignum) 
+    #  plt.subplot(2,1,1) also valid 
     plt.subplot(211)
     plt.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
     
@@ -84,4 +86,48 @@ def example_two_plots():
     plt.ylabel('y stuff')
     plt.xlabel('x stuff')
     plt.title("title")
+    plt.show()
+
+def example_multiple_figures():
+    plt.figure(1)                # the first figure
+    plt.subplot(211)             # the first subplot in the first figure
+    plt.plot([1, 2, 3])
+    plt.subplot(212)             # the second subplot in the first figure
+    plt.plot([4, 5, 6])
+
+    plt.figure(2)                # a second figure
+    plt.plot([4, 5, 6])            # creates a subplot(111) by default
+
+    plt.figure(1)                # figure 1 current; subplot(212) still current
+    plt.subplot(211)             # make subplot(211) in figure1 current
+    plt.title('Easy as 1,2,3')   # subplot 211 title
+    plt.show()
+
+def example_text():
+    mu, sigma = 100, 15
+    x = mu + sigma * np.random.randn(10000)
+    
+    # the histogram of the data
+    n, bins, patches = plt.hist(x, 50, normed=1, facecolor='g', alpha=0.75)
+    
+    t = plt.xlabel('Smarts', fontsize=14, color='red')
+    plt.ylabel('Probability')
+    plt.title('Histogram of IQ ' + r'$\sigma_i=15$')
+    plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+    plt.axis([40, 160, 0, 0.03])
+    plt.grid(True)
+    plt.show()
+
+def example_annotate():
+    ax = plt.subplot(111)
+
+    t = np.arange(0.0, 5.0, 0.01)
+    s = np.cos(2 * np.pi * t)
+    line, = plt.plot(t, s, lw=2)
+    
+    plt.annotate('local max', xy=(2, 1), xytext=(3, 1.5),
+                arrowprops=dict(facecolor='black', shrink=0.05),
+                )
+    
+    plt.ylim(-2, 2)
     plt.show()
