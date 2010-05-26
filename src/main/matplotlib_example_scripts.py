@@ -607,7 +607,7 @@ def example_arrows():
 
     show()
 
-def example_line_charts():
+def example_line_charts_from_csv():
     fname = 'test.txt'
     fname2 = 'test2.txt'
     
