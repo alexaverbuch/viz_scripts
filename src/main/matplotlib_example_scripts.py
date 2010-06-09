@@ -199,12 +199,14 @@ def example_histogram():
     mu, sigma = 100, 15
     x = mu + sigma * np.random.randn(10000)
     
+    print mu + sigma * np.random.randn(10) 
+    
     # the histogram of the data
     n, bins, patches = plt.hist(x, 50, normed=1, facecolor='green', alpha=0.75)
     
     # add a 'best fit' line
-    y = mlab.normpdf(bins, mu, sigma)
-    l = plt.plot(bins, y, 'r--', linewidth=1)
+#    y = mlab.normpdf(bins, mu, sigma)
+#    l = plt.plot(bins, y, 'r--', linewidth=1)
     
     plt.xlabel('Smarts')
     plt.ylabel('Probability')
@@ -227,7 +229,6 @@ def example_histogram_3():
     x2 = mu + sigma * plb.randn(3000)
     
     n, bins, patches = plb.hist([x0, x1, x2], 10, histtype='bar')
-    
     plb.show()
     
 def example_annotate_advanced():

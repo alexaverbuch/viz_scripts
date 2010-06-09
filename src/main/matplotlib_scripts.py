@@ -250,49 +250,55 @@ def line_from_file(csvName, xAxis, yAxes, fileName="output.pdf", title='Title Go
     
     show()
 
+def line_from_file_separate_sym(csvName, axes, fileName="output.pdf",
 
-def line_from_file_separate(csvName, xAxis, yAxes, fileName="output.pdf",
-                            figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait', figPapertype=None, figFormat='pdf', figTransparent=True,
-                            axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                            legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w', legendFancybox=False, legendPos='upper right'):
+                                figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait', figPapertype=None, figFormat='pdf', figTransparent=True,
+                                axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w', legendFancybox=False, legendPos='upper right'):
                 
-#    csvName = 'global_traffic.csv'
     csvDict = csv_to_dict(csvName)
     
-    numRows = len(yAxes)
-    numCols = 1
+    numRows = len(axes)    
+    numCols = max([len(row) for row in axes])
     figNum = 0
         
     fig = plt.figure(1)
 
-    for (yAxis, yColor, xLabel, yLabel, axisTitle) in yAxes:
-        figNum += 1
-        #  subplot(numrows, numcols, fignum) 
-        #  plt.subplot(2,1,1) also valid 
-        ax = fig.add_subplot(numRows, numCols, figNum)
-        line, = plt.plot(csvDict[xAxis], csvDict[yAxis], yColor)
+    currentRow = -1
+    for axesRow in axes:
+        currentRow += 1
+        figNum = currentRow * numCols
+        for (xAxis, yAxis, yColor, xLabel, yLabel, axisTitle) in axesRow:
+            figNum += 1
+            
+            print numRows, numCols, figNum
+            
+            #  subplot(numrows, numcols, fignum) 
+            #  plt.subplot(2,1,1) also valid 
+            ax = fig.add_subplot(numRows, numCols, figNum)
+            line, = plt.plot(csvDict[xAxis], csvDict[yAxis], yColor)
+            
+            legend = ax.legend((line,),
+                               (yLabel,),
+                               legendPos,
+                               shadow=legendShadow,
+                               fancybox=legendFancybox)
+            ltext = legend.get_texts()
+            pylab.setp(ltext[0], fontsize=legendFontsize)
+        #    ax.set_xscale('log')
+            plt.title(axisTitle)
+            plt.xlabel(xLabel)
+            plt.ylabel(yLabel)
+            if xLabel == '':
+                ax.set_xticklabels([])
+            plt.grid(axisGrid)
+            
+            # the matplotlib.patches.Rectangle instance surrounding the legend
+            frame1 = legend.get_frame()  
+            frame1.set_facecolor(legendColor)
+            frame1.set_alpha(legendAlpha)
         
-        legend = ax.legend((line,),
-                           (yLabel,),
-                           legendPos,
-                           shadow=legendShadow,
-                           fancybox=legendFancybox)
-        ltext = legend.get_texts()
-        pylab.setp(ltext[0], fontsize=legendFontsize)
-    #    ax.set_xscale('log')
-        plt.title(axisTitle)
-        plt.xlabel(xLabel)
-        plt.ylabel(yLabel)
-        if xLabel == '':
-            ax.set_xticklabels([])
-        plt.grid(axisGrid)
-        
-        # the matplotlib.patches.Rectangle instance surrounding the legend
-        frame1 = legend.get_frame()  
-        frame1.set_facecolor(legendColor)
-        frame1.set_alpha(legendAlpha)
-    
-        plt.setp(line, linewidth=axisLineWidth, antialiased=axisLineAntialiased)
+            plt.setp(line, linewidth=axisLineWidth, antialiased=axisLineAntialiased)
     
     
     plb.savefig(fileName,
@@ -303,4 +309,57 @@ def line_from_file_separate(csvName, xAxis, yAxes, fileName="output.pdf",
                 papertype=figPapertype,
                 format=figFormat, #png, pdf, ps, eps and svg
                 transparent=figTransparent)
+    show()
+
+def hist_from_file(csvName, values,
+                   binCount=10, fileName="output.pdf",
+                   figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait', figPapertype=None, figFormat='pdf', figTransparent=True,
+                   barFacecolor='blue', barEdgecolor='gray', barHisttype='bar', barAlpha=0.75, barAlign='mid', barOrientation='vertical',
+                   axisGrid=True, axisFontSize=12, axisXLabel='xLabel', axisYLabel='yLabel', axisName='axisName', axisColor='b', axisTitle='Title Goes Here',
+                   legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w', legendFancybox=False, legendPos='upper right'):
+    
+    csvDict = csv_to_dict(csvName)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    
+    #histtype = 'bar' 'barstacked' 'step' 'stepfilled'
+    #align = 'left' 'mid' 'right'
+    #orientation: 'horizontal' 'vertical'
+    n, bins, patches = ax.hist(csvDict[values], binCount,
+                               label=axisName,
+                               normed=0, cumulative=0,
+                               facecolor=barFacecolor, edgecolor=barEdgecolor,
+                               alpha=barAlpha, histtype=barHisttype, align=barAlign,
+                               orientation=barOrientation)
+    
+#    n, bins, patches = plt.hist([x0, x1, x2], 10, histtype='bar')
+#    n, bins, patches = plt.hist(x, 50, normed=1, facecolor='green', alpha=0.75)
+        
+    legend = ax.legend(shadow=legendShadow, fancybox=legendFancybox)
+    
+    frame = legend.get_frame()  
+    frame.set_facecolor(legendColor)
+    frame.set_alpha(legendAlpha)
+    
+    for ltext in legend.get_texts():
+        pylab.setp(ltext, fontsize=legendFontsize)
+    
+#    plt.axis([0, 2000, 0, 100])
+    plt.title(axisTitle)
+    plt.xlabel(axisXLabel, fontsize=axisFontSize)
+    plt.ylabel(axisYLabel, fontsize=axisFontSize)
+    plt.grid(axisGrid)
+#    plt.axis([0, max(csvDict[values]), 0, len(csvDict[values])])
+
+        
+    plb.savefig(fileName,
+                dpi=figDpi,
+                facecolor=figFacecolor,
+                edgecolor=figEdgecolor,
+                orientation=figOrientation,
+                papertype=figPapertype,
+                format=figFormat, #png, pdf, ps, eps and svg
+                transparent=figTransparent)
+    
     show()
