@@ -642,3 +642,71 @@ def example_line_charts_from_csv():
     
     show()
 
+def example_nothing():
+    def f(t): return np.exp(-t) * np.cos(2 * np.pi * t)
+    
+    t1 = np.arange(0.0, 5.0, 0.1)
+    t2 = np.arange(0.0, 5.0, 0.02)
+    
+    plt.figure(1)
+    #  subplot(numrows, numcols, fignum) 
+    #  plt.subplot(2,1,1) also valid 
+    plt.subplot(1, 2, 1)
+    plt.plot(t2, np.cos(2 * np.pi * t2), 'r--')
+    
+    plt.subplot(2, 2, 2)
+    plt.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
+    
+    plt.subplot(2, 2, 4)
+    plt.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
+    
+    plt.ylabel('y stuff')
+    plt.xlabel('x stuff')
+    plt.title("title")
+    
+    plb.savefig("woohooooo.pdf",
+                dpi=300,
+                facecolor='white',
+                edgecolor='black',
+                orientation='potrait',
+                papertype=None,
+                format='pdf', #png, pdf, ps, eps and svg
+                transparent=True)
+
+    plt.show()
+
+def example_bar():
+    menMeans = [20, 35, 30, 35, 27]
+    menStd = [2, 3, 4, 1, 2]
+    N = len(menMeans)
+    
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.4       # the width of the bars
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    rects1 = ax.bar(ind, menMeans, width, color='r', yerr=menStd)
+    
+    womenMeans = [25.8, 32, 34, 20, 25]
+    womenStd = [3, 5, 2, 3, 3]
+    rects2 = ax.bar(ind + width, womenMeans, width, color='y', yerr=womenStd)
+    
+    # add some
+    ax.set_ylabel('Scores')
+    ax.set_title('Scores by group and gender')
+    ax.set_xticks(ind + width)
+    ax.set_xticklabels(['G1', 'G2', 'G3', 'G4', 'G5'])
+    
+    ax.legend((rects1[0], rects2[0]), ('Men', 'Women'))
+    
+    def autolabel(rects):
+        # attach some text labels
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height, '%d' % int(height),
+                    ha='center', va='bottom')
+    
+    autolabel(rects1)
+    autolabel(rects2)
+    
+    plt.show()
