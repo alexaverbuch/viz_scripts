@@ -95,9 +95,6 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     elapsedTime = time()
                     
     print "\tedge width..."
-    temps = [eWidth * multi * multi for multi in g.es[eWidthMulti]]
-    for temp in temps:
-        print temp
     if eWidthMulti == False:
         visual_style["edge_width"] = eWidth
     else:
@@ -121,7 +118,10 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
                 if a_lat_coord > max_lat_coord and a_lat_coord != 0 :
                     max_lat_coord = a_lat_coord
             med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
-#            imgH = (max_lat_coord - min_lat_coord) * 100
+            
+            # Comment out if want absolute imgH control
+            imgH = (max_lat_coord - min_lat_coord) * 10
+            
             print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)
             print "\t\t%d zero_lat_coords found" % (zero_lat_points)             
                     
@@ -137,7 +137,10 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
                 if a_lon_coord > max_lon_coord and a_lon_coord != 0 :
                     max_lon_coord = a_lon_coord
             med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
-#            imgW = (max_lon_coord - min_lon_coord) * 100
+            
+            # Comment out if want absolute imgW control
+            imgW = (max_lon_coord - min_lon_coord) * 10
+
             print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
             print "\t\t%d zero_lon_coords found" % (zero_lon_points)             
                     
@@ -187,8 +190,8 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=F
     
     print "configuring visual style complete"
     
-    print "saving png:" + imgFile + ".png..."
-    plot(g, imgFile + ".png", **visual_style)
+    print "saving pdf:" + imgFile + ".pdf..."
+    plot(g, imgFile + ".pdf", **visual_style)
     print timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
