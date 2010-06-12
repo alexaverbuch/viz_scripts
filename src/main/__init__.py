@@ -55,8 +55,14 @@ from thesis_plots import *
 #show_plots([[get_hist_from_file],
 #            [get_line_from_file],
 #            [get_bar_from_file]])
-#nodes_by_coords()                          
 
-example_vert_horz_lines()
+nodes_by_lon_ptn(partitions=['red', 'cyan'])                   
+#imgFile = '/home/alex/Desktop/Blank_map_of_Romania.png'
+#do_img_from_file = get_img_from_file(imgFile, annotations=[])
+#show_plots([[do_img_from_file]])       
 
+#example_vert_horz_lines()
+#example_annotate_advanced()
 #example_annotate()
+#example_text()
+#example_annotate_vert_horz_lines()

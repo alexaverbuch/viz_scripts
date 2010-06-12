@@ -733,9 +733,6 @@ def example_vert_horz_lines():
                  arrowprops=dict(facecolor='black', shrink=0.05))
 
     
-    #linewidth or lw    float value in points
-
-    
     # draw a thick blue vline at x=0 that spans the the upper quadrant of
     # the yrange
     l = plt.axvline(x=0, ymin=0.75, linewidth=4, color='b')
@@ -747,6 +744,87 @@ def example_vert_horz_lines():
     p = plt.axhspan(0.25, 0.75, facecolor='0.5', alpha=0.5)
     
     p = plt.axvspan(1.25, 1.55, facecolor='g', alpha=0.5)
+    
+    plt.axis([-1, 2, -1, 2])
+    
+    
+    plt.show()
+
+def example_annotate_vert_horz_lines():
+    fig = figure(1)
+    fig.clf()
+    ax = fig.add_subplot(1, 1, 1)
+    
+#    ax.annotate('$->$', xy=(1, 1), xycoords='data',
+#                xytext=(-150, -140), textcoords='offset points',
+#                bbox=dict(boxstyle="round", fc="0.8"),
+#                arrowprops=dict(arrowstyle="->",
+#                                connectionstyle="angle,angleA=90,angleB=0,rad=10"),
+#                )
+#    ax.annotate('fancy', xy=(1, 1), xycoords='data',
+#                xytext=(-100, 60), textcoords='offset points',
+#                size=20,
+#                #bbox=dict(boxstyle="round", fc="0.8"),
+#                arrowprops=dict(arrowstyle="fancy",
+#                                fc="0.6", ec="none",
+#                                connectionstyle="angle3,angleA=0,angleB=-90"),)
+#    
+#    ax.annotate('simple', xy=(1, 1), xycoords='data',
+#                xytext=(100, 60), textcoords='offset points',
+#                size=20,
+#                #bbox=dict(boxstyle="round", fc="0.8"),
+#                arrowprops=dict(arrowstyle="simple",
+#                                fc="0.6", ec="none",
+#                                connectionstyle="arc3,rad=0.3"),
+#                )
+#
+#    ax.annotate('wedge', xy=(1, 1), xycoords='data',
+#                xytext=(-100, -100), textcoords='offset points',
+#                size=20,
+#                #bbox=dict(boxstyle="round", fc="0.8"),
+#                arrowprops=dict(arrowstyle="wedge,tail_width=0.7",
+#                                fc="0.6", ec="none",
+#                                connectionstyle="arc3,rad=-0.3"),
+#                )
+
+    l = ax.axvline(x=0.5, ymax=0.75, linewidth=4, color='b')
+
+    ann = ax.annotate('wedge', xy=(1, 1), xycoords='data',
+                xytext=(0, -45), textcoords='offset points',
+                size=20,
+                bbox=dict(boxstyle="round", fc=(1.0, 0.7, 0.7), ec=(1., .5, .5)),
+                arrowprops=dict(arrowstyle="wedge,tail_width=1.",
+                                fc=(1.0, 0.7, 0.7), ec=(1., .5, .5),
+                                patchA=None,
+                                relpos=(0.2, 0.8),
+                                connectionstyle="arc3,rad=-0.1"),
+                )
+
+    ann = ax.annotate('wedge', xy=(1, 1), xycoords='data',
+                xytext=(35, 0), textcoords='offset points',
+                size=20, va="center",
+                bbox=dict(boxstyle="round", fc=(0.5, 0.7, 0.7), ec="gray", alpha=1.0),
+                arrowprops=dict(arrowstyle="wedge,tail_width=1.",
+                                fc=(0.5, 0.7, 0.7), ec="gray", alpha=1.0,
+                                patchA=None,
+                                relpos=(0.2, 0.8),
+                                )
+                )
+
+    l1 = plt.axhline(y=1, linewidth=1, color='b', alpha=0.7, label='bla',
+                    linestyle='--')
+    
+    l2 = plt.axvline(x=1, linewidth=4, color='g', alpha=0.7, label='bla',
+                    linestyle=':')
+    
+    
+#    plt.annotate('Bucharest', xy=(1, 1), xytext=(1.5, 1.5), xycoords='data',
+#                 arrowprops=dict(facecolor='black', shrink=0.05))
+
+    
+    p1 = plt.axhspan(0.75, 1.25, facecolor='r', alpha=0.5)
+    
+    p2 = plt.axvspan(0.75, 1.25, facecolor='k', alpha=0.5)
     
     plt.axis([-1, 2, -1, 2])
     

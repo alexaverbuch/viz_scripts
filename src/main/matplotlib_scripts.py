@@ -5,7 +5,10 @@ import numpy as np
 import matplotlib.mlab as mlab
 import pylab as plb
 import csv
-from pylab import *
+try:
+    import Image
+except ImportError, exc:
+    raise SystemExit("PIL must be installed to run this example")
 
 def csv_to_dict(filename):
     csvFileName = filename
@@ -44,30 +47,7 @@ def init_tex():
     ## for Palatino and other serif fonts use:
     #rc('font',**{'family':'serif','serif':['Palatino']})
     rc('text', usetex=True)
-    
         
-def show_plot(plot_fun,
-              fileName="output.pdf",
-              figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait',
-              figPapertype=None, figFormat='pdf', figTransparent=True):
-    
-    init_tex()
-    
-    fig = plt.figure(1)
-    
-    plot_fun(fig, 1, 1, 1)
-    
-    plb.savefig(fileName,
-                dpi=figDpi,
-                facecolor=figFacecolor,
-                edgecolor=figEdgecolor,
-                orientation=figOrientation,
-                papertype=figPapertype,
-                format=figFormat, #png, pdf, ps, eps and svg
-                transparent=figTransparent)
-    
-    show()
-    
 def show_plots(plotFuns,
                fileName="output.pdf",
                figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait',
@@ -86,8 +66,9 @@ def show_plots(plotFuns,
         numCols = len(plotFunsRow)
         figNum = (currentRow - 1) * numCols
         for plotFun in plotFunsRow:
-            figNum += 1
-            
+            figNum += 1            
+            if plotFun == None:
+                continue
             plotFun(fig, numRows, numCols, figNum)
             
     plb.savefig(fileName,
@@ -99,11 +80,11 @@ def show_plots(plotFuns,
                 format=figFormat, #png, pdf, ps, eps and svg
                 transparent=figTransparent)
 
-    show()
+    plb.show()
     
-def get_line_from_file(csvName, xAxis, yAxes,
+def get_line_from_file(csvName, xAxis, yAxes, annotations=[],
                        axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True, axisFontSize=12, axisColor='k',
-                       axisXLabel='xLabel', axisYLabel='yLabel', axisTitle='axisTitle',
+                       axisXLabel='', axisYLabel='', axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
                        legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
                        legendFancybox=False, legendPos='upper right'):
     
@@ -122,32 +103,38 @@ def get_line_from_file(csvName, xAxis, yAxes,
             legendLines += (line,)
             legendLineNames += (axisName,)
             
+        for annotation in annotations:
+            annotation(ax)
+            
         legend = ax.legend(legendLines,
                            legendLineNames,
                            legendPos,
                            shadow=legendShadow,
                            fancybox=legendFancybox)
         
-        frame = legend.get_frame()  
-        frame.set_facecolor(legendColor)
-        frame.set_alpha(legendAlpha)
+        if legend != None: 
+            frame = legend.get_frame()  
+            frame.set_facecolor(legendColor)
+            frame.set_alpha(legendAlpha)
         
-        for ltext in legend.get_texts():
-            pylab.setp(ltext, fontsize=legendFontsize)
+            for ltext in legend.get_texts():
+                pylab.setp(ltext, fontsize=legendFontsize)
         
     #    plt.axis([0, 2000, 0, 100])
         ax.set_title(axisTitle, fontsize=axisFontSize)
         ax.set_xlabel(axisXLabel, fontsize=axisFontSize)
         ax.set_ylabel(axisYLabel, fontsize=axisFontSize)
+        ax.set_xlim(axisXLim)
+        ax.set_ylim(axisYLim)
         ax.grid(axisGrid)
         
     return do_line_from_file
         
-def get_hist_from_file(csvName, values,
+def get_hist_from_file(csvName, values, annotations=[],
                        barBinCount=10, barFacecolor='blue', barEdgecolor='gray', barHisttype='bar',
                        barAlpha=0.75, barAlign='mid', barOrientation='vertical',
-                       axisGrid=True, axisFontSize=12, axisColor='k',
-                       axisXLabel='xLabel', axisYLabel='yLabel', axisName='axisName', axisTitle='Title Goes Here',
+                       axisGrid=True, axisFontSize=12, axisColor='k', axisXLim=(None, None), axisYLim=(None, None),
+                       axisXLabel='', axisYLabel='', axisName='', axisTitle='',
                        legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
                        legendFancybox=False, legendPos='upper right'):
     
@@ -173,29 +160,33 @@ def get_hist_from_file(csvName, values,
     #    n, bins, patches = plt.hist([x0, x1, x2], 10, histtype='bar')
     #    n, bins, patches = plt.hist(x, 50, normed=1, facecolor='green', alpha=0.75)
             
+        for annotation in annotations:
+            annotation(ax)
+            
         legend = ax.legend(shadow=legendShadow, fancybox=legendFancybox)
         
-        frame = legend.get_frame()  
-        frame.set_facecolor(legendColor)
-        frame.set_alpha(legendAlpha)
+        if legend != None: 
+            frame = legend.get_frame()  
+            frame.set_facecolor(legendColor)
+            frame.set_alpha(legendAlpha)
         
-        for ltext in legend.get_texts():
-            pylab.setp(ltext, fontsize=legendFontsize)
-        
-    #    plt.axis([0, 2000, 0, 100])
+            for ltext in legend.get_texts():
+                pylab.setp(ltext, fontsize=legendFontsize)
+                
         ax.set_title(axisTitle, fontsize=axisFontSize)
         ax.set_xlabel(axisXLabel, fontsize=axisFontSize)
         ax.set_ylabel(axisYLabel, fontsize=axisFontSize)
+        ax.set_xlim(axisXLim)
+        ax.set_ylim(axisYLim)
         ax.grid(axisGrid)
-    #    plt.axis([0, max(csvDict[values]), 0, len(csvDict[values])])
     
     return do_hist_from_file
 
-def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
+def get_bar_from_file(csvName, xAxis, yAxes, yLabels, annotations=[],
                       barEdgecolor='gray', barHisttype='bar', barAlpha=0.75,
                       barAlign='mid', barOrientation='vertical', barWidth=0.3,
-                      axisGrid=True, axisFontSize=12, axisColor='k',
-                      axisYLabel='yLabel', axisTitle='Title Goes Here',
+                      axisGrid=True, axisFontSize=12, axisColor='k', axisXLim=(None, None), axisYLim=(None, None),
+                      axisYLabel='', axisTitle='',
                       legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
                       legendFancybox=False, legendPos='upper right'):
     
@@ -217,14 +208,9 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
                            color=barColor, edgecolor=barEdgecolor, linewidth=None)
             rectsColl += [rects]
         
-#    #    ax.set_ylabel(axisYLabel)
-#    #    ax.set_title(axisTitle)
-#        ax.set_xticks(ind + barWidth)
-#        ax.set_xticklabels(csvDict[xAxis])
-    
-        legend = ax.legend([rects[0] for rects in rectsColl], yLabels,
-                           shadow=legendShadow, fancybox=legendFancybox)
-        
+        for annotation in annotations:
+            annotation(ax)
+            
         def autolabel(rects):
             # attach some text labels (Optional)
             for rect in rects:
@@ -235,12 +221,16 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
         for rects in rectsColl:
             autolabel(rects)
         
-        frame = legend.get_frame()  
-        frame.set_facecolor(legendColor)
-        frame.set_alpha(legendAlpha)
+        legend = ax.legend([rects[0] for rects in rectsColl], yLabels,
+                           shadow=legendShadow, fancybox=legendFancybox)
         
-        for ltext in legend.get_texts():
-            pylab.setp(ltext, fontsize=legendFontsize)
+        if legend != None: 
+            frame = legend.get_frame()  
+            frame.set_facecolor(legendColor)
+            frame.set_alpha(legendAlpha)
+        
+            for ltext in legend.get_texts():
+                pylab.setp(ltext, fontsize=legendFontsize)
         
     #    ax.axis([0, 2000, 0, 100])
         ax.set_title(axisTitle, fontsize=axisFontSize)
@@ -248,6 +238,21 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
         ax.grid(axisGrid)
         ax.set_xticks(ind + barWidth)
         ax.set_xticklabels(csvDict[xAxis])
+        ax.set_xlim(axisXLim)
+        ax.set_ylim(axisYLim)
     #    plt.axis([0, max(csvDict[values]), 0, len(csvDict[values])])
 
     return do_bar_from_file
+
+def get_img_from_file(imgFile, annotations=[]):
+
+    def do_img_from_file(fig, numRows, numCols, figNum):
+        
+        ax = fig.add_subplot(numRows, numCols, figNum)
+                
+        img = Image.open(imgFile)
+#        ax.set_axes([0, 0, 1, 1], frameon=False)
+        ax.set_axis_off()
+        ax.imshow(img, origin='lower')
+    
+    return do_img_from_file
