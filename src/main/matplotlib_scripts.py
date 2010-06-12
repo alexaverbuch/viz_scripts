@@ -1,3 +1,4 @@
+from matplotlib import rc
 import matplotlib.pyplot as plt
 from matplotlib import *
 import numpy as np
@@ -36,13 +37,23 @@ def csv_to_dict(filename):
                 csvDict[key].append(val)
 
     return csvDict
+
+def init_tex():
+#    rc('font', **{'family':'sans-serif', 'sans-serif':['Helvetica']})
+    rc('font', **{'family':'times'})
+    ## for Palatino and other serif fonts use:
+    #rc('font',**{'family':'serif','serif':['Palatino']})
+    rc('text', usetex=True)
+    
         
 def show_plot(plot_fun,
               fileName="output.pdf",
               figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait',
               figPapertype=None, figFormat='pdf', figTransparent=True):
     
-    fig = plt.figure()
+    init_tex()
+    
+    fig = plt.figure(1)
     
     plot_fun(fig, 1, 1, 1)
     
@@ -61,6 +72,8 @@ def show_plots(plotFuns,
                fileName="output.pdf",
                figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait',
                figPapertype=None, figFormat='pdf', figTransparent=True):
+    
+    init_tex()
     
     fig = plt.figure(1)
     

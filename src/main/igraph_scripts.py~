@@ -36,11 +36,9 @@ def viz_results_seq(directory, default_layout=False, colored=False, coords=False
         print "file number:", fileNumber 
         print "new file name:", newFileName
         imgFilePath = os.path.join(os.path.dirname(filePath), newFileName)
-        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout,
-                                    colored=colored, coords=coords, imgW=imgW, imgH=imgH)
+        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH)
 
-def viz_results(directory, default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000,
-                vLabel=False, vSize=2, eWidth=10, eWidthMulti=False):
+def viz_results(directory, default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False, vSize=2, eWidth=10, eWidthMulti=False):
     for filePath in glob.glob(os.path.join(directory, '*.gml')):
         file = os.path.basename(filePath)
         fileName = os.path.splitext(file)[0]
@@ -49,13 +47,9 @@ def viz_results(directory, default_layout=False, colored=False, coords=False, im
         print "file name:", fileName 
         print "file extension:", fileExtension                         
         imgFilePath = os.path.join(os.path.dirname(filePath), fileName)
-        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored,
-                                    coords=coords, imgW=imgW, imgH=imgH, vLabel=vLabel, vSize=vSize,
-                                    eWidth=eWidth, eWidthMulti=eWidthMulti)
+        default_layout = viz_result(filePath, imgFilePath, default_layout=default_layout, colored=colored, coords=coords, imgW=imgW, imgH=imgH, vLabel=vLabel, vSize=vSize, eWidth=eWidth, eWidthMulti=eWidthMulti)
 
-def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout=False,
-               colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False,
-               vSize=10, eWidth=2, eWidthMulti=False, vColor="#0000ff", eColor="#ff0000"):
+def viz_result(gmlFile, imgFile, imgLayout="fr", default_layout=False, colored=False, coords=False, imgW=5000, imgH=5000, vLabel=False, vSize=10, eWidth=2, eWidthMulti=False):
     elapsedTime = time()
     
     print "loading ", gmlFile, "..."    
@@ -88,7 +82,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
         visual_style["vertex_color"] = [color_dict[color] for color in g.vs["_color"]]
     else:
 #        visual_style["vertex_color"] = ["#000000"] * g.vcount()
-        visual_style["vertex_color"] = [vColor] * g.vcount()
+        visual_style["vertex_color"] = ["#00ff00"] * g.vcount()
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
         
@@ -96,7 +90,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
     if colored == True:        
         visual_style["edge_color"] = [color_dict[color] for color in g.es["_color"]]
     else:
-        visual_style["edge_color"] = [eColor] * g.ecount()
+        visual_style["edge_color"] = ["#ff0000"] * g.ecount()
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
                     
@@ -126,7 +120,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
             med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
             
             # Comment out if want absolute imgH control
-            imgH = (max_lat_coord - min_lat_coord) * 1
+            imgH = (max_lat_coord - min_lat_coord) * 10
             
             print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)
             print "\t\t%d zero_lat_coords found" % (zero_lat_points)             
@@ -145,7 +139,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
             med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
             
             # Comment out if want absolute imgW control
-            imgW = (max_lon_coord - min_lon_coord) * 1
+            imgW = (max_lon_coord - min_lon_coord) * 10
 
             print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
             print "\t\t%d zero_lon_coords found" % (zero_lon_points)             
@@ -194,10 +188,10 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()
     
-    print "configuring visual style complete"    
-
-    print "saving image: ", imgFile , ".", imgFormat, "..."
-    plot(g, imgFile + "." + imgFormat, **visual_style)
+    print "configuring visual style complete"
+    
+    print "saving pdf:" + imgFile + ".pdf..."
+    plot(g, imgFile + ".pdf", **visual_style)
     print timeToStr(time() - elapsedTime)
     elapsedTime = time()
     

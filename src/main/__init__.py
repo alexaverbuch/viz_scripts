@@ -2,11 +2,28 @@ from sys import *
 from igraph_scripts import *
 from matplotlib_example_scripts import *
 from matplotlib_scripts import *
+from thesis_plots import *
 
-gmlFile = "/media/disk/alex/Neo4j/romania-gis-DIDIC2-GID-NAME-COORDS-BICYCLE.basic.gml"
-imgFile = "romania-gis-bicycle"
-viz_result(gmlFile, imgFile, colored=False, coords=True, vSize=10, eWidth=2)
- 
+#********************************************
+#********************igraph******************
+#********************************************
+
+#gmlFile = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/SampleTrees/sampleTree_2932N_5257R.gml"
+#imgFile = "/home/alex/Desktop/sampleTree_2932N_5257R"
+##viz_result(gmlFile, imgFile, colored=False, coords=True, vSize=5, eWidth=2, imgFormat="pdf")
+#
+#black = "#000000"
+#blue = "#0000ff"
+#red = "#ff0000"
+#green = "#00ff00"
+#viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="pdf", colored=False,
+#           imgW=1000, imgH=1000, vSize=10, eWidth=1,
+#           vColor=blue, eColor=red)
+
+#********************************************
+#******************matplotlib****************
+#********************************************
+
 ##dropboxDir = "/media/disk/alex/Dropbox/"
 #dropboxDir = "/home/alex/Dropbox/"
 #csvDir = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/CSV Versions/GIS2 GOp/"
@@ -20,7 +37,6 @@ viz_result(gmlFile, imgFile, colored=False, coords=True, vSize=10, eWidth=2)
 #tempColumnX = 'xaxis'
 #tempColumnY1 = 'column1'
 #tempColumnY2 = 'column2'
-#
 #
 #get_hist_from_file = get_hist_from_file(csvName, columnY1, barBinCount=100,
 #                                        axisXLabel='', axisTitle='')
@@ -38,4 +54,9 @@ viz_result(gmlFile, imgFile, colored=False, coords=True, vSize=10, eWidth=2)
 ##show_plot(get_bar_from_file)
 #show_plots([[get_hist_from_file],
 #            [get_line_from_file],
-#            [get_bar_from_file]])                          
+#            [get_bar_from_file]])
+#nodes_by_coords()                          
+
+example_vert_horz_lines()
+
+#example_annotate()
