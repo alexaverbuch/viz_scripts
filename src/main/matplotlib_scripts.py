@@ -10,7 +10,8 @@ try:
 except ImportError, exc:
     raise SystemExit("PIL must be installed to run this example")
 
-def csv_to_dict(filename):
+def csv_to_dict(filename,
+                default='float', ints=(), floats=()):
     csvFileName = filename
     csvDict = {}
     csvFile = open(csvFileName, "rb")
@@ -18,26 +19,57 @@ def csv_to_dict(filename):
                                delimiter=',',
                                quotechar='"',
                                quoting=csv.QUOTE_ALL)
+    
+    def read_int(val):
+        returnVal = 0
+        try:
+            returnVal = int(val)
+        except ValueError:
+            if returnVal == '':
+                returnVal = None
+            else:
+                raise ValueError
+        return returnVal
 
+    def read_float(val):
+        returnVal = 0.0
+        try:
+            returnVal = float(val)
+        except ValueError:
+            if returnVal == '':
+                returnVal = None
+            else:
+                raise ValueError
+        return returnVal
+
+    def read_string(val):
+        return val
+        
     firstRow = True
     for data in csvReader:        
         if firstRow:
             for key in data.keys():
-                val = 0
-                try:
-                    val = float(data[key])
-                except ValueError:
-                    val = data[key]
-                csvDict[key] = [val]
-            firstRow = False
+                val = None
+                if key in floats:
+                    val = [read_float(data[key])]
+                elif key in ints:
+                    val = [read_int(data[key])]
+                else:
+                    val = [read_string(data[key])]
+                if val != None:
+                    csvDict[key] = val
+                    firstRow = False
         else:
             for key in data.keys():
-                val = 0
-                try:
-                    val = float(data[key])
-                except ValueError:
-                    val = data[key]
-                csvDict[key].append(val)
+                val = None
+                if key in floats:
+                    val = read_float(data[key])
+                elif key in ints:
+                    val = read_int(data[key])
+                else :
+                    val = read_string(data[key])
+                if val != None:
+                    csvDict[key].append(val)
 
     return csvDict
 
@@ -49,17 +81,23 @@ def init_tex():
     rc('text', usetex=True)
         
 def show_plots(plotFuns,
-               fileName="output.pdf",
+               fileName="output.pdf", show=True,
                figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait',
-               figPapertype=None, figFormat='pdf', figTransparent=True):
+               figPapertype=None, figFormat='pdf', figTransparent=True,
+               figWSpace=0.2, figHSpace=0.2):
     
     init_tex()
     
     fig = plt.figure(1)
+    fig.clf()
+    
+    fig.subplots_adjust(wspace=figWSpace, hspace=figHSpace)
     
     numRows = len(plotFuns)    
         
     currentRow = 0
+    
+    axesDict = {}
     
     for plotFunsRow in plotFuns:
         currentRow += 1
@@ -69,7 +107,7 @@ def show_plots(plotFuns,
             figNum += 1            
             if plotFun == None:
                 continue
-            plotFun(fig, numRows, numCols, figNum)
+            plotFun(fig, numRows, numCols, figNum, axesDict)
             
     plb.savefig(fileName,
                 dpi=figDpi,
@@ -80,19 +118,46 @@ def show_plots(plotFuns,
                 format=figFormat, #png, pdf, ps, eps and svg
                 transparent=figTransparent)
 
-    plb.show()
+    if show == True:
+        plb.show()
     
 def get_line_from_file(csvName, xAxis, yAxes, annotations=[],
+                       csvInts=(), csvFloats=(),
                        axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True, axisFontSize=12, axisColor='k',
                        axisXLabel='', axisYLabel='', axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
+                       axisXFormatterFun=None, axisYFormatterFun=None,
+                       axisXScale='linear', axisYScale='linear',
                        legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                       legendFancybox=False, legendPos='upper right'):
+                       legendFancybox=False, legendPos='upper right',
+                       myShareAxis=None, shareAxisX=None, shareAxisY=None):
     
-    def do_line_from_file(fig, numRows, numCols, figNum):
+    def do_line_from_file(fig, numRows, numCols, figNum, axesDict):
         
-        csvDict = csv_to_dict(csvName)
+        csvDict = csv_to_dict(csvName, ints=csvInts, floats=csvFloats)
 
-        ax = fig.add_subplot(numRows, numCols, figNum)
+        xlabel = axisXLabel
+        ylabel = axisYLabel
+        xticks = True
+        yticks = True
+        if axisXLabel == None:
+            xticks = False
+            xlabel = ''
+        if axisYLabel == None:
+            yticks = False
+            ylabel = ''
+            
+        sharex = None
+        sharey = None
+        if shareAxisX != None:
+            sharex = axesDict[shareAxisX]
+        if shareAxisY != None:
+            sharey = axesDict[shareAxisY]
+
+        ax = fig.add_subplot(numRows, numCols, figNum,
+                             sharex=sharex, sharey=sharey)
+        
+        if myShareAxis != None:
+            axesDict[myShareAxis] = ax                    
         
         legendLines = ()
         legendLineNames = ()
@@ -120,33 +185,80 @@ def get_line_from_file(csvName, xAxis, yAxes, annotations=[],
             for ltext in legend.get_texts():
                 pylab.setp(ltext, fontsize=legendFontsize)
         
-    #    plt.axis([0, 2000, 0, 100])
+        formy = None
+        if axisYFormatterFun == None:
+            formy = plt.ScalarFormatter()
+            formy.set_powerlimits((-3, 4))
+            formy.set_scientific(True)
+            ax.yaxis.set_major_formatter(formy)
+        else:
+            formy = ticker.FuncFormatter(axisYFormatterFun)
+            ax.yaxis.set_major_formatter(formy)        
+                    
+        formx = None
+        if axisXFormatterFun == None:
+            formx = plt.ScalarFormatter()
+            formx.set_powerlimits((-3, 4))
+            formx.set_scientific(True)
+            ax.xaxis.set_major_formatter(formx)        
+        else:
+            formx = ticker.FuncFormatter(axisXFormatterFun)
+            ax.xaxis.set_major_formatter(formx)        
+
         ax.set_title(axisTitle, fontsize=axisFontSize)
-        ax.set_xlabel(axisXLabel, fontsize=axisFontSize)
-        ax.set_ylabel(axisYLabel, fontsize=axisFontSize)
+        ax.set_xlabel(xlabel, fontsize=axisFontSize)
+        ax.set_ylabel(ylabel, fontsize=axisFontSize)
         ax.set_xlim(axisXLim)
         ax.set_ylim(axisYLim)
+        ax.set_xscale(axisXScale) # linear,log,symlog
+        ax.set_yscale(axisYScale) # linear,log,symlog
         ax.grid(axisGrid)
+        if xticks == False:
+            ax.set_xticks([])
+        if yticks == False:
+            ax.set_yticks([])
         
     return do_line_from_file
         
 def get_hist_from_file(csvName, values, annotations=[],
+                       csvInts=(), csvFloats=(),
                        barBinCount=10, barFacecolor='blue', barEdgecolor='gray', barHisttype='bar',
-                       barAlpha=0.75, barAlign='mid', barOrientation='vertical',
+                       barAlpha=0.75, barAlign='mid', barOrientation='vertical', barRWidth=None, barLog=False,
                        axisGrid=True, axisFontSize=12, axisColor='k', axisXLim=(None, None), axisYLim=(None, None),
                        axisXLabel='', axisYLabel='', axisName='', axisTitle='',
+                       axisXFormatterFun=None, axisYFormatterFun=None,
                        legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                       legendFancybox=False, legendPos='upper right'):
+                       legendFancybox=False, legendPos='upper right',
+                       myShareAxis=None, shareAxisX=None, shareAxisY=None):
     
-    def do_hist_from_file(fig, numRows, numCols, figNum):            
+    def do_hist_from_file(fig, numRows, numCols, figNum, axesDict):            
         
-        csvDict = csv_to_dict(csvName)
-    
-        if fig == False:
-            fig = plt.figure()
+        csvDict = csv_to_dict(csvName, ints=csvInts, floats=csvFloats)
+        
+        xlabel = axisXLabel
+        ylabel = axisYLabel
+        xticks = True
+        yticks = True
+        if axisXLabel == None:
+            xticks = False
+            xlabel = ''
+        if axisYLabel == None:
+            yticks = False
+            ylabel = ''
+             
+        sharex = None
+        sharey = None
+        if shareAxisX != None:            
+            sharex = axesDict[shareAxisX]
+        if shareAxisY != None:
+            sharey = axesDict[shareAxisY]
+
+        ax = fig.add_subplot(numRows, numCols, figNum,
+                             sharex=sharex, sharey=sharey)
+        
+        if myShareAxis != None:
+            axesDict[myShareAxis] = ax                    
             
-        ax = fig.add_subplot(numRows, numCols, figNum)
-        
         #histtype = 'bar' 'barstacked' 'step' 'stepfilled'
         #align = 'left' 'mid' 'right'
         #orientation: 'horizontal' 'vertical'
@@ -155,11 +267,8 @@ def get_hist_from_file(csvName, values, annotations=[],
                                    normed=0, cumulative=0,
                                    facecolor=barFacecolor, edgecolor=barEdgecolor,
                                    alpha=barAlpha, histtype=barHisttype, align=barAlign,
-                                   orientation=barOrientation)
+                                   orientation=barOrientation, rwidth=barRWidth, log=barLog)
         
-    #    n, bins, patches = plt.hist([x0, x1, x2], 10, histtype='bar')
-    #    n, bins, patches = plt.hist(x, 50, normed=1, facecolor='green', alpha=0.75)
-            
         for annotation in annotations:
             annotation(ax)
             
@@ -173,28 +282,78 @@ def get_hist_from_file(csvName, values, annotations=[],
             for ltext in legend.get_texts():
                 pylab.setp(ltext, fontsize=legendFontsize)
                 
+        formy = None
+        if axisYFormatterFun == None:
+            formy = plt.ScalarFormatter()
+            formy.set_powerlimits((-3, 4))
+            formy.set_scientific(True)
+            ax.yaxis.set_major_formatter(formy)
+        else:
+            formy = ticker.FuncFormatter(axisYFormatterFun)
+            ax.yaxis.set_major_formatter(formy)        
+                    
+        formx = None
+        if axisXFormatterFun == None:
+            formx = plt.ScalarFormatter()
+            formx.set_powerlimits((-3, 4))
+            formx.set_scientific(True)
+            ax.xaxis.set_major_formatter(formx)        
+        else:
+            formx = ticker.FuncFormatter(axisXFormatterFun)
+            ax.xaxis.set_major_formatter(formx)        
+                                
         ax.set_title(axisTitle, fontsize=axisFontSize)
-        ax.set_xlabel(axisXLabel, fontsize=axisFontSize)
-        ax.set_ylabel(axisYLabel, fontsize=axisFontSize)
+        ax.set_xlabel(xlabel, fontsize=axisFontSize)
+        ax.set_ylabel(ylabel, fontsize=axisFontSize)
         ax.set_xlim(axisXLim)
         ax.set_ylim(axisYLim)
         ax.grid(axisGrid)
+        if xticks == False:
+            ax.set_xticks([])
+        if yticks == False:
+            ax.set_yticks([])
     
     return do_hist_from_file
 
 def get_bar_from_file(csvName, xAxis, yAxes, yLabels, annotations=[],
+                      csvInts=(), csvFloats=(),
                       barEdgecolor='gray', barHisttype='bar', barAlpha=0.75,
-                      barAlign='mid', barOrientation='vertical', barWidth=0.3,
-                      axisGrid=True, axisFontSize=12, axisColor='k', axisXLim=(None, None), axisYLim=(None, None),
-                      axisYLabel='', axisTitle='',
-                      legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                      legendFancybox=False, legendPos='upper right'):
+                      barAlign='edge', barOrientation='vertical', barWidth=0.3,
+                      axisGrid=True, axisFontSize=12, axisColor='k',
+                      axisXLim=(None, None), axisYLim=(None, None),
+                      axisXLabel='', axisYLabel='', axisTitle='',
+                      axisXFormatterFun=lambda x: x, axisYFormatterFun=None,
+                      legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                      legendFancybox=False, legendPos='upper right',
+                      myShareAxis=None, shareAxisX=None, shareAxisY=None):
     
-    def do_bar_from_file(fig, numRows, numCols, figNum):
+    def do_bar_from_file(fig, numRows, numCols, figNum, axesDict):
             
-        csvDict = csv_to_dict(csvName)
-    
-        ax = fig.add_subplot(numRows, numCols, figNum)
+        csvDict = csv_to_dict(csvName, ints=csvInts, floats=csvFloats)
+
+        xlabel = axisXLabel
+        ylabel = axisYLabel
+        xticks = True
+        yticks = True
+        if axisXLabel == None:
+            xticks = False
+            xlabel = ''
+        if axisYLabel == None:
+            yticks = False
+            ylabel = ''
+
+        sharex = None
+        sharey = None
+        if shareAxisX != None:
+            sharex = axesDict[shareAxisX]
+        if shareAxisY != None:
+            sharey = axesDict[shareAxisY]
+
+        ax = fig.add_subplot(numRows, numCols, figNum,
+                             sharex=sharex, sharey=sharey)
+        
+        if myShareAxis != None:
+            axesDict[myShareAxis] = ax                    
     
         n = max([len(csvDict[val]) for (val, clr) in yAxes])
         ind = np.arange(n)  # the x locations for the groups
@@ -203,9 +362,10 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels, annotations=[],
         barCount = -1    
         for (yAxis, barColor) in yAxes:
             barCount += 1
-            
-            rects = ax.bar(ind + (barWidth * barCount), csvDict[yAxis], barWidth,
-                           color=barColor, edgecolor=barEdgecolor, linewidth=None)
+                        
+            rects = ax.bar(ind + (barWidth - barWidth * barCount), csvDict[yAxis], barWidth,
+                           color=barColor, edgecolor=barEdgecolor, linewidth=None,
+                           align=barAlign)
             rectsColl += [rects]
         
         for annotation in annotations:
@@ -218,8 +378,9 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels, annotations=[],
                 ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height, '%d' % int(height),
                         ha='center', va='bottom')
         
-        for rects in rectsColl:
-            autolabel(rects)
+        # Uncomment to apply value labels to tops of bars
+#        for rects in rectsColl:
+#            autolabel(rects)
         
         legend = ax.legend([rects[0] for rects in rectsColl], yLabels,
                            shadow=legendShadow, fancybox=legendFancybox)
@@ -231,16 +392,30 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels, annotations=[],
         
             for ltext in legend.get_texts():
                 pylab.setp(ltext, fontsize=legendFontsize)
-        
-    #    ax.axis([0, 2000, 0, 100])
+
+        formy = None
+        if axisYFormatterFun == None:
+            formy = plt.ScalarFormatter()
+            formy.set_powerlimits((-3, 4))
+            formy.set_scientific(True)
+            ax.yaxis.set_major_formatter(formy)
+        else:
+            formy = ticker.FuncFormatter(axisYFormatterFun)
+            ax.yaxis.set_major_formatter(formy)        
+                    
         ax.set_title(axisTitle, fontsize=axisFontSize)
-        ax.set_ylabel(axisYLabel, fontsize=axisFontSize)
+        ax.set_xlabel(xlabel, fontsize=axisFontSize)
+        ax.set_ylabel(ylabel, fontsize=axisFontSize)
         ax.grid(axisGrid)
         ax.set_xticks(ind + barWidth)
-        ax.set_xticklabels(csvDict[xAxis])
+        ax.set_xticklabels([axisXFormatterFun(xLabel) for xLabel in csvDict[xAxis]])
         ax.set_xlim(axisXLim)
         ax.set_ylim(axisYLim)
-    #    plt.axis([0, max(csvDict[values]), 0, len(csvDict[values])])
+        if xticks == False:
+            ax.set_xticks([])
+            ax.set_xticklabels([])
+        if yticks == False:
+            ax.set_yticks([])
 
     return do_bar_from_file
 

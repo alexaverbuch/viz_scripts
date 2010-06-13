@@ -645,20 +645,22 @@ def example_line_charts_from_csv():
 def example_nothing():
     def f(t): return np.exp(-t) * np.cos(2 * np.pi * t)
     
-    t1 = np.arange(0.0, 5.0, 0.1)
+    t1 = np.arange(0.0, 7.0, 0.1)
     t2 = np.arange(0.0, 5.0, 0.02)
     
-    plt.figure(1)
-    #  subplot(numrows, numcols, fignum) 
-    #  plt.subplot(2,1,1) also valid 
-    plt.subplot(1, 2, 1)
-    plt.plot(t2, np.cos(2 * np.pi * t2), 'r--')
+    fig = plt.figure(1)
+
+#    ax1 = fig.add_subplot(3, 1, 1) 
+#    ax1.plot(t2, np.cos(2 * np.pi * t2), 'r--')
     
-    plt.subplot(2, 2, 2)
-    plt.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
+    ax2 = fig.add_subplot(3, 1, 2)#, sharex=ax1)
+#    ax2.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
+
+    plb.hist([0, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4], bins=10,
+              histtype='step', align='mid')
     
-    plt.subplot(2, 2, 4)
-    plt.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
+#    ax3 = fig.add_subplot(3, 1, 3)
+#    ax3.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
     
     plt.ylabel('y stuff')
     plt.xlabel('x stuff')

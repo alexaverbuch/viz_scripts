@@ -51,18 +51,16 @@ from thesis_plots import *
 #                                      ['Col 1', 'Col 2'],
 #                                      axisTitle='')
 #
-##show_plot(get_bar_from_file)
+#show_plots([[get_bar_from_file]])
 #show_plots([[get_hist_from_file],
 #            [get_line_from_file],
 #            [get_bar_from_file]])
 
-nodes_by_lon_ptn(partitions=['red', 'cyan'])                   
-#imgFile = '/home/alex/Desktop/Blank_map_of_Romania.png'
-#do_img_from_file = get_img_from_file(imgFile, annotations=[])
-#show_plots([[do_img_from_file]])       
+#********************************************
+#******************TEMP**********************
+#********************************************
 
-#example_vert_horz_lines()
-#example_annotate_advanced()
-#example_annotate()
-#example_text()
-#example_annotate_vert_horz_lines()
+#gis_deg_stats_all_together()
+#gis_deg_stats_all_separate()
+#tree_deg_stats_all_together()
+tree_deg_stats_all_separate()
