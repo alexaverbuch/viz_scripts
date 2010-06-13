@@ -465,7 +465,7 @@ def gis_deg_stats_all_separate():
 #    show_plots([[do_gis_deg_in_hist]], fileName="output.pdf", show=False)
 #    show_plots([[do_gis_deg_out_hist]], fileName="output.pdf", show=False)
 
-def tree_deg_stats_all_together(): 
+def fstree_deg_stats_all_together(): 
     csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_tree_hist.csv"
     csvColumnDegNum = "deg"
     csvColumnDegHist = "hist_deg"
@@ -531,7 +531,7 @@ def tree_deg_stats_all_together():
                 show=False,
                 figWSpace=0.2, figHSpace=0.3)
     
-def tree_deg_stats_all_separate(): 
+def fstree_deg_stats_all_separate(): 
     csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
     
     csvColumnDegNum = "deg"
@@ -589,3 +589,119 @@ def tree_deg_stats_all_separate():
     show_plots([[do_fstree_deg_bar]], fileName="output1.pdf", show=False)
     show_plots([[do_fstree_deg_in_bar]], fileName="output2.pdf", show=False)
     show_plots([[do_fstree_deg_out_bar]], fileName="output3.pdf", show=False)
+
+def fstree_nodes_at_level(): 
+    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
+    
+    csvColumnTreeLevel = "tree_level"
+    csvColumnTreeLevelNodes = "tree_level_nodes"
+    
+    axisFontsize = 12
+        
+    def axisYFormatterFun(x):
+        if int(x) % 2 == 0:
+            return x
+        else:
+            return ''
+    do_fstree_levels_barh = get_barh_from_file(csvNameHist, csvColumnTreeLevel,
+                                               [(csvColumnTreeLevelNodes, 'blue') ],
+                                               [r'FS-Tree Nodes at Tree Level', ],
+                                               csvInts=(csvColumnTreeLevel, csvColumnTreeLevelNodes),
+                                               annotations=[],
+                                               barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                               barAlign='center', barOrientation='horizontal', barWidth=1.0,
+                                               axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
+                                               axisYLabel='Tree Level', axisXLabel='Node Count',
+                                               axisXLim=(None, None), axisYLim=(None, None),
+                                               axisReverseY=True,
+#                                               axisYFormatterFun=axisYFormatterFun,
+                                               legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                               legendFancybox=False, legendPos='upper right'
+                                              )
+            
+    show_plots([[do_fstree_levels_barh]],
+               fileName="output.pdf",
+               show=False)
+
+def fstree_nodes_at_level_annotated(levelAlpha=0.3): 
+    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
+    
+    csvColumnTreeLevel = "tree_level"
+    csvColumnTreeLevelNodes = "tree_level_nodes"
+    
+    axisFontsize = 12
+    
+    annotations_level_shading = []
+    
+    def get_do_annotation_level_shading(level_start, level_end, color):
+        def do_annotation_level_shading(ax):
+            ax.axhspan(level_start, level_end, facecolor=color, alpha=levelAlpha)
+            
+        return do_annotation_level_shading
+    
+#    0 reference node
+#    1 reference organisiations
+#    2 organisations
+#    3 user
+#    4 user root
+#    5 ... folder files and other stuff
+
+    shading = ['cyan', 'magenta', 'green', 'orange', 'gray', 'yellow']
+    shadingBoundaries = [(0.1, 10), # 1-3 Orgs
+                         (10, 12), # 4-5 Users
+                         (12, 15.9)] # 6-15 Folders & Files
+    
+    for ((level_start, level_end), color) in zip(shadingBoundaries, shading):
+        annotations_level_shading += [get_do_annotation_level_shading(level_start, level_end, color)]
+        
+    annotateRotate = 'horizontal'
+    annotateFontsize = 10
+    boxStyle = "round,pad=0.5"
+    boxFacecolor = '0.9'
+    boxEdgecolor = '0.0'
+    boxAlpha = 1.0    
+    boxLinewidth = 0.5
+        
+    bbox_props = dict(boxstyle=boxStyle,
+                      fc=boxFacecolor, ec=boxEdgecolor,
+                      alpha=boxAlpha, lw=boxLinewidth)
+    
+    def get_do_annotation_level_line(level, value):
+        def do_annotation_level_line(ax):            
+            ax.annotate(value, xy=(205000, level), xytext=(210000, level),
+                        size=annotateFontsize, rotation=annotateRotate,
+                        ha='right', va='center',
+                        bbox=bbox_props)
+
+        return do_annotation_level_line
+
+    for (level, value) in [(5.5, 'Files \& Folders\n250,000 Nodes'),
+                           (11, 'Users\n10 Nodes'),
+                           (14, 'Organisations\n7 Nodes')]:
+        annotations_level_shading += [get_do_annotation_level_line(level, value)]
+        
+    def axisYFormatterFun(x):
+        if int(x) % 2 == 0:
+            return x
+        else:
+            return ''
+
+    do_fstree_levels_barh = get_barh_from_file(csvNameHist, csvColumnTreeLevel,
+                                               [(csvColumnTreeLevelNodes, 'blue') ],
+                                               [r'FS-Tree Nodes at Tree Level', ],
+                                               csvInts=(csvColumnTreeLevel, csvColumnTreeLevelNodes),
+                                               annotations=annotations_level_shading,
+                                               barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                               barAlign='center', barOrientation='horizontal',
+                                               barHeight=1.0, barLog=False, barReverse=True,
+                                               axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
+                                               axisYLabel='Tree Level', axisXLabel='Node Count',
+                                               axisXLim=(0, 220000), axisYLim=(None, None),
+#                                               axisYFormatterFun=axisYFormatterFun,
+                                               legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                               legendFancybox=False, legendPos='upper right'
+                                              )
+            
+    show_plots([[do_fstree_levels_barh]],
+               fileName="output.pdf",
+               show=False)

@@ -63,4 +63,6 @@ from thesis_plots import *
 #gis_deg_stats_all_together()
 #gis_deg_stats_all_separate()
 #tree_deg_stats_all_together()
-tree_deg_stats_all_separate()
+#fstree_deg_stats_all_separate()
+#fstree_nodes_at_level()
+fstree_nodes_at_level_annotated(levelAlpha=0.3)
