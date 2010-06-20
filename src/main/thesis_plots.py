@@ -21,6 +21,7 @@ cities = [('Bucharest', bucharest_lon, bucharest_lat),
          ('Timisoara', timisoara_lon, timisoara_lat),
          ('Constanta', constanta_lon, constanta_lat)]
 
+
 def gis_nodes_by_lon_lat(): 
     csvName = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
     csvColumnLon = "raw_nodes_by_lon"
@@ -81,13 +82,23 @@ def gis_nodes_by_lon_lat():
         
     for (city_name, city_lon, city_lat) in cities:
         annotations_lon += [get_do_annotation_lon(city_name, city_lon)]
-    
+        
+    def axisXFormatterFunLon(x, pos=0):
+        return '%2d%s' % (x, '$^{\circ}$')            
+
+    def axisYFormatterFunLon(x, pos=0):
+        return '%1.1F' % (float(x) / 10000.)            
+        
     node_lons = get_hist_from_file(csvName, csvColumnLon, annotations=annotations_lon,
+                                   csvFloats=(csvColumnLon),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-                                   axisColor='k', axisXLabel=r'Longitude', axisYLabel=r'Node Count',
-                                   axisYLim=(axisYmin, axisYmax))
+                                   axisColor='k', axisXLabel=r'Longitude',
+                                   axisYLabel=r'Node Count $(\times 10^4)$',
+                                   axisYLim=(axisYmin, axisYmax),
+                                   axisXFormatterFun=axisXFormatterFunLon,
+                                   axisYFormatterFun=axisYFormatterFunLon)
 
     axisXmin = 0.0
     axisXmax = 30000.0
@@ -120,12 +131,22 @@ def gis_nodes_by_lon_lat():
     for (city_name, city_lon, city_lat) in cities:
         annotations_lat += [get_do_annotation_lat(city_name, city_lat)]
         
+    def axisYFormatterFunLat(x, pos=0):
+        return '%2d%s' % (x, '$^{\circ}$')
+                
+    def axisXFormatterFunLat(x, pos=0):
+        return '%1.1F' % (float(x) / 10000.)
+    
     node_lats = get_hist_from_file(csvName, csvColumnLat, annotations=annotations_lat,
+                                   csvFloats=(csvColumnLat),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='horizontal', axisGrid=True, axisFontSize=axisFontsize,
-                                   axisColor='k', axisXLabel=r'Node Count', axisYLabel=r'Latitude',
-                                   axisXLim=(axisXmin, axisXmax))
+                                   axisColor='k', axisYLabel=r'Latitude',
+                                   axisXLabel=r'Node Count $(\times 10^4)$',
+                                   axisXLim=(axisXmin, axisXmax),
+                                   axisXFormatterFun=axisXFormatterFunLat,
+                                   axisYFormatterFun=axisYFormatterFunLat)
     
     imgFile = '/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Structure/Romania_map_contour_ale_06r.png'
     do_img_from_file = get_img_from_file(imgFile, annotations=[])
@@ -193,16 +214,22 @@ def gis_nodes_by_lon():
     for (city_name, city_lon, _) in cities:
         annotations_lon += [get_do_annotation_lon(city_name, city_lon)]
     
+    def axisXFormatterFun(x, pos=0):
+        return '%2d%s' % (x, '$^{\circ}$')            
+    
     node_lons = get_hist_from_file(csvName, csvColumnLon, annotations=annotations_lon,
+                                   csvFloats=(csvColumnLon),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
                                    axisColor='k', axisXLabel=r'Longitude', axisYLabel=r'Node Count',
-                                   axisYLim=(axisYmin, axisYmax))
+                                   axisYLim=(axisYmin, axisYmax),
+                                   axisXFormatterFun=axisXFormatterFun)
 
-    show_plots([[node_lons]])
+    show_plots([[node_lons]],
+               show=False)
     
-def gis_nodes_by_lon_ptn(partitions=['red', 'cyan', 'magenta', 'orange']): 
+def gis_nodes_by_lon_ptn(): 
     csvName = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
     csvColumnLon = "raw_nodes_by_lon"
     
@@ -248,15 +275,26 @@ def gis_nodes_by_lon_ptn(partitions=['red', 'cyan', 'magenta', 'orange']):
             
         return do_annotation_lon_ptn
     
-    csvDict = csv_to_dict(csvName)
+    colors = ['red', 'cyan', 'magenta', 'orange']
+    
+    csvDict = csv_to_dict(csvName, (csvColumnLon), floats=(csvColumnLon))
     minLon = min([lon for lon in csvDict[csvColumnLon]])
     maxLon = max([lon for lon in csvDict[csvColumnLon]])
-    rangeLon = maxLon - minLon
-    pSize = float(rangeLon) / float(len(partitions))
-    pBoundaries = [(p * pSize + minLon, (p + 1) * pSize + minLon, partitions[p]) 
-                   for p in range(len(partitions))]
     
-    for (lon_start, lon_end, color) in pBoundaries:
+#    rangeLon = maxLon - minLon
+#    pSize = float(rangeLon) / float(len(colors))
+#    pBoundaries = [(p * pSize + minLon, (p + 1) * pSize + minLon, colors[p]) 
+#                   for p in range(len(colors))]
+
+    pBoundaries = [(minLon, 25.54991),
+                   (25.54991, maxLon)]
+    
+#    pBoundaries = [(minLon, 23.6699606),
+#                   (23.6699606, 25.54991),
+#                   (25.54991, 26.2199546),
+#                   (26.2199546, maxLon)]
+        
+    for ((lon_start, lon_end), color) in zip(pBoundaries, colors):
         annotations_lon += [get_do_annotation_lon_ptn(lon_start, lon_end, color)]
     
     def get_do_annotation_lon(city_name, city_lon):
@@ -281,12 +319,17 @@ def gis_nodes_by_lon_ptn(partitions=['red', 'cyan', 'magenta', 'orange']):
     for (city_name, city_lon, _) in cities:
         annotations_lon += [get_do_annotation_lon(city_name, city_lon)]
     
+    def axisXFormatterFun(x, pos=0):
+        return '%2d%s' % (x, '$^{\circ}$')            
+
     node_lons = get_hist_from_file(csvName, csvColumnLon, annotations=annotations_lon,
+                                   csvFloats=(csvColumnLon),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
                                    axisColor='k', axisXLabel=r'Longitude', axisYLabel=r'Node Count',
-                                   axisYLim=(axisYmin, axisYmax))
+                                   axisYLim=(axisYmin, axisYmax),
+                                   axisXFormatterFun=axisXFormatterFun)
 
     show_plots([[node_lons]])
 
@@ -305,6 +348,7 @@ def gis_deg_stats_all_together():
     axisXmax = None
     axisFontsize = 12
     barBinCount = 15
+    legendAlpha = 0.8
 
 #    axisXmin = 0
 #    axisXmax = 10
@@ -312,33 +356,33 @@ def gis_deg_stats_all_together():
 #    barBinCount = 14
 
     do_gis_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                       [(csvColumnDegHist, 'blue') ], [r'GIS Degree Distribution', ],
+                                       [(csvColumnDegHist, 'blue', None) ], [r'GIS Degree Distribution', ],
                                        csvInts=(csvColumnDegNum, csvColumnDegHist),
                                        annotations=[],
                                        barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                        barAlign='center', barOrientation='vertical', barWidth=1.0,
                                        axisGrid=True, axisFontSize=12, axisColor='k',
                                        axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
-                                       legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                       legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                        legendFancybox=False, legendPos='upper right',
                                        myShareAxis='do_gis_deg_bar'
                                        )
         
     do_gis_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegInHist, 'blue') ], [r'GIS In-Degree Distribution', ],
+                                          [(csvColumnDegInHist, 'blue', None) ], [r'GIS In-Degree Distribution', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                           barAlign='center', barOrientation='vertical', barWidth=1.0,
                                           axisGrid=True, axisFontSize=12, axisColor='k',
                                           axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
-                                          legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right',
                                           shareAxisX='do_gis_deg_bar'
                                           )
 
     do_gis_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegOutHist, 'blue') ], [r'GIS Out-Degree Distribution', ],
+                                          [(csvColumnDegOutHist, 'blue', None) ], [r'GIS Out-Degree Distribution', ],
                                             csvInts=(csvColumnDegNum, csvColumnDegOutHist),
                                             annotations=[],
                                             barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
@@ -346,7 +390,7 @@ def gis_deg_stats_all_together():
                                             axisGrid=True, axisFontSize=12, axisColor='k',
                                             axisXLabel='Degree', axisYLabel='Node Count',
                                             axisXLim=(axisXmin, axisXmax),
-                                            legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                            legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                             legendFancybox=False, legendPos='upper right',
                                             shareAxisX='do_gis_deg_bar'
                                             )
@@ -394,6 +438,7 @@ def gis_deg_stats_all_separate():
     
     axisFontsize = 12
     barBinCount = 15
+    legendAlpha = 0.8
         
     csvColumnDegNum = "deg"
     csvColumnDegHist = "hist_deg"
@@ -401,38 +446,38 @@ def gis_deg_stats_all_separate():
     csvColumnDegOutHist = "hist_deg_out"
     
     do_gis_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                       [(csvColumnDegHist, 'blue') ], [r'GIS Degree Distribution', ],
+                                       [(csvColumnDegHist, 'blue', None) ], [r'GIS Degree Distribution', ],
                                        csvInts=(csvColumnDegNum, csvColumnDegHist),
                                        annotations=[],
                                        barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                        barAlign='center', barOrientation='vertical', barWidth=1.0,
                                        axisGrid=True, axisFontSize=12, axisColor='k',
                                        axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 15),
-                                       legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                       legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                        legendFancybox=False, legendPos='upper right'
                                        )
         
     do_gis_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegInHist, 'blue') ], [r'GIS In-Degree Distribution', ],
+                                          [(csvColumnDegInHist, 'blue', None) ], [r'GIS In-Degree Distribution', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                           barAlign='center', barOrientation='vertical', barWidth=1.0,
                                           axisGrid=True, axisFontSize=12, axisColor='k',
                                           axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 8),
-                                          legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right'
                                           )
 
     do_gis_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegOutHist, 'blue') ], [r'GIS Out-Degree Distribution', ],
+                                          [(csvColumnDegOutHist, 'blue', None) ], [r'GIS Out-Degree Distribution', ],
                                             csvInts=(csvColumnDegNum, csvColumnDegOutHist),
                                             annotations=[],
                                             barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                             barAlign='center', barOrientation='vertical', barWidth=1.0,
                                             axisGrid=True, axisFontSize=12, axisColor='k',
                                             axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 8),
-                                            legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                            legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                             legendFancybox=False, legendPos='upper right'
                                             )
     
@@ -465,6 +510,8 @@ def gis_deg_stats_all_separate():
 #    show_plots([[do_gis_deg_in_hist]], fileName="output.pdf", show=False)
 #    show_plots([[do_gis_deg_out_hist]], fileName="output.pdf", show=False)
 
+
+
 def fstree_deg_stats_all_together(): 
     csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_tree_hist.csv"
     csvColumnDegNum = "deg"
@@ -476,6 +523,8 @@ def fstree_deg_stats_all_together():
     axisXmax = None
     axisFontsize = 12
     
+    legendAlpha = 0.8
+    
     def axisXFormatterFun(x):
         if int(x) % 2 == 0:
             return x
@@ -483,7 +532,7 @@ def fstree_deg_stats_all_together():
             return ''
     
     do_fstree_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegHist, 'blue') ], [r'FS-Tree Degree Distribution', ],
+                                          [(csvColumnDegHist, 'blue', None) ], [r'FS-Tree Degree Distribution', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
@@ -491,13 +540,13 @@ def fstree_deg_stats_all_together():
                                           axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
                                           axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
                                           axisXFormatterFun=axisXFormatterFun,
-                                          legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right',
                                           myShareAxis='do_gis_deg_bar'
                                        )
         
     do_fstree_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegInHist, 'blue') ], [r'FS-Tree In-Degree Distribution', ],
+                                          [(csvColumnDegInHist, 'blue', None) ], [r'FS-Tree In-Degree Distribution', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
@@ -505,13 +554,13 @@ def fstree_deg_stats_all_together():
                                           axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
                                           axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
                                           axisXFormatterFun=axisXFormatterFun,
-                                          legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right',
                                           shareAxisX='do_gis_deg_bar'
                                           )
 
     do_fstree_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                              [(csvColumnDegOutHist, 'blue') ], [r'FS-Tree Out-Degree Distribution', ],
+                                              [(csvColumnDegOutHist, 'blue', None) ], [r'FS-Tree Out-Degree Distribution', ],
                                               csvInts=(csvColumnDegNum, csvColumnDegOutHist),
                                               annotations=[],
                                               barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
@@ -520,7 +569,7 @@ def fstree_deg_stats_all_together():
                                               axisXLabel='Degree', axisYLabel='Node Count',
                                               axisXLim=(axisXmin, axisXmax),
                                               axisXFormatterFun=axisXFormatterFun,
-                                              legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                              legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                               legendFancybox=False, legendPos='upper right',
                                               shareAxisX='do_gis_deg_bar'
                                               )
@@ -541,6 +590,8 @@ def fstree_deg_stats_all_separate():
     
     axisFontsize = 12
         
+    legendAlpha = 0.8
+        
     def axisXFormatterFun(x):
         if int(x) % 2 == 0:
             return x
@@ -548,7 +599,7 @@ def fstree_deg_stats_all_separate():
             return ''
         
     do_fstree_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegHist, 'blue') ], [r'FS-Tree Degree Distribution', ],
+                                          [(csvColumnDegHist, 'blue', None) ], [r'FS-Tree Degree Distribution', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
@@ -556,12 +607,12 @@ def fstree_deg_stats_all_separate():
                                           axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
                                           axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 38),
                                           axisXFormatterFun=axisXFormatterFun,
-                                          legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right'
                                           )
         
     do_fstree_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                             [(csvColumnDegInHist, 'blue') ], [r'FS-Tree In-Degree Distribution', ],
+                                             [(csvColumnDegInHist, 'blue', None) ], [r'FS-Tree In-Degree Distribution', ],
                                              csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                              annotations=[],
                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
@@ -569,12 +620,12 @@ def fstree_deg_stats_all_separate():
                                              axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
                                              axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 8),
                                              axisXFormatterFun=axisXFormatterFun,
-                                             legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                             legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                              legendFancybox=False, legendPos='upper right'
                                              )
 
     do_fstree_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                              [(csvColumnDegOutHist, 'blue') ], [r'FS-Tree Out-Degree Distribution', ],
+                                              [(csvColumnDegOutHist, 'blue', None) ], [r'FS-Tree Out-Degree Distribution', ],
                                               csvInts=(csvColumnDegNum, csvColumnDegOutHist),
                                               annotations=[],
                                               barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
@@ -582,7 +633,7 @@ def fstree_deg_stats_all_separate():
                                               axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
                                               axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 34),
                                               axisXFormatterFun=axisXFormatterFun,
-                                              legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                              legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                               legendFancybox=False, legendPos='upper right'
                                               )
     
@@ -597,6 +648,8 @@ def fstree_nodes_at_level():
     csvColumnTreeLevelNodes = "tree_level_nodes"
     
     axisFontsize = 12
+    
+    legendAlpha = 0.8
         
     def axisYFormatterFun(x):
         if int(x) % 2 == 0:
@@ -615,7 +668,7 @@ def fstree_nodes_at_level():
                                                axisXLim=(None, None), axisYLim=(None, None),
                                                axisReverseY=True,
 #                                               axisYFormatterFun=axisYFormatterFun,
-                                               legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                               legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                                legendFancybox=False, legendPos='upper right'
                                               )
             
@@ -624,12 +677,15 @@ def fstree_nodes_at_level():
                show=False)
 
 def fstree_nodes_at_level_annotated(levelAlpha=0.3): 
+
     csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
     
     csvColumnTreeLevel = "tree_level"
     csvColumnTreeLevelNodes = "tree_level_nodes"
     
     axisFontsize = 12
+    
+    legendAlpha = 0.8
     
     annotations_level_shading = []
     
@@ -676,8 +732,8 @@ def fstree_nodes_at_level_annotated(levelAlpha=0.3):
         return do_annotation_level_line
 
     for (level, value) in [(5.5, 'Files \& Folders\n250,000 Nodes'),
-                           (11, 'Users\n10 Nodes'),
-                           (14, 'Organisations\n7 Nodes')]:
+                           (11, 'Users\n5 Nodes'),
+                           (14, 'Organisations\n5 Nodes')]:
         annotations_level_shading += [get_do_annotation_level_line(level, value)]
         
     def axisYFormatterFun(x):
@@ -698,10 +754,1231 @@ def fstree_nodes_at_level_annotated(levelAlpha=0.3):
                                                axisYLabel='Tree Level', axisXLabel='Node Count',
                                                axisXLim=(0, 220000), axisYLim=(None, None),
 #                                               axisYFormatterFun=axisYFormatterFun,
-                                               legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                               legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                                legendFancybox=False, legendPos='upper right'
                                               )
             
     show_plots([[do_fstree_levels_barh]],
                fileName="output.pdf",
                show=False)
+
+
+
+def twitter_deg_stats_all_together(): 
+    csvNameRaw = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_raw.csv"
+    csvNameHistDeg = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_hist.csv"
+    csvNameHistStats = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_stats_hist.csv"
+    
+    csvColumnDegRaw = "raw_deg_256" 
+    csvColumnDegInRaw = "raw_deg_in_256"
+    csvColumnDegOutRaw = "raw_deg_out_256"
+
+    axisXmin = None
+    axisXmax = None
+    
+    barBinCount = 100
+    barRWidth = None #0.5
+    axisFontsize = 12
+    legendAlpha = 0.8
+    
+    do_twitter_deg_hist = get_hist_from_file(csvNameRaw, csvColumnDegRaw, annotations=[],
+                                             csvInts=(csvColumnDegRaw),
+                                             barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
+                                             barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=barRWidth,
+                                             barOrientation='vertical', barLog=True,
+                                             axisGrid=True, axisFontSize=axisFontsize,
+                                             axisColor='k', axisXLabel='', axisYLabel=r'Node Count',
+                                             axisName='Twitter Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             legendAlpha=legendAlpha,
+                                             myShareAxis='do_twitter_deg_hist'
+                                             )
+
+    do_twitter_deg_in_hist = get_hist_from_file(csvNameRaw, csvColumnDegInRaw, annotations=[],
+                                                csvInts=(csvColumnDegInRaw),
+                                                barBinCount=(1400. / 2000.) * barBinCount, barFacecolor='blue',
+                                                barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barAlign='mid',
+                                                barRWidth=barRWidth, barOrientation='vertical', barLog=True,
+                                                axisGrid=True, axisFontSize=axisFontsize,
+                                                axisColor='k', axisXLabel='', axisYLabel=r'Node Count',
+                                                axisName='Twitter In-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                                legendAlpha=legendAlpha,
+                                                shareAxisX='do_twitter_deg_hist'
+                                                )
+
+    do_twitter_deg_out_hist = get_hist_from_file(csvNameRaw, csvColumnDegOutRaw, annotations=[],
+                                             csvInts=(csvColumnDegOutRaw),
+                                             barBinCount=(700. / 2000.) * barBinCount, barFacecolor='blue',
+                                             barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barAlign='mid',
+                                             barRWidth=1, barOrientation='vertical', barLog=True,
+                                             axisGrid=True, axisFontSize=axisFontsize,
+                                             axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
+                                             axisName='Twitter Out-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             legendAlpha=legendAlpha,
+                                             shareAxisX='do_twitter_deg_hist'
+                                             )
+
+    show_plots([
+                [do_twitter_deg_hist],
+                [do_twitter_deg_in_hist],
+                [do_twitter_deg_out_hist]],
+                show=False,
+                figWSpace=0.2, figHSpace=0.3)
+
+def twitter_deg_stats_all_separate(): 
+    csvNameRaw = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_raw.csv"
+    csvNameHistDeg = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_hist.csv"
+    
+    csvColumnDegRaw = "raw_deg_256" 
+    csvColumnDegInRaw = "raw_deg_in_256"
+    csvColumnDegOutRaw = "raw_deg_out_256"
+    
+    csvColumnDegNum = "deg_256"
+    csvColumnDegHist = "hist_deg_256"
+
+    axisXmin = None
+    axisXmax = None
+    
+    barBinCount = 100
+    barRWidth = None #0.5
+    axisFontsize = 12
+    legendAlpha = 0.8 
+    
+#    do_twitter_deg_bar = get_bar_from_file(csvNameHistDeg, csvColumnDegNum,
+#                                           [(csvColumnDegHist, 'blue',None) ], [r'Twitter Degree Distribution', ],
+#                                           csvInts=(csvColumnDegNum, csvColumnDegHist),
+#                                           annotations=[],
+#                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+#                                           barAlign='center', barOrientation='vertical', barWidth=1.0,
+#                                           barLog=True,
+#                                           axisGrid=True, axisFontSize=12, axisColor='k',
+#                                           axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
+#                                           legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
+#                                           legendFancybox=False, legendPos='upper right'
+#                                           )
+    
+    do_twitter_deg_hist = get_hist_from_file(csvNameRaw, csvColumnDegRaw, annotations=[],
+                                             csvInts=(csvColumnDegRaw),
+                                             barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
+                                             barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=barRWidth,
+                                             barOrientation='vertical', barLog=True,
+                                             axisGrid=True, axisFontSize=axisFontsize,
+                                             axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
+                                             axisName='Twitter Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             legendAlpha=legendAlpha)
+
+    do_twitter_deg_in_hist = get_hist_from_file(csvNameRaw, csvColumnDegInRaw, annotations=[],
+                                                csvInts=(csvColumnDegInRaw),
+                                                barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
+                                                barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=barRWidth,
+                                                barOrientation='vertical', barLog=True,
+                                                axisGrid=True, axisFontSize=axisFontsize,
+                                                axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
+                                                axisName='Twitter In-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                                legendAlpha=legendAlpha)
+
+    do_twitter_deg_out_hist = get_hist_from_file(csvNameRaw, csvColumnDegOutRaw, annotations=[],
+                                             csvInts=(csvColumnDegOutRaw),
+                                             barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
+                                             barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=1,
+                                             barOrientation='vertical', barLog=True,
+                                             axisGrid=True, axisFontSize=axisFontsize,
+                                             axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
+                                             axisName='Twitter Out-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             legendAlpha=legendAlpha)
+
+#    show_plots([[do_twitter_deg_bar]],
+#                show=False,
+#                fileName="output0.pdf")
+    
+    show_plots([[do_twitter_deg_hist]],
+                show=False,
+                fileName="output1.pdf")
+
+    show_plots([[do_twitter_deg_in_hist]],
+                show=False,
+                fileName="output2.pdf")
+    
+    show_plots([[do_twitter_deg_out_hist]],
+                show=False,
+                fileName="output3.pdf")
+
+
+
+def gis_load_balance_2():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFileBal2 = csvFolder + "gis2_balance.csv" 
+    
+    csvColumnPartition = "partition"
+    
+    csvColumnRelsHard2 = "rels_2hard"
+    csvColumnRelsDiDiC2 = "rels_2didic"
+    csvColumnRelsRand2 = "rels_2rand"
+    
+    csvColumnNodesHard2 = "nodes_2hard"
+    csvColumnNodesDiDiC2 = "nodes_2didic"
+    csvColumnNodesRand2 = "nodes_2rand"
+    
+    csvColumnTrafHard2 = "traf_2hard"
+    csvColumnTrafDiDiC2 = "traf_2didic"
+    csvColumnTrafRand2 = "traf_2rand"
+    
+    legendAlpha = 0.8 
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+    
+#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
+    
+    do_gis2_rel_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
+                                            [(csvColumnRelsHard2, 'blue', None),
+                                             (csvColumnRelsDiDiC2, 'red', None),
+                                             (csvColumnRelsRand2, 'green', None)],
+                                             [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
+                                             csvFloats=(csvColumnRelsHard2,
+                                                        csvColumnRelsDiDiC2,
+                                                        csvColumnRelsRand2),
+                                             annotations=[],
+                                             barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                             barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                             barLog=True,
+                                             axisGrid=True, axisFontSize=12, axisColor='k',
+                                             axisYLabel='Stored Relationships',
+                                             axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                             legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                             legendColor='w', legendFancybox=False, legendPos='upper right'
+                                             )
+    
+    do_gis2_node_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
+                                             [(csvColumnNodesHard2, 'blue', None),
+                                              (csvColumnNodesDiDiC2, 'red', None),
+                                              (csvColumnNodesRand2, 'green', None)],
+                                              [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
+                                              csvFloats=(csvColumnNodesHard2,
+                                                         csvColumnNodesDiDiC2,
+                                                         csvColumnNodesRand2),
+                                              annotations=[],
+                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                              barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                              barLog=True,
+                                              axisGrid=True, axisFontSize=12, axisColor='k',
+                                              axisYLabel='Stored Nodes',
+                                              axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                              legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                              legendColor='w', legendFancybox=False, legendPos='upper right'
+                                              )
+    
+    do_gis2_traf_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
+                                             [(csvColumnTrafHard2, 'blue', None),
+                                              (csvColumnTrafDiDiC2, 'red', None),
+                                              (csvColumnTrafRand2, 'green', None)],
+                                              [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
+                                              csvFloats=(csvColumnTrafHard2,
+                                                         csvColumnTrafDiDiC2,
+                                                         csvColumnTrafRand2),
+                                              annotations=[],
+                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                              barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                              barLog=True,
+                                              axisGrid=True, axisFontSize=12, axisColor='k',
+                                              axisYLabel='Traffic',
+                                              axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                              legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                              legendColor='w', legendFancybox=False, legendPos='upper right'
+                                              )
+    
+    show_plots([[do_gis2_rel_bal_bar]],
+                show=False,
+                fileName="output-do_gis2_rel_bal_bar.pdf")
+    show_plots([[do_gis2_node_bal_bar]],
+                show=False,
+                fileName="output-do_gis2_node_bal_bar.pdf")
+    show_plots([[do_gis2_traf_bal_bar]],
+                show=False,
+                fileName="output-do_gis2_traf_bal_bar.pdf")    
+
+def gis_load_balance_4():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFileBal4 = csvFolder + "gis4_balance.csv" 
+    
+    csvColumnPartition = "partition"
+    
+    csvColumnRelsHard4 = "rels_4hard"
+    csvColumnRelsDiDiC4 = "rels_4didic"
+    csvColumnRelsRand4 = "rels_4rand"
+    
+    csvColumnNodesHard4 = "nodes_4hard"
+    csvColumnNodesDiDiC4 = "nodes_4didic"
+    csvColumnNodesRand4 = "nodes_4rand"
+    
+    csvColumnTrafHard4 = "traf_4hard"
+    csvColumnTrafDiDiC4 = "traf_4didic"
+    csvColumnTrafRand4 = "traf_4rand"
+    
+    legendAlpha = 0.8 
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+    
+#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
+    
+    do_gis4_rel_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
+                                            [(csvColumnRelsHard4, 'blue', None),
+                                             (csvColumnRelsDiDiC4, 'red', None),
+                                             (csvColumnRelsRand4, 'green', None)],
+                                             [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
+                                             csvFloats=(csvColumnRelsHard4,
+                                                        csvColumnRelsDiDiC4,
+                                                        csvColumnRelsRand4),
+                                             annotations=[],
+                                             barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                             barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                             barLog=True,
+                                             axisGrid=True, axisFontSize=12, axisColor='k',
+                                             axisYLabel='Stored Relationships',
+                                             axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                             legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                             legendColor='w', legendFancybox=False, legendPos='upper right'
+                                             )
+    
+    do_gis4_node_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
+                                             [(csvColumnNodesHard4, 'blue', None),
+                                              (csvColumnNodesDiDiC4, 'red', None),
+                                              (csvColumnNodesRand4, 'green', None)],
+                                              [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
+                                              csvFloats=(csvColumnNodesHard4,
+                                                         csvColumnNodesDiDiC4,
+                                                         csvColumnNodesRand4),
+                                              annotations=[],
+                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                              barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                              barLog=True,
+                                              axisGrid=True, axisFontSize=12, axisColor='k',
+                                              axisYLabel='Stored Nodes',
+                                              axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                              legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                              legendColor='w', legendFancybox=False, legendPos='upper right'
+                                              )
+    
+    do_gis4_traf_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
+                                             [(csvColumnTrafHard4, 'blue', None),
+                                              (csvColumnTrafDiDiC4, 'red', None),
+                                              (csvColumnTrafRand4, 'green', None)],
+                                              [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
+                                              csvFloats=(csvColumnTrafHard4,
+                                                         csvColumnTrafDiDiC4,
+                                                         csvColumnTrafRand4),
+                                              annotations=[],
+                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                              barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                              barLog=True,
+                                              axisGrid=True, axisFontSize=12, axisColor='k',
+                                              axisYLabel='Traffic',
+                                              axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                              legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                              legendColor='w', legendFancybox=False, legendPos='upper right'
+                                              )
+    
+    show_plots([[do_gis4_rel_bal_bar]],
+                show=False,
+                fileName="output-do_gis4_rel_bal_bar.pdf")
+    show_plots([[do_gis4_node_bal_bar]],
+                show=False,
+                fileName="output-do_gis4_node_bal_bar.pdf")
+    show_plots([[do_gis4_traf_bal_bar]],
+                show=False,
+                fileName="output-do_gis4_traf_bal_bar.pdf")    
+
+def gis_global_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFileGtraf2 = csvFolder + "gis2_global_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard2 = "g_2hard"
+    csvColumnGtrafDiDiC2 = "g_2didic"
+    csvColumnGtrafRand2 = "g_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_gis2_gtraf_line = get_line_from_file(csvFileGtraf2, csvColumnIndex,
+                                            [(csvColumnGtrafHard2, 'blue', 'Hardcoded 2', '-', ''),
+                                             (csvColumnGtrafDiDiC2, 'red', 'DiDiC 2', '-', ''),
+                                             (csvColumnGtrafRand2, 'green', 'Random 2', '-', '')],
+                                             csvFloats=(csvColumnGtrafHard2,
+                                                        csvColumnGtrafDiDiC2,
+                                                        csvColumnGtrafRand2),
+                                             annotations=[],
+                                             axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                             axisFontSize=12, axisColor='k',
+                                             axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                             axisXLim=(None, None), axisYLim=(None, None),
+                                             axisXFormatterFun=None, axisYFormatterFun=None,
+                                             axisXScale='linear', axisYScale='log',
+                                             legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                             legendFancybox=False, legendPos='upper right',
+                                             myShareAxis=None, shareAxisX=None, shareAxisY=None
+                                             )    
+    
+    show_plots([[do_gis2_gtraf_line]],
+                show=False,
+                fileName="output-do_gis2_gtraf_line.pdf")
+
+def gis_global_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFileGtraf4 = csvFolder + "gis4_global_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard4 = "g_4hard"
+    csvColumnGtrafDiDiC4 = "g_4didic"
+    csvColumnGtrafRand4 = "g_4rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_gis4_gtraf_line = get_line_from_file(csvFileGtraf4, csvColumnIndex,
+                                            [(csvColumnGtrafHard4, 'blue', 'Hardcoded 4', '-', ''),
+                                             (csvColumnGtrafDiDiC4, 'red', 'DiDiC 4', '-', ''),
+                                             (csvColumnGtrafRand4, 'green', 'Random 4', '-', '')],
+                                             csvFloats=(csvColumnGtrafHard4,
+                                                        csvColumnGtrafDiDiC4,
+                                                        csvColumnGtrafRand4),
+                                             annotations=[],
+                                             axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                             axisFontSize=12, axisColor='k',
+                                             axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                             axisXLim=(None, None), axisYLim=(None, None),
+                                             axisXFormatterFun=None, axisYFormatterFun=None,
+                                             axisXScale='linear', axisYScale='log',
+                                             legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                             legendFancybox=False, legendPos='upper right',
+                                             myShareAxis=None, shareAxisX=None, shareAxisY=None
+                                             )    
+    
+    show_plots([[do_gis4_gtraf_line]],
+                show=False,
+                fileName="output-do_gis4_gtraf_line.pdf")
+
+def gis_global_perc_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFilePercGtraf2 = csvFolder + "gis2_global_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnGlobalHard4 = "global_2hard"
+    csvColumnGlobalDiDiC4 = "global_2didic"
+    csvColumnGlobalRand4 = "global_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_gis2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf2, csvColumnPerc,
+                                                 [(csvColumnGlobalHard4, 'blue', 'Hardcoded 2', '-', 'o'),
+                                                  (csvColumnGlobalDiDiC4, 'red', 'DiDiC 2', '-', '^'),
+                                                  (csvColumnGlobalRand4, 'green', 'Random 2', '-', 'd')],
+                                                  csvInts=(csvColumnGlobalHard4,
+                                                           csvColumnGlobalDiDiC4,
+                                                           csvColumnGlobalRand4),
+                                                  annotations=[],
+                                                  axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                  axisFontSize=12, axisColor='k',
+                                                  axisXLabel='Amount of Global Traffic',
+                                                  axisYLabel='Percentage of Operations', axisTitle='',
+                                                  axisXLim=(0, 10), axisYLim=(0, 105),
+                                                  axisXFormatterFun=axisXFormatterFun,
+                                                  axisYFormatterFun=axisYFormatterFun,
+                                                  axisXScale='linear', axisYScale='linear',
+                                                  legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                  legendFancybox=False, legendPos='upper right',
+                                                  myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_gis2_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def gis_global_perc_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFilePercGtraf4 = csvFolder + "gis4_global_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnGlobalHard4 = "global_4hard"
+    csvColumnGlobalDiDiC4 = "global_4didic"
+    csvColumnGlobalRand4 = "global_4rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_gis4_perc_gtraf_line = get_line_from_file(csvFilePercGtraf4, csvColumnPerc,
+                                                 [(csvColumnGlobalHard4, 'blue', 'Hardcoded 4', '-', 'o'),
+                                                  (csvColumnGlobalDiDiC4, 'red', 'DiDiC 4', '-', '^'),
+                                                  (csvColumnGlobalRand4, 'green', 'Random 4', '-', 'd')],
+                                                  csvInts=(csvColumnGlobalHard4,
+                                                           csvColumnGlobalDiDiC4,
+                                                           csvColumnGlobalRand4),
+                                                  annotations=[],
+                                                  axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                  axisFontSize=12, axisColor='k',
+                                                  axisXLabel='Amount of Global Traffic',
+                                                  axisYLabel='Percentage of Operations', axisTitle='',
+                                                  axisXLim=(0, 10), axisYLim=(0, 105),
+                                                  axisXFormatterFun=axisXFormatterFun,
+                                                  axisYFormatterFun=axisYFormatterFun,
+                                                  axisXScale='linear', axisYScale='linear',
+                                                  legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                  legendFancybox=False, legendPos='upper right',
+                                                  myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_gis4_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def gis_local_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFileGtraf2 = csvFolder + "gis2_local_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard2 = "g_2hard"
+    csvColumnGtrafDiDiC2 = "g_2didic"
+    csvColumnGtrafRand2 = "g_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_gis2_gtraf_line = get_line_from_file(csvFileGtraf2, csvColumnIndex,
+                                            [(csvColumnGtrafHard2, 'blue', 'Hardcoded 2', '-', ''),
+                                             (csvColumnGtrafDiDiC2, 'red', 'DiDiC 2', '-', ''),
+                                             (csvColumnGtrafRand2, 'green', 'Random 2', '-', '')],
+                                             csvFloats=(csvColumnGtrafHard2,
+                                                        csvColumnGtrafDiDiC2,
+                                                        csvColumnGtrafRand2),
+                                             annotations=[],
+                                             axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                             axisFontSize=12, axisColor='k',
+                                             axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                             axisXLim=(None, None), axisYLim=(None, None),
+                                             axisXFormatterFun=None, axisYFormatterFun=None,
+                                             axisXScale='linear', axisYScale='log',
+                                             legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                             legendFancybox=False, legendPos='upper right',
+                                             myShareAxis=None, shareAxisX=None, shareAxisY=None
+                                             )    
+    
+    show_plots([[do_gis2_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def gis_local_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFileGtraf4 = csvFolder + "gis4_local_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard4 = "g_4hard"
+    csvColumnGtrafDiDiC4 = "g_4didic"
+    csvColumnGtrafRand4 = "g_4rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_gis4_gtraf_line = get_line_from_file(csvFileGtraf4, csvColumnIndex,
+                                            [(csvColumnGtrafHard4, 'blue', 'Hardcoded 4', '-', ''),
+                                             (csvColumnGtrafDiDiC4, 'red', 'DiDiC 4', '-', ''),
+                                             (csvColumnGtrafRand4, 'green', 'Random 4', '-', '')],
+                                             csvFloats=(csvColumnGtrafHard4,
+                                                        csvColumnGtrafDiDiC4,
+                                                        csvColumnGtrafRand4),
+                                             annotations=[],
+                                             axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                             axisFontSize=12, axisColor='k',
+                                             axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                             axisXLim=(None, None), axisYLim=(None, None),
+                                             axisXFormatterFun=None, axisYFormatterFun=None,
+                                             axisXScale='linear', axisYScale='log',
+                                             legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                             legendFancybox=False, legendPos='upper right',
+                                             myShareAxis=None, shareAxisX=None, shareAxisY=None
+                                             )    
+    
+    show_plots([[do_gis4_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def gis_local_perc_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFilePercGtraf2 = csvFolder + "gis2_local_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnLocalHard4 = "local_2hard"
+    csvColumnLocalDiDiC4 = "local_2didic"
+    csvColumnLocalRand4 = "local_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_gis2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf2, csvColumnPerc,
+                                                 [(csvColumnLocalHard4, 'blue', 'Hardcoded 2', '-', 'o'),
+                                                  (csvColumnLocalDiDiC4, 'red', 'DiDiC 2', '-', '^'),
+                                                  (csvColumnLocalRand4, 'green', 'Random 2', '-', 'd')],
+                                                  csvInts=(csvColumnLocalHard4,
+                                                           csvColumnLocalDiDiC4,
+                                                           csvColumnLocalRand4),
+                                                  annotations=[],
+                                                  axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                  axisFontSize=12, axisColor='k',
+                                                  axisXLabel='Amount of Global Traffic',
+                                                  axisYLabel='Percentage of Operations', axisTitle='',
+                                                  axisXLim=(0, 10), axisYLim=(0, 105),
+                                                  axisXFormatterFun=axisXFormatterFun,
+                                                  axisYFormatterFun=axisYFormatterFun,
+                                                  axisXScale='linear', axisYScale='linear',
+                                                  legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                  legendFancybox=False, legendPos='upper right',
+                                                  myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_gis2_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def gis_local_perc_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/GIS/InitialPartitioning/"
+    csvFilePercGtraf4 = csvFolder + "gis4_local_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnLocalHard4 = "local_4hard"
+    csvColumnLocalDiDiC4 = "local_4didic"
+    csvColumnLocalRand4 = "local_4rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_gis4_perc_gtraf_line = get_line_from_file(csvFilePercGtraf4, csvColumnPerc,
+                                                 [(csvColumnLocalHard4, 'blue', 'Hardcoded 4', '-', 'o'),
+                                                  (csvColumnLocalDiDiC4, 'red', 'DiDiC 4', '-', '^'),
+                                                  (csvColumnLocalRand4, 'green', 'Random 4', '-', 'd')],
+                                                  csvInts=(csvColumnLocalHard4,
+                                                           csvColumnLocalDiDiC4,
+                                                           csvColumnLocalRand4),
+                                                  annotations=[],
+                                                  axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                  axisFontSize=12, axisColor='k',
+                                                  axisXLabel='Amount of Global Traffic',
+                                                  axisYLabel='Percentage of Operations', axisTitle='',
+                                                  axisXLim=(0, 10), axisYLim=(0, 105),
+                                                  axisXFormatterFun=axisXFormatterFun,
+                                                  axisYFormatterFun=axisYFormatterFun,
+                                                  axisXScale='linear', axisYScale='linear',
+                                                  legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                  legendFancybox=False, legendPos='upper right',
+                                                  myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_gis4_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+
+
+def fstree_load_balance_2():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFileBal2 = csvFolder + "tree2_balance.csv" 
+    
+    csvColumnPartition = "partition"
+    
+    csvColumnRelsHard2 = "rels_2hard"
+    csvColumnRelsDiDiC2 = "rels_2didic"
+    csvColumnRelsRand2 = "rels_2rand"
+    
+    csvColumnNodesHard2 = "nodes_2hard"
+    csvColumnNodesDiDiC2 = "nodes_2didic"
+    csvColumnNodesRand2 = "nodes_2rand"
+    
+    csvColumnTrafHard2 = "traf_2hard"
+    csvColumnTrafDiDiC2 = "traf_2didic"
+    csvColumnTrafRand2 = "traf_2rand"
+    
+    legendAlpha = 0.8 
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+    
+#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
+    
+    do_fstree2_rel_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
+#                                               [(csvColumnRelsHard2, 'blue', None),
+#                                                (csvColumnRelsDiDiC2, 'red', None),
+#                                                (csvColumnRelsRand2, 'green', None)],
+                                               [(csvColumnRelsHard2, 'blue', None),
+                                                (csvColumnRelsDiDiC2, 'red', None),
+                                                (csvColumnRelsRand2, 'green', None)],
+                                                [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
+                                                csvFloats=(csvColumnRelsHard2,
+                                                           csvColumnRelsDiDiC2,
+                                                           csvColumnRelsRand2),
+                                                annotations=[],
+                                                barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                                barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                                barLog=True,
+                                                axisGrid=True, axisFontSize=12, axisColor='k',
+                                                axisYLabel='Stored Relationships',
+                                                axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                                legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                                legendColor='w', legendFancybox=False, legendPos='upper right'
+                                                )
+    
+    do_fstree2_node_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
+                                                [(csvColumnNodesHard2, 'blue', None),
+                                                 (csvColumnNodesDiDiC2, 'red', None),
+                                                 (csvColumnNodesRand2, 'green', None)],
+                                                 [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
+                                                 csvFloats=(csvColumnNodesHard2,
+                                                            csvColumnNodesDiDiC2,
+                                                            csvColumnNodesRand2),
+                                                 annotations=[],
+                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                                 barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                                 barLog=True,
+                                                 axisGrid=True, axisFontSize=12, axisColor='k',
+                                                 axisYLabel='Stored Nodes',
+                                                 axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                                 legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                                 legendColor='w', legendFancybox=False, legendPos='upper right'
+                                                 )
+    
+    do_fstree2_traf_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
+                                                [(csvColumnTrafHard2, 'blue', None),
+                                                 (csvColumnTrafDiDiC2, 'red', None),
+                                                 (csvColumnTrafRand2, 'green', None)],
+                                                 [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
+                                                 csvFloats=(csvColumnTrafHard2,
+                                                            csvColumnTrafDiDiC2,
+                                                            csvColumnTrafRand2),
+                                                 annotations=[],
+                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                                 barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                                 barLog=True,
+                                                 axisGrid=True, axisFontSize=12, axisColor='k',
+                                                 axisYLabel='Traffic',
+                                                 axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                                 legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                                 legendColor='w', legendFancybox=False, legendPos='upper right'
+                                                 )
+    
+    show_plots([[do_fstree2_rel_bal_bar]],
+                show=False,
+                fileName="output-do_fstree2_rel_bal_bar.pdf")
+    show_plots([[do_fstree2_node_bal_bar]],
+                show=False,
+                fileName="output-do_fstree2_node_bal_bar.pdf")
+    show_plots([[do_fstree2_traf_bal_bar]],
+                show=False,
+                fileName="output-do_fstree2_traf_bal_bar.pdf")    
+
+def fstree_load_balance_4():
+    csvFolder = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFileBal4 = csvFolder + "tree4_balance.csv" 
+    
+    csvColumnPartition = "partition"
+    
+    csvColumnRelsHard4 = "rels_4hard"
+    csvColumnRelsDiDiC4 = "rels_4didic"
+    csvColumnRelsRand4 = "rels_4rand"
+    
+    csvColumnNodesHard4 = "nodes_4hard"
+    csvColumnNodesDiDiC4 = "nodes_4didic"
+    csvColumnNodesRand4 = "nodes_4rand"
+    
+    csvColumnTrafHard4 = "traf_4hard"
+    csvColumnTrafDiDiC4 = "traf_4didic"
+    csvColumnTrafRand4 = "traf_4rand"
+    
+    legendAlpha = 0.8 
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+    
+#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
+    
+    do_fstree4_rel_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
+                                               [(csvColumnRelsHard4, 'blue', None),
+                                                (csvColumnRelsDiDiC4, 'red', None),
+                                                (csvColumnRelsRand4, 'green', None)],
+                                                [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
+                                                csvFloats=(csvColumnRelsHard4,
+                                                           csvColumnRelsDiDiC4,
+                                                           csvColumnRelsRand4),
+                                                annotations=[],
+                                                barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                                barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                                barLog=True,
+                                                axisGrid=True, axisFontSize=12, axisColor='k',
+                                                axisYLabel='Stored Relationships',
+                                                axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                                legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                                legendColor='w', legendFancybox=False, legendPos='upper right'
+                                                )
+    
+    do_fstree4_node_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
+                                                [(csvColumnNodesHard4, 'blue', None),
+                                                 (csvColumnNodesDiDiC4, 'red', None),
+                                                 (csvColumnNodesRand4, 'green', None)],
+                                                 [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
+                                                 csvFloats=(csvColumnNodesHard4,
+                                                            csvColumnNodesDiDiC4,
+                                                            csvColumnNodesRand4),
+                                                 annotations=[],
+                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                                 barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                                 barLog=True,
+                                                 axisGrid=True, axisFontSize=12, axisColor='k',
+                                                 axisYLabel='Stored Nodes',
+                                                 axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                                 legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                                 legendColor='w', legendFancybox=False, legendPos='upper right'
+                                                 )
+    
+    do_fstree4_traf_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
+                                                [(csvColumnTrafHard4, 'blue', None),
+                                                 (csvColumnTrafDiDiC4, 'red', None),
+                                                 (csvColumnTrafRand4, 'green', None)],
+                                                 [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
+                                                 csvFloats=(csvColumnTrafHard4,
+                                                            csvColumnTrafDiDiC4,
+                                                            csvColumnTrafRand4),
+                                                 annotations=[],
+                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                                 barAlign='center', barOrientation='vertical', barWidth=0.3,
+                                                 barLog=True,
+                                                 axisGrid=True, axisFontSize=12, axisColor='k',
+                                                 axisYLabel='Traffic',
+                                                 axisYFormatterFun=axisYFormatterFun, axisYLim=(0, 100),
+                                                 legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                                 legendColor='w', legendFancybox=False, legendPos='upper right'
+                                                 )
+    
+    show_plots([[do_fstree4_rel_bal_bar]],
+                show=False,
+                fileName="output-do_fstree4_rel_bal_bar.pdf")
+    show_plots([[do_fstree4_node_bal_bar]],
+                show=False,
+                fileName="output-do_fstree4_node_bal_bar.pdf")
+    show_plots([[do_fstree4_traf_bal_bar]],
+                show=False,
+                fileName="output-do_fstree4_traf_bal_bar.pdf")    
+
+def fstree_count_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFileGtraf2 = csvFolder + "tree2_count_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard2 = "g_2hard"
+    csvColumnGtrafDiDiC2 = "g_2didic"
+    csvColumnGtrafRand2 = "g_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_fstree2_gtraf_line = get_line_from_file(csvFileGtraf2, csvColumnIndex,
+                                               [(csvColumnGtrafHard2, 'blue', 'Hardcoded 2', '-', '.'),
+                                                (csvColumnGtrafDiDiC2, 'red', 'DiDiC 2', '-', '.'),
+                                                (csvColumnGtrafRand2, 'green', 'Random 2', '-', '.')],
+                                                csvInts=(csvColumnGtrafHard2,
+                                                         csvColumnGtrafDiDiC2,
+                                                         csvColumnGtrafRand2),
+                                                annotations=[],
+                                                
+                                                axisLineWidth=0.5, axisGrid=True, axisLineAntialiased=True,
+                                                axisFontSize=12, axisColor='k',
+                                                axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                                axisXLim=(None, None), axisYLim=(None, None),
+                                                axisXFormatterFun=None, axisYFormatterFun=None,
+                                                axisXScale='log', axisYScale='log',
+                                                legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                                legendFancybox=False, legendPos='upper right',
+                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree2_gtraf_line]],
+                show=False,
+                fileName="output-do_fstree2_gtraf_line.pdf")
+
+def fstree_count_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFileGtraf4 = csvFolder + "tree4_count_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard4 = "g_4hard"
+    csvColumnGtrafDiDiC4 = "g_4didic"
+    csvColumnGtrafRand4 = "g_4rand"
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_fstree2_gtraf_line = get_line_from_file(csvFileGtraf4, csvColumnIndex,
+                                               [(csvColumnGtrafHard4, 'blue', 'Hardcoded 4', '-', '.'),
+                                                (csvColumnGtrafDiDiC4, 'red', 'DiDiC 4', '-', 'x'),
+                                                (csvColumnGtrafRand4, 'green', 'Random 4', '-', '+')],
+                                                csvInts=(csvColumnGtrafHard4,
+                                                         csvColumnGtrafDiDiC4,
+                                                         csvColumnGtrafRand4),
+                                                annotations=[],
+                                                axisLineWidth=0.5, axisGrid=True, axisLineAntialiased=True,
+                                                axisFontSize=12, axisColor='k',
+                                                axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                                axisXLim=(None, None), axisYLim=(None, None),
+                                                axisXFormatterFun=None, axisYFormatterFun=None,
+                                                axisXScale='log', axisYScale='log',
+                                                legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                                legendFancybox=False, legendPos='upper right',
+                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree2_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def fstree_count_perc_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFilePercGtraf2 = csvFolder + "tree2_count_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnCountHard2 = "count_2hard"
+    csvColumnCountDiDiC2 = "count_2didic"
+    csvColumnCountRand2 = "count_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_fstree2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf2, csvColumnPerc,
+                                                    [(csvColumnCountHard2, 'blue', 'Hardcoded 2', '-', 'o'),
+                                                     (csvColumnCountDiDiC2, 'red', 'DiDiC 2', '-', '^'),
+                                                     (csvColumnCountRand2, 'green', 'Random 2', '-', 'd')],
+                                                     csvInts=(csvColumnCountHard2,
+                                                              csvColumnCountDiDiC2,
+                                                              csvColumnCountRand2),
+                                                     annotations=[],
+                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                     axisFontSize=12, axisColor='k',
+                                                     axisXLabel='Amount of Global Traffic',
+                                                     axisYLabel='Percentage of Operations', axisTitle='',
+                                                     axisXLim=(0, 10), axisYLim=(0, 105),
+                                                     axisXFormatterFun=axisXFormatterFun,
+                                                     axisYFormatterFun=axisYFormatterFun,
+                                                     axisXScale='linear', axisYScale='linear',
+                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                     legendFancybox=False, legendPos='upper right',
+                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree2_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def fstree_count_perc_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFilePercGtraf4 = csvFolder + "tree4_count_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnCountHard4 = "count_4hard"
+    csvColumnCountDiDiC4 = "count_4didic"
+    csvColumnCountRand4 = "count_4rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_fstree4_perc_gtraf_line = get_line_from_file(csvFilePercGtraf4, csvColumnPerc,
+                                                    [(csvColumnCountHard4, 'blue', 'Hardcoded 4', '-', 'o'),
+                                                     (csvColumnCountDiDiC4, 'red', 'DiDiC 4', '-', '^'),
+                                                     (csvColumnCountRand4, 'green', 'Random 4', '-', 'd')],
+                                                     csvInts=(csvColumnCountHard4,
+                                                              csvColumnCountDiDiC4,
+                                                              csvColumnCountRand4),
+                                                     annotations=[],
+                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                     axisFontSize=12, axisColor='k',
+                                                     axisXLabel='Amount of Global Traffic',
+                                                     axisYLabel='Percentage of Operations', axisTitle='',
+                                                     axisXLim=(0, 10), axisYLim=(0, 105),
+                                                     axisXFormatterFun=axisXFormatterFun,
+                                                     axisYFormatterFun=axisYFormatterFun,
+                                                     axisXScale='linear', axisYScale='linear',
+                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                     legendFancybox=False, legendPos='upper right',
+                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree4_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def fstree_search_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFileGtraf2 = csvFolder + "tree2_search_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard2 = "g_2hard"
+    csvColumnGtrafDiDiC2 = "g_2didic"
+    csvColumnGtrafRand2 = "g_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_fstree2_gtraf_line = get_line_from_file(csvFileGtraf2, csvColumnIndex,
+                                               [(csvColumnGtrafHard2, 'blue', 'Hardcoded 2', '-', ''),
+                                                (csvColumnGtrafDiDiC2, 'red', 'DiDiC 2', '-', ''),
+                                                (csvColumnGtrafRand2, 'green', 'Random 2', '-', '')],
+                                                csvInts=(csvColumnGtrafHard2,
+                                                         csvColumnGtrafDiDiC2,
+                                                         csvColumnGtrafRand2),
+                                                annotations=[],
+                                                
+                                                axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                axisFontSize=12, axisColor='k',
+                                                axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                                axisXLim=(None, None), axisYLim=(0, 30000),
+                                                axisXFormatterFun=None, axisYFormatterFun=None,
+                                                axisXScale='linear', axisYScale='linear',
+                                                legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                                legendFancybox=False, legendPos='upper right',
+                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree2_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def fstree_search_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFileGtraf4 = csvFolder + "tree4_search_gtraf.csv"     
+    
+    csvColumnIndex = "index"    
+
+    csvColumnGtrafHard4 = "g_4hard"
+    csvColumnGtrafDiDiC4 = "g_4didic"
+    csvColumnGtrafRand4 = "g_4rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
+    
+#linestyles
+# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+
+#markers
+#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
+#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
+#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
+#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
+#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
+    
+    do_fstree4_gtraf_line = get_line_from_file(csvFileGtraf4, csvColumnIndex,
+                                               [(csvColumnGtrafHard4, 'blue', 'Hardcoded 4', '-', ''),
+                                                (csvColumnGtrafDiDiC4, 'red', 'DiDiC 4', '-', ''),
+                                                (csvColumnGtrafRand4, 'green', 'Random 4', '-', '')],
+                                                csvInts=(csvColumnGtrafHard4,
+                                                         csvColumnGtrafDiDiC4,
+                                                         csvColumnGtrafRand4),
+                                                annotations=[],
+                                                axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                axisFontSize=12, axisColor='k',
+                                                axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
+                                                axisXLim=(None, None), axisYLim=(None, None),
+                                                axisXFormatterFun=None, axisYFormatterFun=None,
+                                                axisXScale='linear', axisYScale='linear',
+                                                legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                                legendFancybox=False, legendPos='upper right',
+                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree4_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def fstree_search_perc_gtraf_2():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFilePercGtraf2 = csvFolder + "tree2_search_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnSearchHard2 = "search_2hard"
+    csvColumnSearchDiDiC2 = "search_2didic"
+    csvColumnSearchRand2 = "search_2rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_fstree2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf2, csvColumnPerc,
+                                                    [(csvColumnSearchHard2, 'blue', 'Hardcoded 2', '-', 'o'),
+                                                     (csvColumnSearchDiDiC2, 'red', 'DiDiC 2', '-', '^'),
+                                                     (csvColumnSearchRand2, 'green', 'Random 2', '-', 'd')],
+                                                     csvInts=(csvColumnSearchHard2,
+                                                              csvColumnSearchDiDiC2,
+                                                              csvColumnSearchRand2),
+                                                     annotations=[],
+                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                     axisFontSize=12, axisColor='k',
+                                                     axisXLabel='Amount of Global Traffic',
+                                                     axisYLabel='Percentage of Operations', axisTitle='',
+                                                     axisXLim=(0, 10), axisYLim=(0, 105),
+                                                     axisXFormatterFun=axisXFormatterFun,
+                                                     axisYFormatterFun=axisYFormatterFun,
+                                                     axisXScale='linear', axisYScale='linear',
+                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                     legendFancybox=False, legendPos='upper right',
+                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree2_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+def fstree_search_perc_gtraf_4():
+    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
+    csvFilePercGtraf4 = csvFolder + "tree4_search_perc_gtraf.csv"     
+    
+    csvColumnPerc = "perc_gtraf"    
+
+    csvColumnSearchHard4 = "search_4hard"
+    csvColumnSearchDiDiC4 = "search_4didic"
+    csvColumnSearchRand4 = "search_4rand"
+    
+    def axisYFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+
+    def axisXFormatterFun(x, pos=0):
+        return '%3d %s' % (x, '$\%$')    
+        
+    do_fstree2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf4, csvColumnPerc,
+                                                    [(csvColumnSearchHard4, 'blue', 'Hardcoded 4', '-', 'o'),
+                                                     (csvColumnSearchDiDiC4, 'red', 'DiDiC 4', '-', '^'),
+                                                     (csvColumnSearchRand4, 'green', 'Random 4', '-', 'd')],
+                                                     csvInts=(csvColumnSearchHard4,
+                                                              csvColumnSearchDiDiC4,
+                                                              csvColumnSearchRand4),
+                                                     annotations=[],
+                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
+                                                     axisFontSize=12, axisColor='k',
+                                                     axisXLabel='Amount of Global Traffic',
+                                                     axisYLabel='Percentage of Operations', axisTitle='',
+                                                     axisXLim=(0, 10), axisYLim=(0, 105),
+                                                     axisXFormatterFun=axisXFormatterFun,
+                                                     axisYFormatterFun=axisYFormatterFun,
+                                                     axisXScale='linear', axisYScale='linear',
+                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                                                     legendFancybox=False, legendPos='upper right',
+                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    
+    show_plots([[do_fstree2_perc_gtraf_line]],
+                show=False,
+                fileName="output.pdf")
+
+

@@ -832,3 +832,30 @@ def example_annotate_vert_horz_lines():
     
     
     plt.show()
+
+def example_scatter():
+    x = rand(10)
+    y = rand(10)
+    
+    subplot(321)
+    scatter(x, y, s=80, marker=">")
+    
+    subplot(322)
+    scatter(x, y, s=80, marker=(5, 0))
+    
+    verts = zip([-1., 1., 1., -1.], [-1., -1., 1., -1.])
+    subplot(323)
+    scatter(x, y, s=80, marker=(verts, 0))
+    # equivalent:
+    #pylab.scatter(x,y,s=80,marker=None, verts=verts)
+    
+    subplot(324)
+    scatter(x, y, s=80, marker=(5, 1))
+    
+    subplot(325)
+    scatter(x, y, s=80, marker='+')
+    
+    subplot(326)
+    scatter(x, y, s=80, marker=(5, 2), edgecolor='g')
+    
+    show()
