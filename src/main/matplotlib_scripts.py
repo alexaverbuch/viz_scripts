@@ -441,7 +441,11 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
         ax.set_xlabel(xlabel, fontsize=axisFontSize)
         ax.set_ylabel(ylabel, fontsize=axisFontSize)
         ax.grid(axisGrid)
-        ax.set_xticks(ind)#  barWidth)
+        
+#        ax.set_xticks(ind)#  barWidth)
+        barCount += 1
+        ax.set_xticks((ind - (barWidth / 2.)) + ((barWidth * barCount) / 2.))
+        
         ax.set_xticklabels([axisXFormatterFun(xLabel) for xLabel in csvDict[xAxis]])
         ax.set_xlim(axisXLim)
         ax.set_ylim(axisYLim)

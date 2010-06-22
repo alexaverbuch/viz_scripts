@@ -88,7 +88,13 @@ from thesis_plots import *
 #gis_local_gtraf_2()
 #gis_local_gtraf_4()
 #gis_local_perc_gtraf_2()
-gis_local_perc_gtraf_4()
+#gis_local_perc_gtraf_4()
+#twitter_load_balance_2() 
+#twitter_load_balance_4()
+#twitter_gtraf_2()
+#twitter_gtraf_4()
+#twitter_perc_gtraf_2()
+twitter_perc_gtraf_4()
 
 #********************************************
 #******************FOR MARTIN****************
