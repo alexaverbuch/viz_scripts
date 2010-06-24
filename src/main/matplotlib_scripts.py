@@ -423,8 +423,11 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
 #        for rects in rectsColl:
 #            autolabel(rects)
         
-        legend = ax.legend([rects[0] for rects in rectsColl], yLabels,
-                           shadow=legendShadow, fancybox=legendFancybox)
+        legend = ax.legend([rects[0] for rects in rectsColl], 
+                           yLabels,
+                           legendPos,
+                           shadow=legendShadow, 
+                           fancybox=legendFancybox)
         
         if legend != None: 
             frame = legend.get_frame()  
@@ -442,9 +445,8 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
         ax.set_ylabel(ylabel, fontsize=axisFontSize)
         ax.grid(axisGrid)
         
-#        ax.set_xticks(ind)#  barWidth)
         barCount += 1
-        ax.set_xticks((ind - (barWidth / 2.)) + ((barWidth * barCount) / 2.))
+        ax.set_xticks(ind + ((3 - barCount) / 2.) * barWidth)
         
         ax.set_xticklabels([axisXFormatterFun(xLabel) for xLabel in csvDict[xAxis]])
         ax.set_xlim(axisXLim)
@@ -548,8 +550,11 @@ def get_barh_from_file(csvName, baseAxis, valuesColl, labels, annotations=[],
         # Uncomment to apply value labels to tops of bars
 #        autolabel(rects)
 
-        legend = ax.legend([rects[0] for rects in rectsColl], labels,
-                           shadow=legendShadow, fancybox=legendFancybox)
+        legend = ax.legend([rects[0] for rects in rectsColl], 
+                           labels,
+                           legendPos,
+                           shadow=legendShadow, 
+                           fancybox=legendFancybox)
         
         if legend != None: 
             frame = legend.get_frame()  
