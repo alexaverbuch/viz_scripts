@@ -1700,7 +1700,7 @@ def gis_short_perc_gtraf_2():
 
     def axisXFormatterFun(x, pos=0):
         return '%3d %s' % (x, '$\%$')    
-        
+    
     do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
                                           [
                                            (csvColumnGlobalDiDiC, 'red', None),
@@ -1791,23 +1791,23 @@ def gis_short_perc_gtraf_4():
 
 
 
-def fstree_load_balance_2():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFileBal2 = csvFolder + "tree2_balance.csv" 
+def fstree_search_load_balance_2():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
+    csvFile = csvFolder + "tree2_search_balance.csv" 
     
-    csvColumnPartition = "partition"
+    csvColumnPartition = "partitions"
     
-    csvColumnRelsHard2 = "rels_2hard"
-    csvColumnRelsDiDiC2 = "rels_2didic"
-    csvColumnRelsRand2 = "rels_2rand"
+    csvColumnRelsHard = "rels_hard"
+    csvColumnRelsDiDiC = "rels_didic"
+    csvColumnRelsRand = "rels_rand"
     
-    csvColumnNodesHard2 = "nodes_2hard"
-    csvColumnNodesDiDiC2 = "nodes_2didic"
-    csvColumnNodesRand2 = "nodes_2rand"
+    csvColumnNodesHard = "nodes_hard"
+    csvColumnNodesDiDiC = "nodes_didic"
+    csvColumnNodesRand = "nodes_rand"
     
-    csvColumnTrafHard2 = "traf_2hard"
-    csvColumnTrafDiDiC2 = "traf_2didic"
-    csvColumnTrafRand2 = "traf_2rand"
+    csvColumnTrafHard = "traf_hard"
+    csvColumnTrafDiDiC = "traf_didic"
+    csvColumnTrafRand = "traf_rand"
     
     legendAlpha = 0.8 
     
@@ -1816,17 +1816,17 @@ def fstree_load_balance_2():
     
 #    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
     
-    do_fstree2_rel_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
-#                                               [(csvColumnRelsHard2, 'blue', None),
-#                                                (csvColumnRelsDiDiC2, 'red', None),
-#                                                (csvColumnRelsRand2, 'green', None)],
-                                               [(csvColumnRelsHard2, 'blue', None),
-                                                (csvColumnRelsDiDiC2, 'red', None),
-                                                (csvColumnRelsRand2, 'green', None)],
+    do_fstree2_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
+#                                               [(csvColumnRelsHard, 'blue', None),
+#                                                (csvColumnRelsDiDiC, 'red', None),
+#                                                (csvColumnRelsRand, 'green', None)],
+                                               [(csvColumnRelsHard, 'blue', None),
+                                                (csvColumnRelsDiDiC, 'red', None),
+                                                (csvColumnRelsRand, 'green', None)],
                                                 [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
-                                                csvFloats=(csvColumnRelsHard2,
-                                                           csvColumnRelsDiDiC2,
-                                                           csvColumnRelsRand2),
+                                                csvFloats=(csvColumnRelsHard,
+                                                           csvColumnRelsDiDiC,
+                                                           csvColumnRelsRand),
                                                 annotations=[],
                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                                 barAlign='center', barOrientation='vertical', barWidth=0.3,
@@ -1838,14 +1838,14 @@ def fstree_load_balance_2():
                                                 legendColor='w', legendFancybox=False, legendPos='upper right'
                                                 )
     
-    do_fstree2_node_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
-                                                [(csvColumnNodesHard2, 'blue', None),
-                                                 (csvColumnNodesDiDiC2, 'red', None),
-                                                 (csvColumnNodesRand2, 'green', None)],
+    do_fstree2_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
+                                                [(csvColumnNodesHard, 'blue', None),
+                                                 (csvColumnNodesDiDiC, 'red', None),
+                                                 (csvColumnNodesRand, 'green', None)],
                                                  [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
-                                                 csvFloats=(csvColumnNodesHard2,
-                                                            csvColumnNodesDiDiC2,
-                                                            csvColumnNodesRand2),
+                                                 csvFloats=(csvColumnNodesHard,
+                                                            csvColumnNodesDiDiC,
+                                                            csvColumnNodesRand),
                                                  annotations=[],
                                                  barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                                  barAlign='center', barOrientation='vertical', barWidth=0.3,
@@ -1857,14 +1857,14 @@ def fstree_load_balance_2():
                                                  legendColor='w', legendFancybox=False, legendPos='upper right'
                                                  )
     
-    do_fstree2_traf_bal_bar = get_bar_from_file(csvFileBal2, csvColumnPartition,
-                                                [(csvColumnTrafHard2, 'blue', None),
-                                                 (csvColumnTrafDiDiC2, 'red', None),
-                                                 (csvColumnTrafRand2, 'green', None)],
+    do_fstree2_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
+                                                [(csvColumnTrafHard, 'blue', None),
+                                                 (csvColumnTrafDiDiC, 'red', None),
+                                                 (csvColumnTrafRand, 'green', None)],
                                                  [r'Hardcoded 2', r'DiDiC 2', r'Random 2'],
-                                                 csvFloats=(csvColumnTrafHard2,
-                                                            csvColumnTrafDiDiC2,
-                                                            csvColumnTrafRand2),
+                                                 csvFloats=(csvColumnTrafHard,
+                                                            csvColumnTrafDiDiC,
+                                                            csvColumnTrafRand),
                                                  annotations=[],
                                                  barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                                  barAlign='center', barOrientation='vertical', barWidth=0.3,
@@ -1886,23 +1886,23 @@ def fstree_load_balance_2():
                 show=False,
                 fileName="output-do_fstree2_traf_bal_bar.pdf")    
 
-def fstree_load_balance_4():
-    csvFolder = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFileBal4 = csvFolder + "tree4_balance.csv" 
+def fstree_search_load_balance_4():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
+    csvFile = csvFolder + "tree4_search_balance.csv" 
     
-    csvColumnPartition = "partition"
+    csvColumnPartition = "partitions"
     
-    csvColumnRelsHard4 = "rels_4hard"
-    csvColumnRelsDiDiC4 = "rels_4didic"
-    csvColumnRelsRand4 = "rels_4rand"
+    csvColumnRelsHard = "rels_hard"
+    csvColumnRelsDiDiC = "rels_didic"
+    csvColumnRelsRand = "rels_rand"
     
-    csvColumnNodesHard4 = "nodes_4hard"
-    csvColumnNodesDiDiC4 = "nodes_4didic"
-    csvColumnNodesRand4 = "nodes_4rand"
+    csvColumnNodesHard = "nodes_hard"
+    csvColumnNodesDiDiC = "nodes_didic"
+    csvColumnNodesRand = "nodes_rand"
     
-    csvColumnTrafHard4 = "traf_4hard"
-    csvColumnTrafDiDiC4 = "traf_4didic"
-    csvColumnTrafRand4 = "traf_4rand"
+    csvColumnTrafHard = "traf_hard"
+    csvColumnTrafDiDiC = "traf_didic"
+    csvColumnTrafRand = "traf_rand"
     
     legendAlpha = 0.8 
     
@@ -1911,14 +1911,14 @@ def fstree_load_balance_4():
     
 #    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
     
-    do_fstree4_rel_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
-                                               [(csvColumnRelsHard4, 'blue', None),
-                                                (csvColumnRelsDiDiC4, 'red', None),
-                                                (csvColumnRelsRand4, 'green', None)],
+    do_fstree4_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
+                                               [(csvColumnRelsHard, 'blue', None),
+                                                (csvColumnRelsDiDiC, 'red', None),
+                                                (csvColumnRelsRand, 'green', None)],
                                                 [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
-                                                csvFloats=(csvColumnRelsHard4,
-                                                           csvColumnRelsDiDiC4,
-                                                           csvColumnRelsRand4),
+                                                csvFloats=(csvColumnRelsHard,
+                                                           csvColumnRelsDiDiC,
+                                                           csvColumnRelsRand),
                                                 annotations=[],
                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                                 barAlign='center', barOrientation='vertical', barWidth=0.3,
@@ -1930,14 +1930,14 @@ def fstree_load_balance_4():
                                                 legendColor='w', legendFancybox=False, legendPos='upper right'
                                                 )
     
-    do_fstree4_node_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
-                                                [(csvColumnNodesHard4, 'blue', None),
-                                                 (csvColumnNodesDiDiC4, 'red', None),
-                                                 (csvColumnNodesRand4, 'green', None)],
+    do_fstree4_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
+                                                [(csvColumnNodesHard, 'blue', None),
+                                                 (csvColumnNodesDiDiC, 'red', None),
+                                                 (csvColumnNodesRand, 'green', None)],
                                                  [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
-                                                 csvFloats=(csvColumnNodesHard4,
-                                                            csvColumnNodesDiDiC4,
-                                                            csvColumnNodesRand4),
+                                                 csvFloats=(csvColumnNodesHard,
+                                                            csvColumnNodesDiDiC,
+                                                            csvColumnNodesRand),
                                                  annotations=[],
                                                  barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                                  barAlign='center', barOrientation='vertical', barWidth=0.3,
@@ -1949,14 +1949,14 @@ def fstree_load_balance_4():
                                                  legendColor='w', legendFancybox=False, legendPos='upper right'
                                                  )
     
-    do_fstree4_traf_bal_bar = get_bar_from_file(csvFileBal4, csvColumnPartition,
-                                                [(csvColumnTrafHard4, 'blue', None),
-                                                 (csvColumnTrafDiDiC4, 'red', None),
-                                                 (csvColumnTrafRand4, 'green', None)],
+    do_fstree4_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
+                                                [(csvColumnTrafHard, 'blue', None),
+                                                 (csvColumnTrafDiDiC, 'red', None),
+                                                 (csvColumnTrafRand, 'green', None)],
                                                  [r'Hardcoded 4', r'DiDiC 4', r'Random 4'],
-                                                 csvFloats=(csvColumnTrafHard4,
-                                                            csvColumnTrafDiDiC4,
-                                                            csvColumnTrafRand4),
+                                                 csvFloats=(csvColumnTrafHard,
+                                                            csvColumnTrafDiDiC,
+                                                            csvColumnTrafRand),
                                                  annotations=[],
                                                  barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                                  barAlign='center', barOrientation='vertical', barWidth=0.3,
@@ -1978,186 +1978,15 @@ def fstree_load_balance_4():
                 show=False,
                 fileName="output-do_fstree4_traf_bal_bar.pdf")    
 
-def fstree_count_gtraf_2():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFileGtraf2 = csvFolder + "tree2_count_gtraf.csv"     
-    
-    csvColumnIndex = "index"    
-
-    csvColumnGtrafHard2 = "g_2hard"
-    csvColumnGtrafDiDiC2 = "g_2didic"
-    csvColumnGtrafRand2 = "g_2rand"
-    
-    def axisYFormatterFun(x, pos=0):
-        return '%3d %s' % (x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%3.1f %s' % ((float(x) / 10000.) * 100., '$\%$')    
-    
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
-
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-    
-    do_fstree2_gtraf_line = get_line_from_file(csvFileGtraf2, csvColumnIndex,
-                                               [(csvColumnGtrafHard2, 'blue', 'Hardcoded 2', '-', '.'),
-                                                (csvColumnGtrafDiDiC2, 'red', 'DiDiC 2', '-', '.'),
-                                                (csvColumnGtrafRand2, 'green', 'Random 2', '-', '.')],
-                                                csvInts=(csvColumnGtrafHard2,
-                                                         csvColumnGtrafDiDiC2,
-                                                         csvColumnGtrafRand2),
-                                                annotations=[],
-                                                
-                                                axisLineWidth=0.5, axisGrid=True, axisLineAntialiased=True,
-                                                axisFontSize=12, axisColor='k',
-                                                axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
-                                                axisXLim=(None, None), axisYLim=(None, None),
-                                                axisXFormatterFun=None, axisYFormatterFun=None,
-                                                axisXScale='log', axisYScale='log',
-                                                legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                                legendFancybox=False, legendPos='upper right',
-                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree2_gtraf_line]],
-                show=False,
-                fileName="output-do_fstree2_gtraf_line.pdf")
-
-def fstree_count_gtraf_4():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFileGtraf4 = csvFolder + "tree4_count_gtraf.csv"     
-    
-    csvColumnIndex = "index"    
-
-    csvColumnGtrafHard4 = "g_4hard"
-    csvColumnGtrafDiDiC4 = "g_4didic"
-    csvColumnGtrafRand4 = "g_4rand"
-    
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
-
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-    
-    do_fstree2_gtraf_line = get_line_from_file(csvFileGtraf4, csvColumnIndex,
-                                               [(csvColumnGtrafHard4, 'blue', 'Hardcoded 4', '-', '.'),
-                                                (csvColumnGtrafDiDiC4, 'red', 'DiDiC 4', '-', 'x'),
-                                                (csvColumnGtrafRand4, 'green', 'Random 4', '-', '+')],
-                                                csvInts=(csvColumnGtrafHard4,
-                                                         csvColumnGtrafDiDiC4,
-                                                         csvColumnGtrafRand4),
-                                                annotations=[],
-                                                axisLineWidth=0.5, axisGrid=True, axisLineAntialiased=True,
-                                                axisFontSize=12, axisColor='k',
-                                                axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
-                                                axisXLim=(None, None), axisYLim=(None, None),
-                                                axisXFormatterFun=None, axisYFormatterFun=None,
-                                                axisXScale='log', axisYScale='log',
-                                                legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                                legendFancybox=False, legendPos='upper right',
-                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree2_gtraf_line]],
-                show=False,
-                fileName="output.pdf")
-
-def fstree_count_perc_gtraf_2():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFilePercGtraf2 = csvFolder + "tree2_count_perc_gtraf.csv"     
-    
-    csvColumnPerc = "perc_gtraf"    
-
-    csvColumnCountHard2 = "count_2hard"
-    csvColumnCountDiDiC2 = "count_2didic"
-    csvColumnCountRand2 = "count_2rand"
-    
-    def axisYFormatterFun(x, pos=0):
-        return '%3d %s' % (x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%3d %s' % (x, '$\%$')    
-        
-    do_fstree2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf2, csvColumnPerc,
-                                                    [(csvColumnCountHard2, 'blue', 'Hardcoded 2', '-', 'o'),
-                                                     (csvColumnCountDiDiC2, 'red', 'DiDiC 2', '-', '^'),
-                                                     (csvColumnCountRand2, 'green', 'Random 2', '-', 'd')],
-                                                     csvInts=(csvColumnCountHard2,
-                                                              csvColumnCountDiDiC2,
-                                                              csvColumnCountRand2),
-                                                     annotations=[],
-                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                                     axisFontSize=12, axisColor='k',
-                                                     axisXLabel='Amount of Global Traffic',
-                                                     axisYLabel='Percentage of Operations', axisTitle='',
-                                                     axisXLim=(0, 10), axisYLim=(0, 105),
-                                                     axisXFormatterFun=axisXFormatterFun,
-                                                     axisYFormatterFun=axisYFormatterFun,
-                                                     axisXScale='linear', axisYScale='linear',
-                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                                                     legendFancybox=False, legendPos='upper right',
-                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree2_perc_gtraf_line]],
-                show=False,
-                fileName="output.pdf")
-
-def fstree_count_perc_gtraf_4():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFilePercGtraf4 = csvFolder + "tree4_count_perc_gtraf.csv"     
-    
-    csvColumnPerc = "perc_gtraf"    
-
-    csvColumnCountHard4 = "count_4hard"
-    csvColumnCountDiDiC4 = "count_4didic"
-    csvColumnCountRand4 = "count_4rand"
-    
-    def axisYFormatterFun(x, pos=0):
-        return '%3d %s' % (x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%3d %s' % (x, '$\%$')    
-        
-    do_fstree4_perc_gtraf_line = get_line_from_file(csvFilePercGtraf4, csvColumnPerc,
-                                                    [(csvColumnCountHard4, 'blue', 'Hardcoded 4', '-', 'o'),
-                                                     (csvColumnCountDiDiC4, 'red', 'DiDiC 4', '-', '^'),
-                                                     (csvColumnCountRand4, 'green', 'Random 4', '-', 'd')],
-                                                     csvInts=(csvColumnCountHard4,
-                                                              csvColumnCountDiDiC4,
-                                                              csvColumnCountRand4),
-                                                     annotations=[],
-                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                                     axisFontSize=12, axisColor='k',
-                                                     axisXLabel='Amount of Global Traffic',
-                                                     axisYLabel='Percentage of Operations', axisTitle='',
-                                                     axisXLim=(0, 10), axisYLim=(0, 105),
-                                                     axisXFormatterFun=axisXFormatterFun,
-                                                     axisYFormatterFun=axisYFormatterFun,
-                                                     axisXScale='linear', axisYScale='linear',
-                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                                                     legendFancybox=False, legendPos='upper right',
-                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree4_perc_gtraf_line]],
-                show=False,
-                fileName="output.pdf")
-
 def fstree_search_gtraf_2():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFileGtraf2 = csvFolder + "tree2_search_gtraf.csv"     
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
+    csvFile = csvFolder + "tree2_search_gtraf.csv"     
     
     csvColumnIndex = "index"    
 
-    csvColumnGtrafHard2 = "g_2hard"
-    csvColumnGtrafDiDiC2 = "g_2didic"
-    csvColumnGtrafRand2 = "g_2rand"
+    csvColumnGtrafHard = "g_hard"
+    csvColumnGtrafDiDiC = "g_didic"
+    csvColumnGtrafRand = "g_rand"
     
     def axisYFormatterFun(x, pos=0):
         return '%3d %s' % (x, '$\%$')    
@@ -2175,13 +2004,13 @@ def fstree_search_gtraf_2():
 #('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
 #('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
     
-    do_fstree2_gtraf_line = get_line_from_file(csvFileGtraf2, csvColumnIndex,
-                                               [(csvColumnGtrafHard2, 'blue', 'Hardcoded 2', '-', ''),
-                                                (csvColumnGtrafDiDiC2, 'red', 'DiDiC 2', '-', ''),
-                                                (csvColumnGtrafRand2, 'green', 'Random 2', '-', '')],
-                                                csvInts=(csvColumnGtrafHard2,
-                                                         csvColumnGtrafDiDiC2,
-                                                         csvColumnGtrafRand2),
+    do_fstree2_gtraf_line = get_line_from_file(csvFile, csvColumnIndex,
+                                               [(csvColumnGtrafHard, 'blue', 'Hardcoded 2', '-', ''),
+                                                (csvColumnGtrafDiDiC, 'red', 'DiDiC 2', '-', ''),
+                                                (csvColumnGtrafRand, 'green', 'Random 2', '-', '')],
+                                                csvInts=(csvColumnGtrafHard,
+                                                         csvColumnGtrafDiDiC,
+                                                         csvColumnGtrafRand),
                                                 annotations=[],
                                                 
                                                 axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
@@ -2189,7 +2018,7 @@ def fstree_search_gtraf_2():
                                                 axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
                                                 axisXLim=(None, None), axisYLim=(0, 30000),
                                                 axisXFormatterFun=None, axisYFormatterFun=None,
-                                                axisXScale='linear', axisYScale='linear',
+                                                axisXScale='linear', axisYScale='log',
                                                 legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
                                                 legendFancybox=False, legendPos='upper right',
                                                 myShareAxis=None, shareAxisX=None, shareAxisY=None)    
@@ -2199,14 +2028,14 @@ def fstree_search_gtraf_2():
                 fileName="output.pdf")
 
 def fstree_search_gtraf_4():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFileGtraf4 = csvFolder + "tree4_search_gtraf.csv"     
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
+    csvFile = csvFolder + "tree4_search_gtraf.csv"     
     
     csvColumnIndex = "index"    
 
-    csvColumnGtrafHard4 = "g_4hard"
-    csvColumnGtrafDiDiC4 = "g_4didic"
-    csvColumnGtrafRand4 = "g_4rand"
+    csvColumnGtrafHard = "g_hard"
+    csvColumnGtrafDiDiC = "g_didic"
+    csvColumnGtrafRand = "g_rand"
     
     def axisYFormatterFun(x, pos=0):
         return '%3d %s' % (x, '$\%$')    
@@ -2224,20 +2053,20 @@ def fstree_search_gtraf_4():
 #('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
 #('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
     
-    do_fstree4_gtraf_line = get_line_from_file(csvFileGtraf4, csvColumnIndex,
-                                               [(csvColumnGtrafHard4, 'blue', 'Hardcoded 4', '-', ''),
-                                                (csvColumnGtrafDiDiC4, 'red', 'DiDiC 4', '-', ''),
-                                                (csvColumnGtrafRand4, 'green', 'Random 4', '-', '')],
-                                                csvInts=(csvColumnGtrafHard4,
-                                                         csvColumnGtrafDiDiC4,
-                                                         csvColumnGtrafRand4),
+    do_fstree4_gtraf_line = get_line_from_file(csvFile, csvColumnIndex,
+                                               [(csvColumnGtrafHard, 'blue', 'Hardcoded 4', '-', ''),
+                                                (csvColumnGtrafDiDiC, 'red', 'DiDiC 4', '-', ''),
+                                                (csvColumnGtrafRand, 'green', 'Random 4', '-', '')],
+                                                csvInts=(csvColumnGtrafHard,
+                                                         csvColumnGtrafDiDiC,
+                                                         csvColumnGtrafRand),
                                                 annotations=[],
                                                 axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
                                                 axisFontSize=12, axisColor='k',
                                                 axisXLabel='Operations', axisYLabel='Global Traffic', axisTitle='',
                                                 axisXLim=(None, None), axisYLim=(None, None),
                                                 axisXFormatterFun=None, axisYFormatterFun=None,
-                                                axisXScale='linear', axisYScale='linear',
+                                                axisXScale='linear', axisYScale='log',
                                                 legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
                                                 legendFancybox=False, legendPos='upper right',
                                                 myShareAxis=None, shareAxisX=None, shareAxisY=None)    
@@ -2247,85 +2076,110 @@ def fstree_search_gtraf_4():
                 fileName="output.pdf")
 
 def fstree_search_perc_gtraf_2():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFilePercGtraf2 = csvFolder + "tree2_search_perc_gtraf.csv"     
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
+    csvFile = csvFolder + "tree2_search_perc_gtraf.csv"     
     
     csvColumnPerc = "perc_gtraf"    
 
-    csvColumnSearchHard2 = "search_2hard"
-    csvColumnSearchDiDiC2 = "search_2didic"
-    csvColumnSearchRand2 = "search_2rand"
+    csvColumnSearchHard = "hard"
+    csvColumnSearchDiDiC = "didic"
+    csvColumnSearchRand = "rand"
     
     def axisYFormatterFun(x, pos=0):
+        if x > 100:
+            return ""        
         return '%3d %s' % (x, '$\%$')    
 
     def axisXFormatterFun(x, pos=0):
         return '%3d %s' % (x, '$\%$')    
-        
-    do_fstree2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf2, csvColumnPerc,
-                                                    [(csvColumnSearchHard2, 'blue', 'Hardcoded 2', '-', 'o'),
-                                                     (csvColumnSearchDiDiC2, 'red', 'DiDiC 2', '-', '^'),
-                                                     (csvColumnSearchRand2, 'green', 'Random 2', '-', 'd')],
-                                                     csvInts=(csvColumnSearchHard2,
-                                                              csvColumnSearchDiDiC2,
-                                                              csvColumnSearchRand2),
-                                                     annotations=[],
-                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                                     axisFontSize=12, axisColor='k',
-                                                     axisXLabel='Amount of Global Traffic',
-                                                     axisYLabel='Percentage of Operations', axisTitle='',
-                                                     axisXLim=(0, 10), axisYLim=(0, 105),
-                                                     axisXFormatterFun=axisXFormatterFun,
-                                                     axisYFormatterFun=axisYFormatterFun,
-                                                     axisXScale='linear', axisYScale='linear',
-                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                                                     legendFancybox=False, legendPos='upper right',
-                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree2_perc_gtraf_line]],
+                            
+    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
+                                          [
+                                           (csvColumnSearchDiDiC, 'red', None),
+                                           (csvColumnSearchRand, 'green', None),
+                                           (csvColumnSearchHard, 'blue', None),
+                                           ],
+                                           [
+                                            r'DiDiC 2',
+                                            r'Random 2',
+                                            r'Hardcoded 2',
+                                            ],
+                                            csvFloats=(
+                                                       csvColumnPerc,
+                                                       csvColumnSearchDiDiC,
+                                                       csvColumnSearchRand,
+                                                       csvColumnSearchHard,
+                                                       ),
+                                            annotations=[],
+                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                            barAlign='center', barOrientation='vertical', barWidth=0.2,
+                                            barLog=True,
+                                            axisGrid=True, axisFontSize=12, axisColor='k',
+                                            axisYLabel='Percentage of Operations',
+                                            axisXLabel='Amount of Global Traffic',
+                                            axisYFormatterFun=axisYFormatterFun,
+                                            axisXFormatterFun=axisXFormatterFun,
+                                            axisYLim=(0, 130),
+                                            legendFontsize=12, legendAlpha=0.8, legendShadow=False,
+                                            legendColor='w', legendFancybox=False, legendPos='upper right'
+                                            )
+
+    show_plots([[do_perc_gtraf_bar]],
                 show=False,
                 fileName="output.pdf")
 
 def fstree_search_perc_gtraf_4():
-    csvFolder = dropboxDir + "/Neo_Thesis/Notes/evaluation results/FSTree/InitialPartitioning/"
-    csvFilePercGtraf4 = csvFolder + "tree4_search_perc_gtraf.csv"     
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
+    csvFile = csvFolder + "tree4_search_perc_gtraf.csv"     
     
     csvColumnPerc = "perc_gtraf"    
 
-    csvColumnSearchHard4 = "search_4hard"
-    csvColumnSearchDiDiC4 = "search_4didic"
-    csvColumnSearchRand4 = "search_4rand"
+    csvColumnSearchHard = "hard"
+    csvColumnSearchDiDiC = "didic"
+    csvColumnSearchRand = "rand"
     
     def axisYFormatterFun(x, pos=0):
+        if x > 100:
+            return ""        
         return '%3d %s' % (x, '$\%$')    
 
     def axisXFormatterFun(x, pos=0):
         return '%3d %s' % (x, '$\%$')    
-        
-    do_fstree2_perc_gtraf_line = get_line_from_file(csvFilePercGtraf4, csvColumnPerc,
-                                                    [(csvColumnSearchHard4, 'blue', 'Hardcoded 4', '-', 'o'),
-                                                     (csvColumnSearchDiDiC4, 'red', 'DiDiC 4', '-', '^'),
-                                                     (csvColumnSearchRand4, 'green', 'Random 4', '-', 'd')],
-                                                     csvInts=(csvColumnSearchHard4,
-                                                              csvColumnSearchDiDiC4,
-                                                              csvColumnSearchRand4),
-                                                     annotations=[],
-                                                     axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                                     axisFontSize=12, axisColor='k',
-                                                     axisXLabel='Amount of Global Traffic',
-                                                     axisYLabel='Percentage of Operations', axisTitle='',
-                                                     axisXLim=(0, 10), axisYLim=(0, 105),
-                                                     axisXFormatterFun=axisXFormatterFun,
-                                                     axisYFormatterFun=axisYFormatterFun,
-                                                     axisXScale='linear', axisYScale='linear',
-                                                     legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                                                     legendFancybox=False, legendPos='upper right',
-                                                     myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree2_perc_gtraf_line]],
+                            
+    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
+                                          [
+                                           (csvColumnSearchDiDiC, 'red', None),
+                                           (csvColumnSearchRand, 'green', None),
+                                           (csvColumnSearchHard, 'blue', None),
+                                           ],
+                                           [
+                                            r'DiDiC 4',
+                                            r'Random 4',
+                                            r'Hardcoded 4',
+                                            ],
+                                            csvFloats=(
+                                                       csvColumnPerc,
+                                                       csvColumnSearchDiDiC,
+                                                       csvColumnSearchRand,
+                                                       csvColumnSearchHard,
+                                                       ),
+                                            annotations=[],
+                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                            barAlign='center', barOrientation='vertical', barWidth=0.2,
+                                            barLog=True,
+                                            axisGrid=True, axisFontSize=12, axisColor='k',
+                                            axisYLabel='Percentage of Operations',
+                                            axisXLabel='Amount of Global Traffic',
+                                            axisYFormatterFun=axisYFormatterFun,
+                                            axisXFormatterFun=axisXFormatterFun,
+                                            axisYLim=(0, 130),
+                                            legendFontsize=12, legendAlpha=0.8, legendShadow=False,
+                                            legendColor='w', legendFancybox=False, legendPos='upper right'
+                                            )
+
+    show_plots([[do_perc_gtraf_bar]],
                 show=False,
                 fileName="output.pdf")
-
 
 
 def twitter_load_balance_2():

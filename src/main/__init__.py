@@ -8,9 +8,14 @@ from thesis_plots import *
 #********************igraph******************
 #********************************************
 
-#gmlFile = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/SampleTrees/sampleDB_742N_1327R.gml"
-#imgFile = "/home/alex/Desktop/sampleDB_742N_1327R"
+#gmlFile = "/home/alex/Desktop/Test/migrator_gis_test.2.100.gml"
+#imgFile = "/home/alex/Desktop/Test/migrator_gis_test.2.100"
 #
+#default_layout = viz_result(gmlFile, imgFile, colored=True,
+#                            imgW=500, imgH=500, vSize=20, eWidth=2)
+#viz_results("/home/alex/Desktop/Test", default_layout=default_layout,
+#            colored=True, coords=False, imgW=500, imgH=500, vSize=20, eWidth=2)
+
 #black = "#000000"
 #blue = "#0000ff"
 #red = "#ff0000"
@@ -73,16 +78,12 @@ from thesis_plots import *
 #twitter_deg_stats_all_separate()
 
 
-fstree_load_balance_2()
-fstree_load_balance_4()
-fstree_count_gtraf_2()
-fstree_count_gtraf_4()
-fstree_count_perc_gtraf_2()
-fstree_count_perc_gtraf_4()
-fstree_search_gtraf_2()
-fstree_search_gtraf_4()
-fstree_search_perc_gtraf_2()
-fstree_search_perc_gtraf_4()
+#fstree_search_load_balance_2()
+#fstree_search_load_balance_4()
+#fstree_search_gtraf_2()
+#fstree_search_gtraf_4()
+#fstree_search_perc_gtraf_2()
+#fstree_search_perc_gtraf_4()
 
 #gis_short_load_balance_2()
 #gis_short_load_balance_4()

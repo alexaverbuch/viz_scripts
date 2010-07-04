@@ -8,7 +8,7 @@ import csv
 try:
     import Image
 except ImportError, exc:
-    raise SystemExit("PIL must be installed to run this example")
+    raise SystemExit("PIL must be installed")
 
 def csv_to_dict(filename, columns,
                 default='float', ints=(), floats=()):
