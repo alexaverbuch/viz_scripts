@@ -196,7 +196,7 @@ def get_line_from_file(csvName, xAxis, yAxes, annotations=[],
             frame.set_alpha(legendAlpha)
         
             for ltext in legend.get_texts():
-                pylab.setp(ltext, fontsize=legendFontsize)
+                plb.setp(ltext, fontsize=legendFontsize)
         
         formx = None
         if axisXFormatterFun == None:
@@ -315,7 +315,7 @@ def get_hist_from_file(csvName, values, annotations=[],
             frame.set_alpha(legendAlpha)
         
             for ltext in legend.get_texts():
-                pylab.setp(ltext, fontsize=legendFontsize)
+                plb.setp(ltext, fontsize=legendFontsize)
                 
         formy = None
         if axisYFormatterFun == None:
@@ -435,7 +435,7 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
             frame.set_alpha(legendAlpha)
         
             for ltext in legend.get_texts():
-                pylab.setp(ltext, fontsize=legendFontsize)
+                plb.setp(ltext, fontsize=legendFontsize)
 
         ax.set_xscale('linear') # linear,log,symlog
         ax.set_yscale('linear') # linear,log,symlog
@@ -562,7 +562,7 @@ def get_barh_from_file(csvName, baseAxis, valuesColl, labels, annotations=[],
             frame.set_alpha(legendAlpha)
         
             for ltext in legend.get_texts():
-                pylab.setp(ltext, fontsize=legendFontsize)
+                plb.setp(ltext, fontsize=legendFontsize)
 
         formx = None
         if axisXFormatterFun == None:

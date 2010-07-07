@@ -1,8 +1,10 @@
 from sys import *
-from igraph_scripts import *
-from matplotlib_example_scripts import *
-from matplotlib_scripts import *
-from thesis_plots import *
+from igraph_scripts.igraph_scripts import *
+from matplotlib_scripts.matplotlib_scripts import *
+from matplotlib_scripts.matplotlib_example_scripts import *
+from thesis_plots.thesis_plots_structure import *
+from thesis_plots.thesis_plots_static import *
+from thesis_plots.thesis_plots_insert import *
 
 #********************************************
 #********************igraph******************
@@ -60,9 +62,9 @@ from thesis_plots import *
 #            [get_line_from_file],
 #            [get_bar_from_file]])
 
-#********************************************
-#******************TEMP**********************
-#********************************************
+#*************************************************
+#******************STRUCTURE**********************
+#*************************************************
 #gis_nodes_by_lon_lat()
 #gis_nodes_by_lon()
 #gis_nodes_by_lon_ptn()
@@ -78,83 +80,76 @@ from thesis_plots import *
 #twitter_deg_stats_all_separate()
 
 
+#**********************************************
+#******************STATIC**********************
+#**********************************************
 #fstree_search_load_balance_2()
 #fstree_search_load_balance_4()
+
 #fstree_search_gtraf_2()
 #fstree_search_gtraf_4()
+
 #fstree_search_perc_gtraf_2()
 #fstree_search_perc_gtraf_4()
+
+#fstree_search_glratio_2()
+#fstree_search_glratio_4()
+
+
+
 
 #gis_short_load_balance_2()
 #gis_short_load_balance_4()
 #gis_long_load_balance_2()
 #gis_long_load_balance_4()
-#gis_long_gtraf_2()
-#gis_long_gtraf_4()
-#gis_long_perc_gtraf_2()
-#gis_long_perc_gtraf_4()
+#gis_long5_short95_load_balance_2()
+#gis_long5_short95_load_balance_4()
+
 #gis_short_gtraf_2()
 #gis_short_gtraf_4()
+#gis_long_gtraf_2()
+#gis_long_gtraf_4()
+#gis_long5_short95_gtraf_2()
+#gis_long5_short95_gtraf_4()
+
 #gis_short_perc_gtraf_2()
 #gis_short_perc_gtraf_4()
+#gis_long_perc_gtraf_2()
+#gis_long_perc_gtraf_4()
+#gis_long5_short95_perc_gtraf_2()
+#gis_long5_short95_perc_gtraf_4()
+
+#gis_short_glratio_2()
+#gis_short_glratio_4()
+#gis_long_glratio_2()
+#gis_long_glratio_4()
+#gis_long5_short95_glratio_2()
+#gis_long5_short95_glratio_4()
+
+
+
 
 #twitter_load_balance_2() 
 #twitter_load_balance_4()
+
 #twitter_gtraf_2()
 #twitter_gtraf_4()
+
 #twitter_perc_gtraf_2()
 #twitter_perc_gtraf_4()
 
-#********************************************
-#******************FOR MARTIN****************
-#********************************************
+#twitter_glratio_2()
+#twitter_glratio_4()
 
-#csvName = "/home/alex/Desktop/ReadWrite_didic4_mix_trffAdd4"
-#columnX = "id"
-#columnY1 = "Chart_0_numNodes"
-#columnY2 = "Chart_1_numNodes"
-#columnY3 = "Chart_2_numNodes"
-#columnY4 = "Chart_3_numNodes"
-#columnY1 = "Chart_0_numRelas"
-#columnY2 = "Chart_1_numRelas"
-#columnY3 = "Chart_2_numRelas"
-#columnY4 = "Chart_3_numRelas"
-#columnY1 = "Chart_0_traffic"
-#columnY2 = "Chart_1_traffic"
-#columnY3 = "Chart_2_traffic"
-#columnY4 = "Chart_3_traffic"
-#                        
-#get_line_from_file = get_line_from_file(csvName, columnX,
-#                                        [(columnY1, 'r', "chart 0"),
-#                                         (columnY2, 'b', "chart 1"),
-#                                         (columnY3, 'g', "chart 2"),
-#                                         (columnY4, 'k', "chart 3")],
-#                                         axisXLabel='id', axisTitle='Number of Traffic')
-#show_plots([[get_line_from_file]],
-#           show=False)
+#**********************************************
+#******************INSERT**********************
+#**********************************************
+#fstree_insert_gl_traf4()
+#fstree_insert_std_nodes_4()
+#fstree_insert_std_rels_4()
+#fstree_insert_std_traf_4()
 
-#csvNameRaw = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_raw.csv"
-#csvNameHistDeg = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_hist.csv"
-#csvNameHistStats = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_stats_hist.csv"
-#
-#csvColumnDegNum = "deg_256"
-#csvColumnDegHist = "hist_deg_256"
-#csvColumnDegInHist = "hist_deg_in_256"
-#csvColumnDegOutHist = "hist_deg_out_256"
-#
-#csvColumnDegRaw = "raw_deg_256" 
-#csvColumnDegInRaw = "raw_deg_in_256"
-#csvColumnDegInRaw = "raw_deg_out_256"
-#
-##get_line_from_file = get_line_from_file(csvNameHistDeg, csvColumnDegNum,
-##                                        [(csvColumnDegHist, 'r', "chart 0")],
-##                                        csvInts=(csvColumnDegNum, csvColumnDegHist),
-##                                        axisXLabel='id', axisTitle='Number of Traffic',
-##                                        axisXScale='linear', axisYScale='log')
-#
-#get_hist_from_file = get_hist_from_file(csvNameRaw, csvColumnDegRaw, barBinCount=100,
-#                                        axisXLabel='', axisTitle='',
-#                                        csvInts=(csvColumnDegRaw), barLog=True)
-#
-#show_plots([[get_hist_from_file]],
-#           show=False)
+#twitter_insert_gl_traf4()
+twitter_insert_std_nodes_4()
+#twitter_insert_std_rels_4()
+#twitter_insert_std_traf_4()
