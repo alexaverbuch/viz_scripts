@@ -2,13 +2,15 @@ from sys import *
 from igraph_scripts.igraph_scripts import *
 from matplotlib_scripts.matplotlib_scripts import *
 from matplotlib_scripts.matplotlib_example_scripts import *
-from thesis_plots.thesis_plots_structure import *
-from thesis_plots.thesis_plots_static import *
-from thesis_plots.thesis_plots_insert import *
+from thesis_plots import thesis_plots_structure
+from thesis_plots import thesis_plots_static
+from thesis_plots import thesis_plots_insert
+from thesis_plots import thesis_plots_dynamic
+from thesis_plots import thesis_plots_didic_stress
 
-#********************************************
-#********************igraph******************
-#********************************************
+#************************************************************************************************************************************
+#********************igraph**********************************************************************************************************
+#************************************************************************************************************************************
 
 #gmlFile = "/home/alex/Desktop/Test/migrator_gis_test.2.100.gml"
 #imgFile = "/home/alex/Desktop/Test/migrator_gis_test.2.100"
@@ -26,115 +28,106 @@ from thesis_plots.thesis_plots_insert import *
 #           imgW=1000, imgH=1000, vSize=10, eWidth=2,
 #           vColor=blue, eColor=black)
 
-#********************************************
-#******************matplotlib****************
-#********************************************
-
-##dropboxDir = "/media/disk/alex/Dropbox/"
-#dropboxDir = "/home/alex/Dropbox/"
-#csvDir = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/CSV Versions/GIS2 GOp/"
-#csvName = csvDir + "GIS2_GOp_GTraf.csv"
-#columnX = 'Index'
-#columnY1 = '2rand (sorted)'
-#columnY2 = '2didic (sorted)' 
-#columnY3 = '2hard (sorted)'
-#
-#tempCsvName = "test.txt"
-#tempColumnX = 'xaxis'
-#tempColumnY1 = 'column1'
-#tempColumnY2 = 'column2'
-#
-#get_hist_from_file = get_hist_from_file(csvName, columnY1, barBinCount=100,
-#                                        axisXLabel='', axisTitle='')
-#
-#get_line_from_file = get_line_from_file(csvName, columnX,
-#                                        [(columnY1, 'r', 'yLabel1'),
-#                                         (columnY2, 'b', 'yLabel2')],
-#                                        axisXLabel='', axisTitle='')
-#
-#get_bar_from_file = get_bar_from_file(tempCsvName, tempColumnX,
-#                                      [(tempColumnY1, 'b'), (tempColumnY2, 'g')],
-#                                      ['Col 1', 'Col 2'],
-#                                      axisTitle='')
-#
-#show_plots([[get_bar_from_file]])
-#show_plots([[get_hist_from_file],
-#            [get_line_from_file],
-#            [get_bar_from_file]])
+#************************************************************************************************************************************
+#******************matplotlib********************************************************************************************************
+#************************************************************************************************************************************
 
 #*************************************************
 #******************STRUCTURE**********************
 #*************************************************
-#gis_nodes_by_lon_lat()
-#gis_nodes_by_lon()
-#gis_nodes_by_lon_ptn()
-#gis_deg_stats_all_together()
-#gis_deg_stats_all_separate()
-
-#fstree_deg_stats_all_together()
-#fstree_deg_stats_all_separate()
-#fstree_nodes_at_level()
-#fstree_nodes_at_level_annotated(levelAlpha=0.3)
-
-#twitter_deg_stats_all_together()
-#twitter_deg_stats_all_separate()
-
+#thesis_plots_structure.gis_nodes_by_lon_lat()
+#thesis_plots_structure.gis_nodes_by_lon()
+#thesis_plots_structure.gis_nodes_by_lon_ptn()
+#thesis_plots_structure.gis_deg_stats_all_together()
+#thesis_plots_structure.gis_deg_stats_all_separate()
+#
+#thesis_plots_structure.fstree_deg_stats_all_together()
+#thesis_plots_structure.fstree_deg_stats_all_separate()
+#thesis_plots_structure.fstree_nodes_at_level_annotated(levelAlpha=0.3)
+#
+#thesis_plots_structure.twitter_deg_stats_all_together()
+#thesis_plots_structure.twitter_deg_stats_all_separate()
 
 #**********************************************
 #******************STATIC**********************
 #**********************************************
-#fstree_search_load_balance_all_2()
-#fstree_search_load_balance_all_4()
-#
-#fstree_search_glratio_2()
-#fstree_search_glratio_4()
-#
-#fstree_traf()
+#thesis_plots_static.fstree_search_load_balance_all_2()
+#thesis_plots_static.fstree_search_load_balance_all_4()
+#thesis_plots_static.fstree_search_glratio_2()
+#thesis_plots_static.fstree_search_glratio_4()
+#thesis_plots_static.fstree_traf()
 
+#thesis_plots_static.gis_long5_short95_load_balance_all_2()
+#thesis_plots_static.gis_long5_short95_load_balance_all_4()
+#thesis_plots_static.gis_long5_short95_glratio_2()
+#thesis_plots_static.gis_long5_short95_glratio_4()
+#thesis_plots_static.gis_traf()
 
-#gis_long5_short95_load_balance_all_2()
-#gis_long5_short95_load_balance_all_4()
-#
-#gis_long5_short95_glratio_2()
-#gis_long5_short95_glratio_4()
-#
-#gis_traf()
-
-
-
-#twitter_load_balance_all_2()
-#twitter_load_balance_all_4()
-#
-#twitter_glratio_2()
-#twitter_glratio_4()
-#
-#twitter_traf()
+#thesis_plots_static.twitter_load_balance_all_2()
+#thesis_plots_static.twitter_load_balance_all_4()
+#thesis_plots_static.twitter_glratio_2()
+#thesis_plots_static.twitter_glratio_4()
+#thesis_plots_static.twitter_traf()
 
 #**********************************************
 #******************INSERT**********************
 #**********************************************
-#fstree_insert_gl_traf_4()
-#fstree_insert_std_nodes_4()
-#fstree_insert_std_rels_4()
-#fstree_insert_std_traf_4()
-#fstree_insert_edge_cut_4()
+#thesis_plots_insert.fstree_insert_gl_traf_4()
+#thesis_plots_insert.fstree_insert_std_nodes_4()
+#thesis_plots_insert.fstree_insert_std_rels_4()
+#thesis_plots_insert.fstree_insert_std_traf_4()
+#thesis_plots_insert.fstree_insert_edge_cut_4()
 
-#twitter_insert_gl_traf_4()
-#twitter_insert_std_nodes_4()
-#twitter_insert_std_rels_4()
-#twitter_insert_std_traf_4()
-#twitter_insert_edge_cut_4()
+#thesis_plots_insert.twitter_insert_gl_traf_4()
+#thesis_plots_insert.twitter_insert_std_nodes_4()
+#thesis_plots_insert.twitter_insert_std_rels_4()
+#thesis_plots_insert.twitter_insert_std_traf_4()
+#thesis_plots_insert.twitter_dynamic_edge_cut_4()
 
-#gis_insert_gl_traf_4()
-#gis_insert_std_nodes_4()
-#gis_insert_std_rels_4()
-#gis_insert_std_traf_4()
-#gis_insert_edge_cut_4()
+#thesis_plots_insert.gis_insert_gl_traf_4()
+#thesis_plots_insert.gis_insert_std_nodes_4()
+#thesis_plots_insert.gis_insert_std_rels_4()
+#thesis_plots_insert.gis_insert_std_traf_4()
+#thesis_plots_insert.gis_insert_edge_cut_4()
 
 #**********************************************
 #******************DYNAMIC*********************
 #**********************************************
+#thesis_plots_dynamic.gis_dynamic_gl_traf_4()
+#thesis_plots_dynamic.gis_dynamic_std_nodes_4()
+#thesis_plots_dynamic.gis_dynamic_std_rels_4()
+#thesis_plots_dynamic.gis_dynamic_std_traf_4()
+#thesis_plots_dynamic.gis_dynamic_edge_cut_4()
+
+#thesis_plots_dynamic.fstree_dynamic_gl_traf_4()
+#thesis_plots_dynamic.fstree_dynamic_std_nodes_4()
+#thesis_plots_dynamic.fstree_dynamic_std_rels_4()
+#thesis_plots_dynamic.fstree_dynamic_std_traf_4()
+#thesis_plots_dynamic.fstree_dynamic_edge_cut_4()
+
+#thesis_plots_dynamic.twitter_dynamic_gl_traf_4()
+#thesis_plots_dynamic.twitter_dynamic_std_nodes_4()
+#thesis_plots_dynamic.twitter_dynamic_std_rels_4()
+#thesis_plots_dynamic.twitter_dynamic_std_traf_4()
+#thesis_plots_dynamic.twitter_dynamic_edge_cut_4()
 
 #**********************************************
-#******************STUPID**********************
+#******************DIDIC STRESS****************
 #**********************************************
+thesis_plots_didic_stress.gis_stress_gl_traf_4()
+thesis_plots_didic_stress.gis_stress_std_nodes_4()
+thesis_plots_didic_stress.gis_stress_std_rels_4()
+thesis_plots_didic_stress.gis_stress_std_traf_4()
+thesis_plots_didic_stress.gis_stress_edge_cut_4()
+
+thesis_plots_didic_stress.fstree_stress_gl_traf_4()
+thesis_plots_didic_stress.fstree_stress_std_nodes_4()
+thesis_plots_didic_stress.fstree_stress_std_rels_4()
+thesis_plots_didic_stress.fstree_stress_std_traf_4()
+thesis_plots_didic_stress.fstree_stress_edge_cut_4()
+
+thesis_plots_didic_stress.twitter_stress_gl_traf_4()
+thesis_plots_didic_stress.twitter_stress_std_nodes_4()
+thesis_plots_didic_stress.twitter_stress_std_rels_4()
+thesis_plots_didic_stress.twitter_stress_std_traf_4()
+thesis_plots_didic_stress.twitter_stress_edge_cut_4()

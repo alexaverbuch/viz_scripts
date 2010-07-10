@@ -1,8 +1,11 @@
+import math
 from matplotlib import rc
 from matplotlib_scripts.matplotlib_scripts import *
 
-#dropboxDir = "/media/disk/alex/Dropbox/"
-dropboxDir = "/home/alex/Dropbox/"
+fontsizeLabels = r'\LARGE '
+fontsizeTicks = r'\Large '
+fontsizeLegend = r'\Large '
+axisTickFontSize = 16
 
 bucharest_lon = 26.1
 bucharest_lat = 44.44    
@@ -22,7 +25,7 @@ cities = [('Bucharest', bucharest_lon, bucharest_lat),
          ('Constanta', constanta_lon, constanta_lat)]
 
 def gis_nodes_by_lon_lat(): 
-    csvName = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
+    csvName = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
     csvColumnLon = "raw_nodes_by_lon"
     csvColumnLat = "raw_nodes_by_lat"
             
@@ -83,18 +86,19 @@ def gis_nodes_by_lon_lat():
         annotations_lon += [get_do_annotation_lon(city_name, city_lon)]
         
     def axisXFormatterFunLon(x, pos=0):
-        return '%2d%s' % (x, '$^{\circ}$')            
+        return '%s%2d%s' % (fontsizeTicks, x, '$^{\circ}$')            
 
     def axisYFormatterFunLon(x, pos=0):
-        return '%1.1F' % (float(x) / 10000.)            
+        return '%s%1.1F' % (fontsizeTicks, float(x) / 10000.)            
         
     node_lons = get_hist_from_file(csvName, csvColumnLon, annotations=annotations_lon,
                                    csvFloats=(csvColumnLon),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-                                   axisColor='k', axisXLabel=r'Longitude',
-                                   axisYLabel=r'Node Count $(\times 10^4)$',
+                                   axisColor='k', axisTickFontSize=axisTickFontSize,
+                                   axisXLabel=fontsizeLabels + r'Longitude',
+                                   axisYLabel=fontsizeLabels + r'Vertex Count $(\times 10^4)$',
                                    axisYLim=(axisYmin, axisYmax),
                                    axisXFormatterFun=axisXFormatterFunLon,
                                    axisYFormatterFun=axisYFormatterFunLon)
@@ -131,18 +135,19 @@ def gis_nodes_by_lon_lat():
         annotations_lat += [get_do_annotation_lat(city_name, city_lat)]
         
     def axisYFormatterFunLat(x, pos=0):
-        return '%2d%s' % (x, '$^{\circ}$')
+        return '%s%2d%s' % (fontsizeTicks, x, '$^{\circ}$')
                 
     def axisXFormatterFunLat(x, pos=0):
-        return '%1.1F' % (float(x) / 10000.)
+        return '%s%1.1F' % (fontsizeTicks, float(x) / 10000.)
     
     node_lats = get_hist_from_file(csvName, csvColumnLat, annotations=annotations_lat,
                                    csvFloats=(csvColumnLat),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='horizontal', axisGrid=True, axisFontSize=axisFontsize,
-                                   axisColor='k', axisYLabel=r'Latitude',
-                                   axisXLabel=r'Node Count $(\times 10^4)$',
+                                   axisColor='k', axisTickFontSize=axisTickFontSize,
+                                   axisYLabel=fontsizeLabels + r'Latitude',
+                                   axisXLabel=fontsizeLabels + r'Vertex Count $(\times 10^4)$',
                                    axisXLim=(axisXmin, axisXmax),
                                    axisXFormatterFun=axisXFormatterFunLat,
                                    axisYFormatterFun=axisYFormatterFunLat)
@@ -151,10 +156,13 @@ def gis_nodes_by_lon_lat():
     do_img_from_file = get_img_from_file(imgFile, annotations=[])
 
     show_plots([[node_lons, None],
-                [do_img_from_file, node_lats]])
+                [do_img_from_file, node_lats]],
+                show=False,
+                fileName='gis_density_map_lon_lat.pdf',
+                figWSpace=0.25, figHSpace=0.25)
     
 def gis_nodes_by_lon(): 
-    csvName = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
+    csvName = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
     csvColumnLon = "raw_nodes_by_lon"
     
     axisYmin = 0.0
@@ -214,22 +222,100 @@ def gis_nodes_by_lon():
         annotations_lon += [get_do_annotation_lon(city_name, city_lon)]
     
     def axisXFormatterFun(x, pos=0):
-        return '%2d%s' % (x, '$^{\circ}$')            
+        return '%s%2d%s' % (fontsizeTicks, x, '$^{\circ}$')            
     
     node_lons = get_hist_from_file(csvName, csvColumnLon, annotations=annotations_lon,
                                    csvFloats=(csvColumnLon),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-                                   axisColor='k', axisXLabel=r'Longitude', axisYLabel=r'Node Count',
+                                   axisColor='k', axisTickFontSize=axisTickFontSize,
+                                   axisXLabel=fontsizeLabels + r'Longitude',
+                                   axisYLabel=fontsizeLabels + r'Vertex Count',
                                    axisYLim=(axisYmin, axisYmax),
                                    axisXFormatterFun=axisXFormatterFun)
 
     show_plots([[node_lons]],
-               show=False)
+               show=False,
+               fileName='gis_density_lon.pdf')
+
+#def gis_nodes_by_lon(): 
+#    csvName = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
+#    csvColumnLon = "raw_nodes_by_lon"
+#    
+#    axisYmin = 0.0
+#    axisYmax = 40000.0
+#    axisFontsize = 12
+#    
+#    annotateRotateLon = 'vertical'
+#    annotateFontsize = 10
+#    annotateLinewidth = 3
+#    annotateLinecolor = 'red'
+#    annotateLinealpha = 0.8
+#    annotateLinestyle = '-'
+#    
+#    lineYmin = 0.0
+#    lineYmax = 37000.0
+#    
+#    boxStyle = "round,pad=0.3"
+#    boxFacecolor = '0.9'
+#    boxEdgecolor = '0.0'
+#    boxAlpha = 1.0
+#    boxLinewidth = 0.1
+#    
+#    arrowStyle = 'wedge,tail_width=1.'
+#    arrowFacecolor = '0.9'
+#    arrowEdgecolor = '0.0'
+#    arrowAlpha = 1.0
+#    
+#    bbox_props = dict(boxstyle=boxStyle,
+#                      fc=boxFacecolor, ec=boxEdgecolor,
+#                      alpha=boxAlpha, lw=boxLinewidth)
+#    arrow_props = dict(arrowstyle=arrowStyle,
+#                       fc=arrowFacecolor, ec=arrowEdgecolor, alpha=arrowAlpha,
+#                       patchA=None)
+#            
+#    annotations_lon = []
+#    
+#    def get_do_annotation_lon(city_name, city_lon):
+#        def do_annotation_lon(ax):
+#            ha = 'center'
+#            if city_name == 'Iasi':
+#                ha = 'right'
+#            if city_name == 'Constanta':
+#                ha = 'left'
+#            ax.axvline(x=city_lon, ymin=lineYmin / axisYmax, ymax=lineYmax / axisYmax,
+#                       linewidth=annotateLinewidth, color=annotateLinecolor,
+#                       alpha=annotateLinealpha, linestyle=annotateLinestyle)
+#            
+#            ax.annotate(city_name, xy=(city_lon + 0.0, lineYmax), #xycoords='data',
+#                        xytext=(city_lon + 0.0, lineYmax + 1000), #textcoords='offset points',
+#                        size=annotateFontsize, rotation=annotateRotateLon, ha=ha, va='bottom',
+##                        arrowprops=arrow_props,
+#                        bbox=bbox_props
+#                        )
+#        return do_annotation_lon
+#        
+#    for (city_name, city_lon, _) in cities:
+#        annotations_lon += [get_do_annotation_lon(city_name, city_lon)]
+#    
+#    def axisXFormatterFun(x, pos=0):
+#        return '%2d%s' % (x, '$^{\circ}$')            
+#    
+#    node_lons = get_hist_from_file(csvName, csvColumnLon, annotations=annotations_lon,
+#                                   csvFloats=(csvColumnLon),
+#                                   barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
+#                                   barHisttype='bar', barAlpha=0.9, barAlign='mid',
+#                                   barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
+#                                   axisColor='k', axisXLabel=r'Longitude', axisYLabel=r'Node Count',
+#                                   axisYLim=(axisYmin, axisYmax),
+#                                   axisXFormatterFun=axisXFormatterFun)
+#
+#    show_plots([[node_lons]],
+#               show=False)
     
 def gis_nodes_by_lon_ptn(): 
-    csvName = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
+    csvName = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
     csvColumnLon = "raw_nodes_by_lon"
     
     axisYmin = 0.0
@@ -319,124 +405,104 @@ def gis_nodes_by_lon_ptn():
         annotations_lon += [get_do_annotation_lon(city_name, city_lon)]
     
     def axisXFormatterFun(x, pos=0):
-        return '%2d%s' % (x, '$^{\circ}$')            
+        return '%s%2d%s' % (fontsizeTicks, x, '$^{\circ}$')            
 
     node_lons = get_hist_from_file(csvName, csvColumnLon, annotations=annotations_lon,
                                    csvFloats=(csvColumnLon),
                                    barBinCount=100, barFacecolor='blue', barEdgecolor='gray',
                                    barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                    barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-                                   axisColor='k', axisXLabel=r'Longitude', axisYLabel=r'Node Count',
+                                   axisColor='k', axisTickFontSize=axisTickFontSize,
+                                   axisXLabel=fontsizeLabels + r'Longitude',
+                                   axisYLabel=fontsizeLabels + r'Vertex Count',
                                    axisYLim=(axisYmin, axisYmax),
                                    axisXFormatterFun=axisXFormatterFun)
 
-    show_plots([[node_lons]])
+    show_plots([[node_lons]],
+               show=False,
+               fileName='gis_partition2_lon_balanced.pdf')
 
 def gis_deg_stats_all_together(): 
-    csvNameRaw = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
-    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_hist.csv"
+    csvNameHist = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_hist.csv"
     csvColumnDegNum = "deg"
     csvColumnDegHist = "hist_deg"
     csvColumnDegInHist = "hist_deg_in"
     csvColumnDegOutHist = "hist_deg_out"
-    csvColumnDegRaw = "raw_deg"
-    csvColumnDegInRaw = "raw_deg_in"
-    csvColumnDegOutRaw = "raw_deg_out"
     
     axisXmin = None
     axisXmax = None
-    axisFontsize = 12
-    barBinCount = 15
     legendAlpha = 0.8
 
-#    axisXmin = 0
-#    axisXmax = 10
-#    axisFontsize = 12
-#    barBinCount = 14
+    def axisXFormatterFun(x, pos=0):
+        return '%s%s' % (fontsizeTicks, x)            
+
+    def axisYFormatterFun(x, pos=0):
+        if x < 1:
+            return ''
+        return '%s$10^%d$' % (fontsizeTicks, math.ceil(math.log(x, 10)))
 
     do_gis_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                       [(csvColumnDegHist, 'blue', None) ], [r'GIS Degree Distribution', ],
+                                       [(csvColumnDegHist, 'blue', None) ],
+                                       [fontsizeLegend + r'GIS Degree', ],
                                        csvInts=(csvColumnDegNum, csvColumnDegHist),
                                        annotations=[],
-                                       barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                       barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barLog=True,
                                        barAlign='center', barOrientation='vertical', barWidth=1.0,
                                        axisGrid=True, axisFontSize=12, axisColor='k',
-                                       axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
-                                       legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
-                                       legendFancybox=False, legendPos='upper right',
+                                       axisYLabel=fontsizeLabels + r'Vertices',
+                                       axisXLim=(axisXmin, axisXmax), axisTickFontSize=axisTickFontSize,
+                                       axisXFormatterFun=axisXFormatterFun,
+                                       axisYFormatterFun=axisYFormatterFun,
+                                       legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                       legendColor='w', legendFancybox=False, legendPos='upper right',
                                        myShareAxis='do_gis_deg_bar'
                                        )
         
     do_gis_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegInHist, 'blue', None) ], [r'GIS In-Degree Distribution', ],
+                                          [(csvColumnDegInHist, 'blue', None) ],
+                                          [fontsizeLegend + r'GIS In-Degree', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                           annotations=[],
-                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barLog=True,
                                           barAlign='center', barOrientation='vertical', barWidth=1.0,
                                           axisGrid=True, axisFontSize=12, axisColor='k',
-                                          axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
-                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
-                                          legendFancybox=False, legendPos='upper right',
+                                          axisYLabel=fontsizeLabels + r'Vertices',
+                                          axisXLim=(axisXmin, axisXmax), axisTickFontSize=axisTickFontSize,
+                                          axisXFormatterFun=axisXFormatterFun,
+                                          axisYFormatterFun=axisYFormatterFun,
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                          legendColor='w', legendFancybox=False, legendPos='upper right',
                                           shareAxisX='do_gis_deg_bar'
                                           )
 
     do_gis_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegOutHist, 'blue', None) ], [r'GIS Out-Degree Distribution', ],
-                                            csvInts=(csvColumnDegNum, csvColumnDegOutHist),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=1.0,
-                                            axisGrid=True, axisFontSize=12, axisColor='k',
-                                            axisXLabel='Degree', axisYLabel='Node Count',
-                                            axisXLim=(axisXmin, axisXmax),
-                                            legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
-                                            legendFancybox=False, legendPos='upper right',
-                                            shareAxisX='do_gis_deg_bar'
-                                            )
+                                          [(csvColumnDegOutHist, 'blue', None) ],
+                                          [fontsizeLegend + r'GIS Out-Degree', ],
+                                          csvInts=(csvColumnDegNum, csvColumnDegOutHist),
+                                          annotations=[],
+                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barLog=True,
+                                          barAlign='center', barOrientation='vertical', barWidth=1.0,
+                                          axisGrid=True, axisFontSize=12, axisColor='k',
+                                          axisXLabel=fontsizeLabels + r'Degree',
+                                          axisYLabel=fontsizeLabels + r'Vertices',
+                                          axisXLim=(axisXmin, axisXmax), axisTickFontSize=axisTickFontSize,
+                                          axisXFormatterFun=axisXFormatterFun,
+                                          axisYFormatterFun=axisYFormatterFun,
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False,
+                                          legendColor='w', legendFancybox=False, legendPos='upper right',
+                                          shareAxisX='do_gis_deg_bar'
+                                          )
     
-#    do_gis_deg_hist = get_hist_from_file(csvNameRaw, csvColumnDegRaw, annotations=[],
-#                                         barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
-#                                         barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=0.5,
-#                                         barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-#                                         axisColor='k', axisXLabel=None, axisYLabel=r'Node Count',
-#                                         axisName='GIS Degree Distribution', axisXLim=(axisXmin, axisXmax),
-#                                         myShareAxis='do_gis_deg_hist')
-#
-#    do_gis_deg_in_hist = get_hist_from_file(csvNameRaw, csvColumnDegInRaw, annotations=[],
-#                                            barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
-#                                            barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=1,
-#                                            barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-#                                            axisColor='k', axisXLabel=None, axisYLabel=r'Node Count',
-#                                            axisName='GIS In-Degree Distribution', axisXLim=(axisXmin, axisXmax),
-#                                            myShareAxis='do_gis_deg_in_hist', shareAxisX='do_gis_deg_hist')
-#
-#    do_gis_deg_out_hist = get_hist_from_file(csvNameRaw, csvColumnDegOutRaw, annotations=[],
-#                                             barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
-#                                             barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=1,
-#                                             barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-#                                             axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
-#                                             axisName='GIS Out-Degree Distribution', axisXLim=(axisXmin, axisXmax),
-#                                             myShareAxis='do_gis_deg_out_hist', shareAxisX='do_gis_deg_hist')
-
     show_plots([[do_gis_deg_bar],
                 [do_gis_deg_in_bar],
                 [do_gis_deg_out_bar]],
                 show=False,
-                figWSpace=0.2, figHSpace=0.3)
+                figWSpace=0.2, figHSpace=0.35,
+                fileName='gis_degree_dist_all.pdf')
     
-#    show_plots([[do_gis_deg_hist],
-#                [do_gis_deg_in_hist],
-#                [do_gis_deg_out_hist]], show=False)
-
 def gis_deg_stats_all_separate(): 
-    csvNameRaw = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_raw.csv"
-    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_hist.csv"
-    csvColumnDegRaw = "raw_deg"
-    csvColumnDegInRaw = "raw_deg_in"
-    csvColumnDegOutRaw = "raw_deg_out"
-    
-    axisFontsize = 12
-    barBinCount = 15
+    csvNameHist = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Structure/structure_gis_hist.csv"
+
     legendAlpha = 0.8
         
     csvColumnDegNum = "deg"
@@ -444,75 +510,86 @@ def gis_deg_stats_all_separate():
     csvColumnDegInHist = "hist_deg_in"
     csvColumnDegOutHist = "hist_deg_out"
     
+    def axisXFormatterFun(x, pos=0):
+        return '%s%s' % (fontsizeTicks, x)
+                
+    def axisYFormatterFun(x, pos=0):
+        if x < 1:
+            return ''
+        return '%s$10^%d$' % (fontsizeTicks, math.ceil(math.log(x, 10)))
+        
     do_gis_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                       [(csvColumnDegHist, 'blue', None) ], [r'GIS Degree Distribution', ],
+                                       [(csvColumnDegHist, 'blue', None) ],
+                                       [fontsizeLegend + r'GIS Degree', ],
                                        csvInts=(csvColumnDegNum, csvColumnDegHist),
                                        annotations=[],
                                        barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                       barAlign='center', barOrientation='vertical', barWidth=1.0,
+                                       barAlign='center', barOrientation='vertical',
+                                       barWidth=1.0, barLog=True,
                                        axisGrid=True, axisFontSize=12, axisColor='k',
-                                       axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 15),
+                                       axisXLabel=fontsizeLabels + r'Degree',
+                                       axisYLabel=fontsizeLabels + r'Vertices',
+                                       axisTickFontSize=axisTickFontSize,
+                                       axisXLim=(0, 15),
+                                       axisXFormatterFun=axisXFormatterFun,
+                                       axisYFormatterFun=axisYFormatterFun,
                                        legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                        legendFancybox=False, legendPos='upper right'
                                        )
         
     do_gis_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegInHist, 'blue', None) ], [r'GIS In-Degree Distribution', ],
+                                          [(csvColumnDegInHist, 'blue', None) ],
+                                          [fontsizeLegend + r'GIS In-Degree', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                          barAlign='center', barOrientation='vertical', barWidth=1.0,
+                                          barAlign='center', barOrientation='vertical',
+                                          barWidth=1.0, barLog=True,
                                           axisGrid=True, axisFontSize=12, axisColor='k',
-                                          axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 8),
+                                          axisXLabel=fontsizeLabels + r'Degree',
+                                          axisYLabel=fontsizeLabels + r'Vertices',
+                                          axisTickFontSize=axisTickFontSize,
+                                          axisXLim=(0, 8),
+                                          axisXFormatterFun=axisXFormatterFun,
+                                          axisYFormatterFun=axisYFormatterFun,
                                           legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right'
                                           )
 
     do_gis_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegOutHist, 'blue', None) ], [r'GIS Out-Degree Distribution', ],
-                                            csvInts=(csvColumnDegNum, csvColumnDegOutHist),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=1.0,
-                                            axisGrid=True, axisFontSize=12, axisColor='k',
-                                            axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 8),
-                                            legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
-                                            legendFancybox=False, legendPos='upper right'
-                                            )
+                                          [(csvColumnDegOutHist, 'blue', None) ],
+                                          [fontsizeLegend + r'GIS Out-Degree', ],
+                                          csvInts=(csvColumnDegNum, csvColumnDegOutHist),
+                                          annotations=[],
+                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                          barAlign='center', barOrientation='vertical',
+                                          barWidth=1.0, barLog=True,
+                                          axisGrid=True, axisFontSize=12, axisColor='k',
+                                          axisXLabel=fontsizeLabels + r'Degree',
+                                          axisYLabel=fontsizeLabels + r'Vertices',
+                                          axisTickFontSize=axisTickFontSize,
+                                          axisXLim=(0, 8),
+                                          axisXFormatterFun=axisXFormatterFun,
+                                          axisYFormatterFun=axisYFormatterFun,
+                                          legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
+                                          legendFancybox=False, legendPos='upper right'
+                                          )
     
-#    do_gis_deg_hist = get_hist_from_file(csvNameRaw, csvColumnDegRaw, annotations=[],
-#                                         barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
-#                                         barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=None, barLog=False,
-#                                         barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-#                                         axisColor='k', axisXLabel='Degree', axisYLabel='Node Count',
-#                                         axisName='GIS Degree Distribution', axisXLim=(axisXmin, axisXmax))
-
-#    do_gis_deg_in_hist = get_hist_from_file(csvNameRaw, csvColumnDegInRaw, annotations=[],
-#                                            barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
-#                                            barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=None,
-#                                            barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-#                                            axisColor='k', axisXLabel='Degree', axisYLabel='Node Count',
-#                                            axisName='GIS In-Degree Distribution')
-
-#    do_gis_deg_out_hist = get_hist_from_file(csvNameRaw, csvColumnDegOutRaw, annotations=[],
-#                                             barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
-#                                             barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=None,
-#                                             barOrientation='vertical', axisGrid=True, axisFontSize=axisFontsize,
-#                                             axisColor='k', axisXLabel='Degree', axisYLabel='Node Count',
-#                                             axisName='GIS Out-Degree Distribution')
-
-    show_plots([[do_gis_deg_bar]], fileName="output1.pdf", show=False)
-    show_plots([[do_gis_deg_in_bar]], fileName="output2.pdf", show=False)
-    show_plots([[do_gis_deg_out_bar]], fileName="output3.pdf", show=False)
-    
-#    show_plots([[do_gis_deg_hist]], fileName="output.pdf", show=False)
-#    show_plots([[do_gis_deg_in_hist]], fileName="output.pdf", show=False)
-#    show_plots([[do_gis_deg_out_hist]], fileName="output.pdf", show=False)
+    show_plots([[do_gis_deg_bar]],
+               fileName="gis_degree_dist_one_in_out.pdf",
+               show=False)
+    show_plots([[do_gis_deg_in_bar]],
+               fileName="gis_degree_dist_one_in.pdf",
+               show=False)
+    show_plots([[do_gis_deg_out_bar]],
+               fileName="gis_degree_dist_one_out.pdf",
+               show=False)
 
 
 
 def fstree_deg_stats_all_together(): 
-    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_tree_hist.csv"
+    csvNameHist = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv" 
+    
     csvColumnDegNum = "deg"
     csvColumnDegHist = "hist_deg"
     csvColumnDegInHist = "hist_deg_in"
@@ -524,50 +601,67 @@ def fstree_deg_stats_all_together():
     
     legendAlpha = 0.8
     
-    def axisXFormatterFun(x):
+    def axisXFormatterFun(x, pos=0):
         if int(x) % 2 == 0:
-            return x
+            return '%s%d' % (fontsizeTicks, x)
         else:
             return ''
     
+    def axisYFormatterFun(x, pos=0):
+        if x < 1:
+            return ''
+        return '%s$10^%d$' % (fontsizeTicks, math.ceil(math.log(x, 10)))
+    
     do_fstree_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegHist, 'blue', None) ], [r'FS-Tree Degree Distribution', ],
+                                          [(csvColumnDegHist, 'blue', None) ],
+                                          [fontsizeTicks + r'FS-Tree Degree', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                          barAlign='center', barOrientation='vertical', barWidth=1.0,
+                                          barAlign='center', barOrientation='vertical',
+                                          barWidth=1.0, barLog=True,
                                           axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                          axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
+                                          axisYLabel=fontsizeLabels + r'Vertices',
+                                          axisXLim=(axisXmin, axisXmax),
+                                          axisTickFontSize=axisTickFontSize,
                                           axisXFormatterFun=axisXFormatterFun,
+                                          axisYFormatterFun=axisYFormatterFun,
                                           legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right',
                                           myShareAxis='do_gis_deg_bar'
                                        )
         
     do_fstree_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegInHist, 'blue', None) ], [r'FS-Tree In-Degree Distribution', ],
+                                          [(csvColumnDegInHist, 'blue', None) ],
+                                          [fontsizeTicks + r'FS-Tree In-Degree', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                           annotations=[],
                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                          barAlign='center', barOrientation='vertical', barWidth=1.0,
+                                          barAlign='center', barOrientation='vertical',
+                                          barWidth=1.0, barLog=True,
                                           axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                          axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
+                                          axisYLabel=fontsizeLabels + r'Vertices',
+                                          axisXLim=(axisXmin, axisXmax), axisTickFontSize=axisTickFontSize,
                                           axisXFormatterFun=axisXFormatterFun,
+                                          axisYFormatterFun=axisYFormatterFun,
                                           legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right',
                                           shareAxisX='do_gis_deg_bar'
                                           )
 
     do_fstree_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                              [(csvColumnDegOutHist, 'blue', None) ], [r'FS-Tree Out-Degree Distribution', ],
+                                              [(csvColumnDegOutHist, 'blue', None) ],
+                                              [fontsizeTicks + r'FS-Tree Out-Degree', ],
                                               csvInts=(csvColumnDegNum, csvColumnDegOutHist),
                                               annotations=[],
                                               barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                              barAlign='center', barOrientation='vertical', barWidth=1.0,
+                                              barAlign='center', barOrientation='vertical',
+                                              barWidth=1.0, barLog=True,
                                               axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                              axisXLabel='Degree', axisYLabel='Node Count',
-                                              axisXLim=(axisXmin, axisXmax),
+                                              axisXLabel=fontsizeLabels + r'Degree', axisYLabel=fontsizeLabels + r'Vertices',
+                                              axisXLim=(axisXmin, axisXmax), axisTickFontSize=axisTickFontSize,
                                               axisXFormatterFun=axisXFormatterFun,
+                                              axisYFormatterFun=axisYFormatterFun,
                                               legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                               legendFancybox=False, legendPos='upper right',
                                               shareAxisX='do_gis_deg_bar'
@@ -577,10 +671,11 @@ def fstree_deg_stats_all_together():
                 [do_fstree_deg_in_bar],
                 [do_fstree_deg_out_bar]],
                 show=False,
-                figWSpace=0.2, figHSpace=0.3)
+                figWSpace=0.2, figHSpace=0.3,
+                fileName='fstree_degree_dist_all.pdf')
     
 def fstree_deg_stats_all_separate(): 
-    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
+    csvNameHist = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
     
     csvColumnDegNum = "deg"
     csvColumnDegHist = "hist_deg"
@@ -591,93 +686,78 @@ def fstree_deg_stats_all_separate():
         
     legendAlpha = 0.8
         
-    def axisXFormatterFun(x):
+    def axisXFormatterFun(x, pos=0):
         if int(x) % 2 == 0:
-            return x
+            return '%s%d' % (fontsizeTicks, x)
         else:
             return ''
+    
+    def axisYFormatterFun(x, pos=0):
+        if x < 1:
+            return ''
+        return '%s$10^%d$' % (fontsizeTicks, math.ceil(math.log(x, 10)))
+    
         
     do_fstree_deg_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                          [(csvColumnDegHist, 'blue', None) ], [r'FS-Tree Degree Distribution', ],
+                                          [(csvColumnDegHist, 'blue', None) ],
+                                          [fontsizeLegend + r'FS-Tree Degree', ],
                                           csvInts=(csvColumnDegNum, csvColumnDegHist),
                                           annotations=[],
-                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barLog=True,
                                           barAlign='center', barOrientation='vertical', barWidth=1.0,
                                           axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                          axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 38),
+                                          axisXLabel=fontsizeLabels + r'Degree', axisYLabel=fontsizeLabels + r'Vertices',
+                                          axisXLim=(0, 38), axisTickFontSize=axisTickFontSize,
                                           axisXFormatterFun=axisXFormatterFun,
+                                          axisYFormatterFun=axisYFormatterFun,
                                           legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                           legendFancybox=False, legendPos='upper right'
                                           )
         
     do_fstree_deg_in_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                             [(csvColumnDegInHist, 'blue', None) ], [r'FS-Tree In-Degree Distribution', ],
+                                             [(csvColumnDegInHist, 'blue', None) ],
+                                             [fontsizeLegend + r'FS-Tree In-Degree', ],
                                              csvInts=(csvColumnDegNum, csvColumnDegInHist),
                                              annotations=[],
-                                             barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                             barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barLog=True,
                                              barAlign='center', barOrientation='vertical', barWidth=1.0,
                                              axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                             axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 8),
+                                             axisXLabel=fontsizeLabels + r'Degree', axisYLabel=fontsizeLabels + r'Vertices',
+                                             axisXLim=(0, 8), axisTickFontSize=axisTickFontSize,
                                              axisXFormatterFun=axisXFormatterFun,
+                                             axisYFormatterFun=axisYFormatterFun,
                                              legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                              legendFancybox=False, legendPos='upper right'
                                              )
 
     do_fstree_deg_out_bar = get_bar_from_file(csvNameHist, csvColumnDegNum,
-                                              [(csvColumnDegOutHist, 'blue', None) ], [r'FS-Tree Out-Degree Distribution', ],
+                                              [(csvColumnDegOutHist, 'blue', None) ],
+                                              [fontsizeLegend + r'FS-Tree Out-Degree', ],
                                               csvInts=(csvColumnDegNum, csvColumnDegOutHist),
                                               annotations=[],
-                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
+                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barLog=True,
                                               barAlign='center', barOrientation='vertical', barWidth=1.0,
                                               axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                              axisXLabel='Degree', axisYLabel='Node Count', axisXLim=(0, 34),
+                                              axisXLabel=fontsizeLabels + r'Degree', axisYLabel=fontsizeLabels + r'Vertices',
+                                              axisXLim=(0, 34), axisTickFontSize=axisTickFontSize,
                                               axisXFormatterFun=axisXFormatterFun,
+                                              axisYFormatterFun=axisYFormatterFun,
                                               legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                               legendFancybox=False, legendPos='upper right'
                                               )
     
-    show_plots([[do_fstree_deg_bar]], fileName="output1.pdf", show=False)
-    show_plots([[do_fstree_deg_in_bar]], fileName="output2.pdf", show=False)
-    show_plots([[do_fstree_deg_out_bar]], fileName="output3.pdf", show=False)
-
-def fstree_nodes_at_level(): 
-    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
-    
-    csvColumnTreeLevel = "tree_level"
-    csvColumnTreeLevelNodes = "tree_level_nodes"
-    
-    axisFontsize = 12
-    
-    legendAlpha = 0.8
-        
-    def axisYFormatterFun(x):
-        if int(x) % 2 == 0:
-            return x
-        else:
-            return ''
-    do_fstree_levels_barh = get_barh_from_file(csvNameHist, csvColumnTreeLevel,
-                                               [(csvColumnTreeLevelNodes, 'blue') ],
-                                               [r'FS-Tree Nodes at Tree Level', ],
-                                               csvInts=(csvColumnTreeLevel, csvColumnTreeLevelNodes),
-                                               annotations=[],
-                                               barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                               barAlign='center', barOrientation='horizontal', barWidth=1.0,
-                                               axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                               axisYLabel='Tree Level', axisXLabel='Node Count',
-                                               axisXLim=(None, None), axisYLim=(None, None),
-                                               axisReverseY=True,
-#                                               axisYFormatterFun=axisYFormatterFun,
-                                               legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
-                                               legendFancybox=False, legendPos='upper right'
-                                              )
-            
-    show_plots([[do_fstree_levels_barh]],
-               fileName="output.pdf",
+    show_plots([[do_fstree_deg_bar]],
+               fileName="fstree_degree_dist_one_in_out.pdf",
+               show=False)
+    show_plots([[do_fstree_deg_in_bar]],
+               fileName="fstree_degree_dist_one_in.pdf",
+               show=False)
+    show_plots([[do_fstree_deg_out_bar]],
+               fileName="fstree_degree_dist_one_out.pdf",
                show=False)
 
 def fstree_nodes_at_level_annotated(levelAlpha=0.3): 
-
-    csvNameHist = dropboxDir + "Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
+    csvNameHist = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Structure/structure_fstree_hist.csv"
     
     csvColumnTreeLevel = "tree_level"
     csvColumnTreeLevelNodes = "tree_level_nodes"
@@ -710,8 +790,8 @@ def fstree_nodes_at_level_annotated(levelAlpha=0.3):
         annotations_level_shading += [get_do_annotation_level_shading(level_start, level_end, color)]
         
     annotateRotate = 'horizontal'
-    annotateFontsize = 10
-    boxStyle = "round,pad=0.5"
+    annotateFontsize = 13
+    boxStyle = "round,pad=0.4"
     boxFacecolor = '0.9'
     boxEdgecolor = '0.0'
     boxAlpha = 1.0    
@@ -730,43 +810,49 @@ def fstree_nodes_at_level_annotated(levelAlpha=0.3):
 
         return do_annotation_level_line
 
-    for (level, value) in [(5.5, 'Files \& Folders\n250,000 Nodes'),
-                           (11, 'Users\n5 Nodes'),
-                           (14, 'Organisations\n5 Nodes')]:
+    for (level, value) in [(5.5, '250,000 Files \& Folders'),
+                           (11, ' 5 Users'),
+                           (14, '5 Organisations')]:
         annotations_level_shading += [get_do_annotation_level_line(level, value)]
         
     def axisYFormatterFun(x):
-        if int(x) % 2 == 0:
-            return x
-        else:
-            return ''
+        return '%s$%d$' % (fontsizeTicks, x)
+
+#    def axisXFormatterFun(x, pos=0):
+#        if x < 1:
+#            return ''
+#        return '%s$10^%d$' % (fontsizeTicks, math.ceil(math.log(x,10)))
+    def axisXFormatterFun(x, pos=0):
+        return '%s$%1.1f$' % (fontsizeTicks, x / pow(10, 5))
+#    axisXFormatterFun=None
 
     do_fstree_levels_barh = get_barh_from_file(csvNameHist, csvColumnTreeLevel,
                                                [(csvColumnTreeLevelNodes, 'blue') ],
-                                               [r'FS-Tree Nodes at Tree Level', ],
+                                               [fontsizeLegend + r'FS-Tree Vertices at Tree Level', ],
                                                csvInts=(csvColumnTreeLevel, csvColumnTreeLevelNodes),
                                                annotations=annotations_level_shading,
                                                barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
                                                barAlign='center', barOrientation='horizontal',
                                                barHeight=1.0, barLog=False, barReverse=True,
                                                axisGrid=True, axisFontSize=axisFontsize, axisColor='k',
-                                               axisYLabel='Tree Level', axisXLabel='Node Count',
-                                               axisXLim=(0, 220000), axisYLim=(None, None),
-#                                               axisYFormatterFun=axisYFormatterFun,
+                                               axisYLabel=fontsizeLabels + r'Tree Level',
+                                               axisXLabel=fontsizeLabels + r'Vertices ($\times 10^5$)',
+                                               axisXLim=(0, 220000), axisTickFontSize=axisTickFontSize,
+                                               axisYLim=(None, None),
+                                               axisXFormatterFun=axisXFormatterFun,
+                                               axisYFormatterFun=axisYFormatterFun,
                                                legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
                                                legendFancybox=False, legendPos='upper right'
                                               )
             
     show_plots([[do_fstree_levels_barh]],
-               fileName="output.pdf",
+               fileName='fstree_nodes_at_levels_annotated.pdf',
                show=False)
 
 
 
 def twitter_deg_stats_all_together(): 
-    csvNameRaw = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_raw.csv"
-    csvNameHistDeg = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_hist.csv"
-    csvNameHistStats = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_stats_hist.csv"
+    csvNameRaw = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_raw.csv"
     
     csvColumnDegRaw = "raw_deg_256" 
     csvColumnDegInRaw = "raw_deg_in_256"
@@ -780,14 +866,26 @@ def twitter_deg_stats_all_together():
     axisFontsize = 12
     legendAlpha = 0.8
     
+    def axisXFormatterFun(x, pos=0):
+        return '%s$%d$' % (fontsizeTicks, x)
+    
+    def axisYFormatterFun(x, pos=0):
+        if x < 1:
+            return ''
+        return '%s$10^%d$' % (fontsizeTicks, math.ceil(math.log(x, 10)))
+    
     do_twitter_deg_hist = get_hist_from_file(csvNameRaw, csvColumnDegRaw, annotations=[],
                                              csvInts=(csvColumnDegRaw),
                                              barBinCount=barBinCount, barFacecolor='blue', barEdgecolor='gray',
                                              barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=barRWidth,
                                              barOrientation='vertical', barLog=True,
                                              axisGrid=True, axisFontSize=axisFontsize,
-                                             axisColor='k', axisXLabel='', axisYLabel=r'Node Count',
-                                             axisName='Twitter Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             axisColor='k', axisTickFontSize=axisTickFontSize, axisXLabel='',
+                                             axisYLabel=fontsizeLabels + r'Vertices',
+                                             axisName=fontsizeLegend + r'Twitter Degree',
+                                             axisXLim=(axisXmin, axisXmax),
+                                             axisYFormatterFun=axisYFormatterFun,
+                                             axisXFormatterFun=axisXFormatterFun,
                                              legendAlpha=legendAlpha,
                                              myShareAxis='do_twitter_deg_hist'
                                              )
@@ -798,8 +896,12 @@ def twitter_deg_stats_all_together():
                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                                 barRWidth=barRWidth, barOrientation='vertical', barLog=True,
                                                 axisGrid=True, axisFontSize=axisFontsize,
-                                                axisColor='k', axisXLabel='', axisYLabel=r'Node Count',
-                                                axisName='Twitter In-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                                axisColor='k', axisTickFontSize=axisTickFontSize, axisXLabel='',
+                                                axisYLabel=fontsizeLabels + r'Vertices',
+                                                axisName=fontsizeLegend + r'Twitter In-Degree',
+                                                axisXLim=(axisXmin, axisXmax),
+                                                axisYFormatterFun=axisYFormatterFun,
+                                                axisXFormatterFun=axisXFormatterFun,
                                                 legendAlpha=legendAlpha,
                                                 shareAxisX='do_twitter_deg_hist'
                                                 )
@@ -810,8 +912,13 @@ def twitter_deg_stats_all_together():
                                              barEdgecolor='gray', barHisttype='bar', barAlpha=0.9, barAlign='mid',
                                              barRWidth=1, barOrientation='vertical', barLog=True,
                                              axisGrid=True, axisFontSize=axisFontsize,
-                                             axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
-                                             axisName='Twitter Out-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             axisColor='k', axisTickFontSize=axisTickFontSize,
+                                             axisXLabel=fontsizeLabels + r'Degree',
+                                             axisYLabel=fontsizeLabels + r'Vertices',
+                                             axisName=fontsizeLegend + r'Twitter Out-Degree',
+                                             axisXLim=(axisXmin, axisXmax),
+                                             axisYFormatterFun=axisYFormatterFun,
+                                             axisXFormatterFun=axisXFormatterFun,
                                              legendAlpha=legendAlpha,
                                              shareAxisX='do_twitter_deg_hist'
                                              )
@@ -821,39 +928,32 @@ def twitter_deg_stats_all_together():
                 [do_twitter_deg_in_hist],
                 [do_twitter_deg_out_hist]],
                 show=False,
-                figWSpace=0.2, figHSpace=0.3)
+                figWSpace=0.2, figHSpace=0.3,
+                fileName='twitter_degree_dist_all.pdf')
 
 def twitter_deg_stats_all_separate(): 
-    csvNameRaw = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_raw.csv"
-    csvNameHistDeg = dropboxDir + "Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_hist.csv"
+    csvNameRaw = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Structure/structure_twitter_deg_raw.csv"
     
     csvColumnDegRaw = "raw_deg_256" 
     csvColumnDegInRaw = "raw_deg_in_256"
     csvColumnDegOutRaw = "raw_deg_out_256"
     
-    csvColumnDegNum = "deg_256"
-    csvColumnDegHist = "hist_deg_256"
-
     axisXmin = None
     axisXmax = None
     
     barBinCount = 100
     barRWidth = None #0.5
     axisFontsize = 12
-    legendAlpha = 0.8 
+    legendAlpha = 0.8
     
-#    do_twitter_deg_bar = get_bar_from_file(csvNameHistDeg, csvColumnDegNum,
-#                                           [(csvColumnDegHist, 'blue',None) ], [r'Twitter Degree Distribution', ],
-#                                           csvInts=(csvColumnDegNum, csvColumnDegHist),
-#                                           annotations=[],
-#                                           barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-#                                           barAlign='center', barOrientation='vertical', barWidth=1.0,
-#                                           barLog=True,
-#                                           axisGrid=True, axisFontSize=12, axisColor='k',
-#                                           axisYLabel='Node Count', axisXLim=(axisXmin, axisXmax),
-#                                           legendFontsize=12, legendAlpha=legendAlpha, legendShadow=False, legendColor='w',
-#                                           legendFancybox=False, legendPos='upper right'
-#                                           )
+    def axisXFormatterFun(x, pos=0):
+        return '%s$%d$' % (fontsizeTicks, x)
+    
+    def axisYFormatterFun(x, pos=0):
+        if x < 1:
+            return ''
+        return '%s$10^%d$' % (fontsizeTicks, math.ceil(math.log(x, 10)))
+    
     
     do_twitter_deg_hist = get_hist_from_file(csvNameRaw, csvColumnDegRaw, annotations=[],
                                              csvInts=(csvColumnDegRaw),
@@ -861,8 +961,13 @@ def twitter_deg_stats_all_separate():
                                              barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=barRWidth,
                                              barOrientation='vertical', barLog=True,
                                              axisGrid=True, axisFontSize=axisFontsize,
-                                             axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
-                                             axisName='Twitter Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             axisColor='k', axisTickFontSize=axisTickFontSize,
+                                             axisXLabel=fontsizeLabels + r'Degree', 
+                                             axisYLabel=fontsizeLabels + r'Vertices',
+                                             axisName=fontsizeLegend + r'Twitter Degree',
+                                             axisXFormatterFun=axisXFormatterFun, 
+                                             axisYFormatterFun=axisYFormatterFun,
+                                             axisXLim=(axisXmin, axisXmax),
                                              legendAlpha=legendAlpha)
 
     do_twitter_deg_in_hist = get_hist_from_file(csvNameRaw, csvColumnDegInRaw, annotations=[],
@@ -871,8 +976,13 @@ def twitter_deg_stats_all_separate():
                                                 barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=barRWidth,
                                                 barOrientation='vertical', barLog=True,
                                                 axisGrid=True, axisFontSize=axisFontsize,
-                                                axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
-                                                axisName='Twitter In-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                                axisColor='k', axisTickFontSize=axisTickFontSize, 
+                                                axisXLabel=fontsizeLabels + r'Degree', 
+                                                axisYLabel=fontsizeLabels + r'Vertices',
+                                                axisName=fontsizeLegend + r'Twitter In-Degree', 
+                                                axisXFormatterFun=axisXFormatterFun, 
+                                                axisYFormatterFun=axisYFormatterFun,
+                                                axisXLim=(axisXmin, axisXmax),
                                                 legendAlpha=legendAlpha)
 
     do_twitter_deg_out_hist = get_hist_from_file(csvNameRaw, csvColumnDegOutRaw, annotations=[],
@@ -881,23 +991,24 @@ def twitter_deg_stats_all_separate():
                                              barHisttype='bar', barAlpha=0.9, barAlign='mid', barRWidth=1,
                                              barOrientation='vertical', barLog=True,
                                              axisGrid=True, axisFontSize=axisFontsize,
-                                             axisColor='k', axisXLabel=r'Degree', axisYLabel=r'Node Count',
-                                             axisName='Twitter Out-Degree Distribution', axisXLim=(axisXmin, axisXmax),
+                                             axisColor='k', axisTickFontSize=axisTickFontSize,
+                                             axisXLabel=fontsizeLabels + r'Degree', 
+                                             axisYLabel=fontsizeLabels + r'Vertices',
+                                             axisName=fontsizeLegend + r'Twitter Out-Degree', 
+                                             axisXFormatterFun=axisXFormatterFun, 
+                                             axisYFormatterFun=axisYFormatterFun,
+                                             axisXLim=(axisXmin, axisXmax),
                                              legendAlpha=legendAlpha)
 
-#    show_plots([[do_twitter_deg_bar]],
-#                show=False,
-#                fileName="output0.pdf")
-    
     show_plots([[do_twitter_deg_hist]],
                 show=False,
-                fileName="output1.pdf")
+                fileName='twitter_degree_dist_one_in_out.pdf')
 
     show_plots([[do_twitter_deg_in_hist]],
                 show=False,
-                fileName="output2.pdf")
+                fileName='twitter_degree_dist_one_in.pdf')
     
     show_plots([[do_twitter_deg_out_hist]],
                 show=False,
-                fileName="output3.pdf")
+                fileName='twitter_degree_dist_one_out.pdf')
 
