@@ -12,6 +12,7 @@ except ImportError, exc:
 
 def csv_to_dict(filename, columns,
                 default='float', ints=(), floats=()):
+    
     csvFileName = filename
     csvDict = {}
     csvFile = open(csvFileName, "rb")
@@ -84,25 +85,35 @@ def csv_to_dict(filename, columns,
 
 def init_tex():
 #    rc('font', **{'family':'sans-serif', 'sans-serif':['Helvetica']})
-    rc('font', **{'family':'times'})
+#    rc('font', **{'family':'times'})
     ## for Palatino and other serif fonts use:
     #rc('font',**{'family':'serif','serif':['Palatino']})
-    rc('text', usetex=True)
+#    rc('text', usetex=True)
+    
+    params = {'backend': 'ps',
+              'axes.labelsize': 10,
+              'text.fontsize': 10,
+              'legend.fontsize': 10,
+              'xtick.labelsize': 8,
+              'ytick.labelsize': 8,
+              'text.usetex': True,
+              'font.family': 'times'}
+    plb.rcParams.update(params)
         
 def show_plots(plotFuns,
                fileName="output.pdf", show=True,
                figDpi=300, figFacecolor='w', figEdgecolor='w', figOrientation='portrait',
                figPapertype=None, figFormat='pdf', figTransparent=True,
-               figWSpace=0.2, figHSpace=0.2,
+               figWSpace=0.2, figHSpace=0.2, figSize=None,
                figLeftSpace=0.125, figRightSpace=0.9, figBottomSpace=0.1, figTopSpace=0.9):
     
     init_tex()
     
-    fig = plt.figure(1)
+    fig = plt.figure(1, figsize=figSize)
     fig.clf()
     
     fig.subplots_adjust(wspace=figWSpace, hspace=figHSpace,
-                        left=figLeftSpace, right=figRightSpace, 
+                        left=figLeftSpace, right=figRightSpace,
                         bottom=figBottomSpace, top=figTopSpace)
     
     numRows = len(plotFuns)    
@@ -264,13 +275,14 @@ def get_line_from_file(csvName, xAxis, yAxes, annotations=[],
 
 def get_line_from_file_multi_x(csvName, axes, annotations=[],
                                csvInts=(), csvFloats=(),
-                               axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True, axisColor='k',
-                               axisFontSize=12, axisTickFontSize=12,
+                               axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True, axisColor='k',
+                               axisFontSize=10, axisTickFontSize=10,
                                axisXLabel='', axisYLabel='', axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
                                axisXFormatterFun=None, axisYFormatterFun=None,
                                axisXScale='linear', axisYScale='linear',
-                               legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
-                               legendFancybox=False, legendPos='upper right', legendCols=1,
+                               legendFontsize=10, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                               legendFancybox=False, legendPos='upper right', legendCols=1, 
+                               legendBorderPad=0.0, legendTop = True,
                                myShareAxis=None, shareAxisX=None, shareAxisY=None):
     
     def do_line_from_file(fig, numRows, numCols, figNum, axesDict):
@@ -311,7 +323,8 @@ def get_line_from_file_multi_x(csvName, axes, annotations=[],
         for (xAxis, yAxis, yColor, axisName, lineStyle, lineMarker) in axes:
             line = plt.plot(csvDict[xAxis], csvDict[yAxis], linewidth=axisLineWidth)
             plt.setp(line, color=yColor, antialiased=axisLineAntialiased,
-                     linewidth=axisLineWidth, linestyle=lineStyle, marker=lineMarker)
+                     linewidth=axisLineWidth, linestyle=lineStyle, marker=lineMarker,
+                     markersize=4.0)
             legendLines += (line,)
             legendLineNames += (axisName,)
             
@@ -321,12 +334,25 @@ def get_line_from_file_multi_x(csvName, axes, annotations=[],
         legend = None
         
         if legendPos != None:        
-            legend = ax.legend(legendLines,
-                               legendLineNames,
-                               legendPos,
-                               shadow=legendShadow,
-                               fancybox=legendFancybox,
-                               ncol=legendCols)
+            if legendTop == True:
+                legend = ax.legend(legendLines,
+                                   legendLineNames,
+                                   'lower right',
+                                   shadow=legendShadow,
+                                   fancybox=legendFancybox,
+                                   ncol=legendCols,
+                                   bbox_to_anchor=(0., 1.07, 1., .102),
+                                   mode="expand",
+                                   borderpad=0.2,
+                                   labelspacing=0.1, 
+                                   borderaxespad=legendBorderPad)
+            else:            
+                legend = ax.legend(legendLines,
+                                   legendLineNames,
+                                   legendPos,
+                                   shadow=legendShadow,
+                                   fancybox=legendFancybox,
+                                   ncol=legendCols)
         
         if legend != None: 
             frame = legend.get_frame()  
@@ -371,20 +397,12 @@ def get_line_from_file_multi_x(csvName, axes, annotations=[],
         ax.set_title(axisTitle, fontsize=axisFontSize)
         ax.set_xlabel(xlabel, fontsize=axisFontSize)
         ax.set_ylabel(ylabel, fontsize=axisFontSize)
-#        ax.set_xscale(axisXScale) # linear,log,symlog
-#        ax.set_yscale(axisYScale) # linear,log,symlog
         ax.grid(axisGrid)
         if xticks == False:
-            ax.set_xticks([])
-#        else:
-#            xticks = ax.get_xticks()
-#            ax.set_xticklabels([r"$\mathbf{%s}$" % x for x in xticks])
+            ax.xaxis.set_ticklabels([])
             
         if yticks == False:
-            ax.set_yticks([])
-#        else:
-#            yticks = ax.get_yticks()
-#            ax.set_yticklabels([r"$\mathbf{%s}$" % y for y in yticks])
+            ax.yaxis.set_ticklabels([])
             
         ax.set_xlim(axisXLim)
         ax.set_ylim(axisYLim)
@@ -395,12 +413,13 @@ def get_line_from_file_multi_x(csvName, axes, annotations=[],
 def get_hist_from_file(csvName, values, annotations=[],
                        csvInts=(), csvFloats=(),
                        barBinCount=10, barFacecolor='blue', barEdgecolor='gray', barHisttype='bar',
-                       barAlpha=0.75, barAlign='mid', barOrientation='vertical', barRWidth=None, barLog=False,
-                       axisGrid=True, axisFontSize=12, axisTickFontSize=12,
+                       barAlpha=0.8, barAlign='mid', barOrientation='vertical', barRWidth=None, barLog=False,
+                       axisGrid=True, axisFontSize=10, axisTickFontSize=8,
                        axisColor='k', axisXLim=(None, None), axisYLim=(None, None),
                        axisXLabel='', axisYLabel='', axisName='', axisTitle='',
                        axisXFormatterFun=None, axisYFormatterFun=None,
-                       legendFontsize=12, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                       legendFontsize=10, legendAlpha=0.5, legendShadow=False, legendColor='w',
+                       legendBorderPad=0.2, legendLabelSpace=0.1, 
                        legendFancybox=False, legendPos='upper right',
                        myShareAxis=None, shareAxisX=None, shareAxisY=None):
     
@@ -445,7 +464,10 @@ def get_hist_from_file(csvName, values, annotations=[],
         for annotation in annotations:
             annotation(ax)
             
-        legend = ax.legend(shadow=legendShadow, fancybox=legendFancybox)
+        legend = ax.legend(shadow=legendShadow, 
+                           fancybox=legendFancybox,
+                           borderpad=legendBorderPad,
+                           labelspacing=legendLabelSpace)
         
         if legend != None: 
             frame = legend.get_frame()  
@@ -502,12 +524,13 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
                       barEdgecolor='gray', barHisttype='bar', barAlpha=0.75,
                       barAlign='edge', barOrientation='vertical', barWidth=0.3,
                       barLog=False,
-                      axisGrid=True, axisFontSize=12, axisTickFontSize=12, axisColor='k',
+                      axisGrid=True, axisFontSize=10, axisTickFontSize=8, axisColor='k',
                       axisXLim=(None, None), axisYLim=(None, None),
                       axisXLabel='', axisYLabel='', axisTitle='',
                       axisXFormatterFun=lambda x: x, axisYFormatterFun=None,
-                      legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                      legendFancybox=False, legendPos='upper right', legendCols=1,
+                      legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                      legendFancybox=False, legendPos='upper right', legendCols=1, 
+                      legendBorderPad=0.2, legendLabelSpace=0.1, legendTop = True,
                       myShareAxis=None, shareAxisX=None, shareAxisY=None):
     
     def do_bar_from_file(fig, numRows, numCols, figNum, axesDict):
@@ -572,12 +595,30 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
         legend = None
         
         if legendPos != None:            
-            legend = ax.legend([rects[0] for rects in rectsColl],
-                               yLabels,
-                               legendPos,
-                               shadow=legendShadow,
-                               fancybox=legendFancybox,
-                               ncol=legendCols)
+            if legendTop == True:
+                legend = ax.legend([rects[0] for rects in rectsColl],
+                                   yLabels,
+                                   'lower right',
+                                   shadow=legendShadow,
+                                   fancybox=legendFancybox,
+                                   ncol=legendCols,
+                                   bbox_to_anchor=(0., 1.07, 1., .102),
+                                   mode="expand",
+                                   borderpad=legendBorderPad,
+                                   labelspacing=legendLabelSpace, 
+#                                   borderaxespad=legendBorderPad
+                                   )
+            else:
+                legend = ax.legend([rects[0] for rects in rectsColl],
+                                   yLabels,
+                                   legendPos,
+                                   shadow=legendShadow,
+                                   fancybox=legendFancybox,
+                                   ncol=legendCols,
+                                   borderpad=legendBorderPad,
+                                   labelspacing=legendLabelSpace, 
+                                   )
+                            
         
         if legend != None: 
             frame = legend.get_frame()  
@@ -587,9 +628,6 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
             for ltext in legend.get_texts():
                 plb.setp(ltext, fontsize=legendFontsize)
 
-#        ax.set_xscale('linear') # linear,log,symlog
-#        ax.set_yscale('linear') # linear,log,symlog
-        
         ax.set_title(axisTitle, fontsize=axisFontSize)
         ax.set_xlabel(xlabel, fontsize=axisFontSize)
         ax.set_ylabel(ylabel, fontsize=axisFontSize)
@@ -602,10 +640,11 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
         ax.set_xlim(axisXLim)
         ax.set_ylim(axisYLim)
         if xticks == False:
-            ax.set_xticks([])
+#            ax.set_xticks([])
             ax.set_xticklabels([])
         if yticks == False:
-            ax.set_yticks([])
+#            ax.set_yticks([])
+            ax.set_xticklabels([])
         
         formy = None
         if axisYFormatterFun == None:
@@ -619,7 +658,6 @@ def get_bar_from_file(csvName, xAxis, yAxes, yLabels,
                 yticklabel.set_fontsize(axisTickFontSize)
         else:
             formy = plt.FuncFormatter(axisYFormatterFun)
-#            formy = plt.FormatStrFormatter('%d% %')
             ax.yaxis.set_major_formatter(formy)        
 
 
@@ -634,8 +672,9 @@ def get_barh_from_file(csvName, baseAxis, valuesColl, labels, annotations=[],
                        axisXLim=(None, None), axisYLim=(None, None),
                        axisXLabel='', axisYLabel='', axisTitle='',
                        axisXFormatterFun=None, axisYFormatterFun=lambda x: x,
-                       legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                       legendFancybox=False, legendPos='upper right', legendCols=1,
+                       legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',                       
+                       legendFancybox=False, legendPos='upper right', legendCols=1, legendTop=True,
+                       legendBorderPad=0.1, legendLabelSpace=0.1, legendBorderAxesPad=0.0,
                        myShareAxis=None, shareAxisX=None, shareAxisY=None):
     
     def do_barh_from_file(fig, numRows, numCols, figNum, axesDict):
@@ -706,13 +745,28 @@ def get_barh_from_file(csvName, baseAxis, valuesColl, labels, annotations=[],
 
         legend = None
         
-        if legendPos != None:
-            legend = ax.legend([rects[0] for rects in rectsColl],
-                               labels,
-                               legendPos,
-                               shadow=legendShadow,
-                               fancybox=legendFancybox,
-                               ncol=legendCols)
+        if legendPos != None:            
+            if legendTop == True:
+                legend = ax.legend([rects[0] for rects in rectsColl],
+                                   labels,
+                                   'lower left',
+                                   shadow=legendShadow,
+                                   fancybox=legendFancybox,
+                                   ncol=legendCols,
+                                   bbox_to_anchor=(0., 1.05, 1., .102),
+                                   mode="expand",
+                                   borderpad=legendBorderPad,
+                                   labelspacing=legendLabelSpace, 
+                                   borderaxespad=legendBorderAxesPad
+                                   )
+            else:
+                legend = ax.legend([rects[0] for rects in rectsColl],
+                                   labels,
+                                   legendPos,
+                                   shadow=legendShadow,
+                                   fancybox=legendFancybox,
+                                   ncol=legendCols)
+        
         
         if legend != None: 
             frame = legend.get_frame()  

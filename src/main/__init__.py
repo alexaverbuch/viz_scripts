@@ -7,6 +7,7 @@ from thesis_plots import thesis_plots_static
 from thesis_plots import thesis_plots_insert
 from thesis_plots import thesis_plots_dynamic
 from thesis_plots import thesis_plots_didic_stress
+from thesis_plots import thesis_plots_structure_new
 
 #************************************************************************************************************************************
 #********************igraph**********************************************************************************************************
@@ -48,86 +49,80 @@ from thesis_plots import thesis_plots_didic_stress
 #thesis_plots_structure.twitter_deg_stats_all_together()
 #thesis_plots_structure.twitter_deg_stats_all_separate()
 
+
+
+
+#thesis_plots_structure_new.fstree_deg_stats_all_together()
+#thesis_plots_structure_new.gis_deg_stats_all_together()
+#thesis_plots_structure_new.twitter_deg_stats_all_together()
+#thesis_plots_structure_new.gis_nodes_by_lon_lat()
+#thesis_plots_structure_new.gis_nodes_by_lon()
+#thesis_plots_structure_new.gis_nodes_by_lon_ptn()
+thesis_plots_structure_new.fstree_nodes_at_level_annotated(levelAlpha=0.3)
+
+
 #**********************************************
 #******************STATIC**********************
 #**********************************************
-#thesis_plots_static.fstree_search_load_balance_all_2()
-#thesis_plots_static.fstree_search_load_balance_all_4()
-#thesis_plots_static.fstree_search_glratio_2()
-#thesis_plots_static.fstree_search_glratio_4()
-#thesis_plots_static.fstree_traf()
-
-#thesis_plots_static.gis_long5_short95_load_balance_all_2()
-#thesis_plots_static.gis_long5_short95_load_balance_all_4()
-#thesis_plots_static.gis_long5_short95_glratio_2()
-#thesis_plots_static.gis_long5_short95_glratio_4()
+#thesis_plots_static.gis_load_balance_all_2()
+#thesis_plots_static.gis_load_balance_all_4()
 #thesis_plots_static.gis_traf()
+#thesis_plots_static.gis_glratio_2()
+#thesis_plots_static.gis_glratio_4()
+
+#thesis_plots_static.fstree_load_balance_all_2()
+#thesis_plots_static.fstree_load_balance_all_4()
+#thesis_plots_static.fstree_traf()
+#thesis_plots_static.fstree_glratio_2()
+#thesis_plots_static.fstree_glratio_4()
 
 #thesis_plots_static.twitter_load_balance_all_2()
 #thesis_plots_static.twitter_load_balance_all_4()
+#thesis_plots_static.twitter_traf()
 #thesis_plots_static.twitter_glratio_2()
 #thesis_plots_static.twitter_glratio_4()
-#thesis_plots_static.twitter_traf()
 
 #**********************************************
 #******************INSERT**********************
 #**********************************************
-#thesis_plots_insert.fstree_insert_gl_traf_4()
-#thesis_plots_insert.fstree_insert_std_nodes_4()
-#thesis_plots_insert.fstree_insert_std_rels_4()
-#thesis_plots_insert.fstree_insert_std_traf_4()
-#thesis_plots_insert.fstree_insert_edge_cut_4()
+##thesis_plots_insert.gis_insert_gl_traf_4()
+#thesis_plots_insert.gis_insert_std_all_4()
+#thesis_plots_insert.gis_insert_comms_all_4()
 
-#thesis_plots_insert.twitter_insert_gl_traf_4()
-#thesis_plots_insert.twitter_insert_std_nodes_4()
-#thesis_plots_insert.twitter_insert_std_rels_4()
-#thesis_plots_insert.twitter_insert_std_traf_4()
-#thesis_plots_insert.twitter_dynamic_edge_cut_4()
+##thesis_plots_insert.fstree_insert_gl_traf_4()
+#thesis_plots_insert.fstree_insert_std_all_4()
+#thesis_plots_insert.fstree_insert_comms_all_4()
 
-#thesis_plots_insert.gis_insert_gl_traf_4()
-#thesis_plots_insert.gis_insert_std_nodes_4()
-#thesis_plots_insert.gis_insert_std_rels_4()
-#thesis_plots_insert.gis_insert_std_traf_4()
-#thesis_plots_insert.gis_insert_edge_cut_4()
+##thesis_plots_insert.twitter_insert_gl_traf_4()
+#thesis_plots_insert.twitter_insert_std_all_4()
+#thesis_plots_insert.twitter_insert_comms_all_4()
 
 #**********************************************
 #******************DYNAMIC*********************
 #**********************************************
-#thesis_plots_dynamic.gis_dynamic_gl_traf_4()
-#thesis_plots_dynamic.gis_dynamic_std_nodes_4()
-#thesis_plots_dynamic.gis_dynamic_std_rels_4()
-#thesis_plots_dynamic.gis_dynamic_std_traf_4()
-#thesis_plots_dynamic.gis_dynamic_edge_cut_4()
+##thesis_plots_dynamic.gis_dynamic_gl_traf_4()
+#thesis_plots_dynamic.gis_dynamic_std_all_4()
+#thesis_plots_dynamic.gis_dynamic_comms_all_4()
 
-#thesis_plots_dynamic.fstree_dynamic_gl_traf_4()
-#thesis_plots_dynamic.fstree_dynamic_std_nodes_4()
-#thesis_plots_dynamic.fstree_dynamic_std_rels_4()
-#thesis_plots_dynamic.fstree_dynamic_std_traf_4()
-#thesis_plots_dynamic.fstree_dynamic_edge_cut_4()
+##thesis_plots_dynamic.fstree_dynamic_gl_traf_4()
+#thesis_plots_dynamic.fstree_dynamic_std_all_4()
+#thesis_plots_dynamic.fstree_dynamic_comms_all_4()
 
-#thesis_plots_dynamic.twitter_dynamic_gl_traf_4()
-#thesis_plots_dynamic.twitter_dynamic_std_nodes_4()
-#thesis_plots_dynamic.twitter_dynamic_std_rels_4()
-#thesis_plots_dynamic.twitter_dynamic_std_traf_4()
-#thesis_plots_dynamic.twitter_dynamic_edge_cut_4()
+###thesis_plots_dynamic.twitter_dynamic_gl_traf_4()
+#thesis_plots_dynamic.twitter_dynamic_std_all_4()
+#thesis_plots_dynamic.twitter_dynamic_comms_all_4()
 
 #**********************************************
 #******************DIDIC STRESS****************
 #**********************************************
-thesis_plots_didic_stress.gis_stress_gl_traf_4()
-thesis_plots_didic_stress.gis_stress_std_nodes_4()
-thesis_plots_didic_stress.gis_stress_std_rels_4()
-thesis_plots_didic_stress.gis_stress_std_traf_4()
-thesis_plots_didic_stress.gis_stress_edge_cut_4()
+##thesis_plots_didic_stress.gis_stress_gl_traf_4()
+#thesis_plots_didic_stress.gis_stress_std_all_4()
+#thesis_plots_didic_stress.gis_stress_comms_all_4()
 
-thesis_plots_didic_stress.fstree_stress_gl_traf_4()
-thesis_plots_didic_stress.fstree_stress_std_nodes_4()
-thesis_plots_didic_stress.fstree_stress_std_rels_4()
-thesis_plots_didic_stress.fstree_stress_std_traf_4()
-thesis_plots_didic_stress.fstree_stress_edge_cut_4()
+##thesis_plots_didic_stress.fstree_stress_gl_traf_4()
+#thesis_plots_didic_stress.fstree_stress_std_all_4()
+#thesis_plots_didic_stress.fstree_stress_comms_all_4()
 
-thesis_plots_didic_stress.twitter_stress_gl_traf_4()
-thesis_plots_didic_stress.twitter_stress_std_nodes_4()
-thesis_plots_didic_stress.twitter_stress_std_rels_4()
-thesis_plots_didic_stress.twitter_stress_std_traf_4()
-thesis_plots_didic_stress.twitter_stress_edge_cut_4()
+##thesis_plots_didic_stress.twitter_stress_gl_traf_4()
+#thesis_plots_didic_stress.twitter_stress_std_all_4()
+#thesis_plots_didic_stress.twitter_stress_comms_all_4()

@@ -1,1034 +1,147 @@
 from matplotlib import rc
 from matplotlib_scripts.matplotlib_scripts import *
+import numpy
 
-fontsizeLabels = r'\LARGE '
-fontsizeTicks = r'\Large '
-fontsizeLegend = r'\Large '
-axisTickFontSize = 16
-barWidth = 0.2
+defBarWidth = 0.2
 
-def gis_long5_short95_load_balance_all_2():
+defFigWidthAll = 9.0
+defFigHeightAll = 9.0
+defFigLeftSpaceAll = 0.17
+defFigBottomSpaceAll = 0.06
+defFigRightSpaceAll = 0.98
+defFigTopSpaceAll = 0.84
+
+defFigWidthOne = 9.0
+defFigHeightOne = 7.0
+defFigLeftSpaceOne = 0.15
+defFigBottomSpaceOne = 0.15
+defFigRightSpaceOne = 0.92
+defFigTopSpaceOne = 0.93
+
+
+def gis_load_balance_all_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
     csvFile = csvFolder + "gis2_long5_short95_balance.csv"
-     
-    csvColumnPartition = "partitions"
     
-    csvColumnRelsHard = "rels_hard"
-    csvColumnRelsDiDiC = "rels_didic"
-    csvColumnRelsRand = "rels_rand"
+    legends = [r'Hardcoded 2',
+               r'DiDiC 2',
+               r'Random 2']
     
-    csvColumnNodesHard = "nodes_hard"
-    csvColumnNodesDiDiC = "nodes_didic"
-    csvColumnNodesRand = "nodes_rand"
+    barWidth = defBarWidth / 3.0
     
-    csvColumnTrafHard = "traf_hard"
-    csvColumnTrafDiDiC = "traf_didic"
-    csvColumnTrafRand = "traf_rand"
-    
-    legendAlpha = 0.8 
-    maxY = 100
-    reducedBarWidth = barWidth / 3.0
-    axisGrid = False
-    
-    def do_annotation_avg_gltraf(ax):
-        ax.axhline(y=50, linewidth=1, color='black', alpha=1.0, linestyle='--')
-    
-    annotations = [do_annotation_avg_gltraf]    
+    load_balance_all(csvFile, legends,
+                     fileName="gis2_bal_all.pdf",
+                     horizontalLineY=50,
+                     barWidth=barWidth)
 
-    def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%s' % (fontsizeTicks, x)    
-    
-#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
-    
-    do_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                       [
-                                        (csvColumnRelsHard, 'blue', None),
-                                        (csvColumnRelsDiDiC, 'red', None),
-                                        (csvColumnRelsRand, 'green', None),
-                                        ],
-                                        [
-                                         fontsizeLegend + r'Hardcoded 2',
-                                         fontsizeLegend + r'DiDiC 2',
-                                         fontsizeLegend + r'Random 2',
-                                         ],
-                                         csvFloats=(
-                                                    csvColumnRelsHard,
-                                                    csvColumnRelsDiDiC,
-                                                    csvColumnRelsRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Edges', # axisXLabel=None,
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos='upper right',
-                                         legendCols=3,
-                                         )
-    
-    do_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                        [
-                                         (csvColumnNodesHard, 'blue', None),
-                                         (csvColumnNodesDiDiC, 'red', None),
-                                         (csvColumnNodesRand, 'green', None),
-                                         ],
-                                         [],
-                                         csvFloats=(
-                                                    csvColumnNodesHard,
-                                                    csvColumnNodesDiDiC,
-                                                    csvColumnNodesRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Vertices', # axisXLabel=None,
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos=None
-                                         )
-    
-    do_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                        [
-                                         (csvColumnTrafHard, 'blue', None),
-                                         (csvColumnTrafDiDiC, 'red', None),
-                                         (csvColumnTrafRand, 'green', None),
-                                         ],
-                                         [],
-                                         csvFloats=(
-                                                    csvColumnTrafHard,
-                                                    csvColumnTrafDiDiC,
-                                                    csvColumnTrafRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Traffic',
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos=None
-                                         )
-    
-    show_plots([
-                [do_rel_bal_bar],
-                [do_node_bal_bar],
-                [do_traf_bal_bar]],
-                show=False,
-                figHSpace=0.3,
-                fileName="gis2_bal_all.pdf")
-
-def gis_long5_short95_load_balance_all_4():
+def gis_load_balance_all_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
     csvFile = csvFolder + "gis4_long5_short95_balance.csv"
-     
-    csvColumnPartition = "partitions"
     
-    csvColumnRelsHard = "rels_hard"
-    csvColumnRelsDiDiC = "rels_didic"
-    csvColumnRelsRand = "rels_rand"
+    legends = [r'Hardcoded 4',
+               r'DiDiC 4',
+               r'Random 4']
     
-    csvColumnNodesHard = "nodes_hard"
-    csvColumnNodesDiDiC = "nodes_didic"
-    csvColumnNodesRand = "nodes_rand"
+    barWidth = defBarWidth
     
-    csvColumnTrafHard = "traf_hard"
-    csvColumnTrafDiDiC = "traf_didic"
-    csvColumnTrafRand = "traf_rand"
-    
-    legendAlpha = 0.8 
-    maxY = 50
-    reducedBarWidth = barWidth
-    axisGrid = False
-    
-    def do_annotation_avg_gltraf(ax):
-        ax.axhline(y=25, linewidth=1, color='black', alpha=1.0, linestyle='--')
-    
-    annotations = [do_annotation_avg_gltraf]
-        
-    def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%s' % (fontsizeTicks, x)    
-    
-#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
-    
-    do_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                       [
-                                        (csvColumnRelsHard, 'blue', None),
-                                        (csvColumnRelsDiDiC, 'red', None),
-                                        (csvColumnRelsRand, 'green', None),
-                                        ],
-                                        [
-                                         fontsizeLegend + r'Hardcoded 4',
-                                         fontsizeLegend + r'DiDiC 4',
-                                         fontsizeLegend + r'Random 4',
-                                         ],
-                                         csvFloats=(
-                                                    csvColumnRelsHard,
-                                                    csvColumnRelsDiDiC,
-                                                    csvColumnRelsRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Edges', # axisXLabel=None,
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos='upper right',
-                                         legendCols=3,
-                                         )
-    
-    do_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                        [
-                                         (csvColumnNodesHard, 'blue', None),
-                                         (csvColumnNodesDiDiC, 'red', None),
-                                         (csvColumnNodesRand, 'green', None),
-                                         ],
-                                         [],
-                                         csvFloats=(
-                                                    csvColumnNodesHard,
-                                                    csvColumnNodesDiDiC,
-                                                    csvColumnNodesRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Vertices', # axisXLabel=None,
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos=None
-                                         )
-    
-    do_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                        [
-                                         (csvColumnTrafHard, 'blue', None),
-                                         (csvColumnTrafDiDiC, 'red', None),
-                                         (csvColumnTrafRand, 'green', None),
-                                         ],
-                                         [],
-                                         csvFloats=(
-                                                    csvColumnTrafHard,
-                                                    csvColumnTrafDiDiC,
-                                                    csvColumnTrafRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Traffic',
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos=None
-                                         )
-    
-    show_plots([
-                [do_rel_bal_bar],
-                [do_node_bal_bar],
-                [do_traf_bal_bar]],
-                show=False,
-                figHSpace=0.3,
-                fileName="gis4_bal_all.pdf")
+    load_balance_all(csvFile, legends,
+                     fileName="gis4_bal_all.pdf",
+                     horizontalLineY=25,
+                     barWidth=barWidth)
 
 def gis_traf():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/"
     csvFile = csvFolder + "gis_traffic.csv"     
     
-    csvColumnIndex = "index"    
-    csvColumnTraf = "traffic"
-
-    def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3.1f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
+    fileName = "gis_traf.pdf"
     
-    do_fstree2_gtraf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                               [(csvColumnTraf, 'blue', fontsizeLegend + r'Traffic', '-', ''), ],
-                                                csvInts=(csvColumnTraf),
-                                                annotations=[],
-                                                axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                                axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Traffic',
-                                                axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                                axisXFormatterFun=None, axisYFormatterFun=None,
-                                                axisXScale='linear', axisYScale='log',
-                                                legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                                legendFancybox=False, legendPos='upper right',
-                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree2_gtraf_line]],
-                show=False,
-                fileName="gis_traf.pdf")
+    traf(csvFile,
+         legendName='GIS Traffic',
+         fileName=fileName)        
 
-def gis_long5_short95_perc_gtraf_2():
+def gis_glratio_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
-    csvFile = csvFolder + "gis2_long5_short95_perc_gtraf.csv"     
-    
-    csvColumnPerc = "perc_gtraf"    
+    csvFile = csvFolder + "gis2_long5_short95_gtraf.csv"
+         
+    glratio(csvFile,
+            legendNameHard='Hardcoded 2',
+            legendNameDiDiC='DiDiC 2',
+            legendNameRand='Random 2',
+            fileName='gis_g_l_traf_2.pdf')
 
-    csvColumnGlobalHard = "hard"
-    csvColumnGlobalDiDiC = "didic"
-    csvColumnGlobalRand = "rand"
-    
-    def axisYFormatterFun(x, pos=0):
-        if x > 100:
-            return ""        
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-        
-    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
-                                          [
-                                           (csvColumnGlobalDiDiC, 'red', None),
-                                           (csvColumnGlobalRand, 'green', None),
-                                           (csvColumnGlobalHard, 'blue', None),
-                                           ],
-                                           [
-                                            fontsizeLegend + r'DiDiC 2',
-                                            fontsizeLegend + r'Random 2',
-                                            fontsizeLegend + r'Hardcoded 2',
-                                            ],
-                                            csvFloats=(
-                                                       csvColumnPerc,
-                                                       csvColumnGlobalDiDiC,
-                                                       csvColumnGlobalRand,
-                                                       csvColumnGlobalHard,
-                                                       ),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                            barLog=True,
-                                            axisGrid=True, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                            axisYLabel=fontsizeLabels + r'Percentage of Operations',
-                                            axisXLabel=fontsizeLabels + r'Amount of Global Traffic',
-                                            axisYFormatterFun=axisYFormatterFun,
-                                            axisXFormatterFun=axisXFormatterFun,
-                                            axisYLim=(0, 130),
-                                            legendAlpha=0.8, legendShadow=False,
-                                            legendColor='w', legendFancybox=False, legendPos='upper right'
-                                            )
-
-    show_plots([[do_perc_gtraf_bar]],
-                show=False,
-                fileName="gis2_long5_short95_perc_gtraf.pdf")
-
-def gis_long5_short95_perc_gtraf_4():
+def gis_glratio_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
-    csvFile = csvFolder + "gis4_long5_short95_perc_gtraf.csv"     
-    
-    csvColumnPerc = "perc_gtraf"    
-
-    csvColumnGlobalHard = "hard"
-    csvColumnGlobalDiDiC = "didic"
-    csvColumnGlobalRand = "rand"
-    
-    def axisYFormatterFun(x, pos=0):
-        if x > 100:
-            return ""        
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-        
-    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
-                                          [
-                                           (csvColumnGlobalDiDiC, 'red', None),
-                                           (csvColumnGlobalRand, 'green', None),
-                                           (csvColumnGlobalHard, 'blue', None),
-                                           ],
-                                           [
-                                            fontsizeLegend + r'DiDiC 4',
-                                            fontsizeLegend + r'Random 4',
-                                            fontsizeLegend + r'Hardcoded 4',
-                                            ],
-                                            csvFloats=(
-                                                       csvColumnPerc,
-                                                       csvColumnGlobalDiDiC,
-                                                       csvColumnGlobalRand,
-                                                       csvColumnGlobalHard,
-                                                       ),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                            barLog=True,
-                                            axisGrid=True, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                            axisYLabel=fontsizeLabels + r'Percentage of Operations',
-                                            axisXLabel=fontsizeLabels + r'Amount of Global Traffic',
-                                            axisYFormatterFun=axisYFormatterFun,
-                                            axisXFormatterFun=axisXFormatterFun,
-                                            axisYLim=(0, 130),
-                                            legendAlpha=0.8, legendShadow=False,
-                                            legendColor='w', legendFancybox=False, legendPos='upper right'
-                                            )
-
-    show_plots([[do_perc_gtraf_bar]],
-                show=False,
-                fileName="gis4_long5_short95_perc_gtraf.pdf")
-
-def gis_long5_short95_glratio_2():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
-    csvFile = csvFolder + "gis2_long5_short95_gtraf.csv"     
-    
-    csvColumnIndex = "index"    
-
-    csvColumnGLtrafHard = "g_l_hard"
-    csvColumnGLtrafDiDiC = "g_l_didic"
-    csvColumnGLtrafRand = "g_l_rand"
-    
-    csvFileAnnotate = csvFolder + "gis2_long5_short95_gtraf.csv"
-    csvColumnGLAvgHard = "g_l_avg_hard"
-    csvColumnGLAvgDiDiC = "g_l_avg_didic"
-    csvColumnGLAvgRand = "g_l_avg_rand"
-    
-    csvDict = csv_to_dict(csvFileAnnotate,
-                          (csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand),
-                          floats=(csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand))
-
-    def get_do_annotation_avg_gltraf(column, color):
-        def do_annotation_avg_gltraf(ax):
-            ax.axhline(y=csvDict[column][0], linewidth=1, color=color, alpha=1.0, linestyle='--')
-        return do_annotation_avg_gltraf
-    
-    annotations = []    
-    for (column, color) in ((csvColumnGLAvgHard, 'blue'),
-                           (csvColumnGLAvgDiDiC, 'red'),
-                           (csvColumnGLAvgRand, 'green')):    
-        annotations += [get_do_annotation_avg_gltraf(column, color)]
-        
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
-
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-    
-    def axisYFormatterFun(x, pos=0):        
-        return '%s%3d %s' % (fontsizeTicks, x * 100., '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3.0f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
-    
-    do_gl_traf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                         [(csvColumnGLtrafHard, 'blue', fontsizeLegend + r'Hardcoded 2', '-', ''),
-                                          (csvColumnGLtrafDiDiC, 'red', fontsizeLegend + r'DiDiC 2', '-', ''),
-                                          (csvColumnGLtrafRand, 'green', fontsizeLegend + r'Random 2', '-', '')],
-                                          csvFloats=(csvColumnGLtrafHard,
-                                                     csvColumnGLtrafDiDiC,
-                                                     csvColumnGLtrafRand),
-                                          annotations=annotations,
-                                          axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                          axisTickFontSize=axisTickFontSize, axisColor='k',
-                                          axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Percentage Global',
-                                          axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                          axisXScale='linear', axisYScale='linear',
-                                          legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                          legendFancybox=False, legendPos='upper right',
-                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_gl_traf_line]],
-                show=False,
-                fileName="gis2_long5_short95_g_l_traf.pdf")
-
-def gis_long5_short95_glratio_4():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
-    csvFile = csvFolder + "gis4_long5_short95_gtraf.csv"     
-    
-    csvColumnIndex = "index"    
-
-    csvColumnGLtrafHard = "g_l_hard"
-    csvColumnGLtrafDiDiC = "g_l_didic"
-    csvColumnGLtrafRand = "g_l_rand"
-    
-    csvFileAnnotate = csvFolder + "gis2_long5_short95_gtraf.csv"
-    csvColumnGLAvgHard = "g_l_avg_hard"
-    csvColumnGLAvgDiDiC = "g_l_avg_didic"
-    csvColumnGLAvgRand = "g_l_avg_rand"
-    
-    csvDict = csv_to_dict(csvFileAnnotate,
-                          (csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand),
-                          floats=(csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand))
-
-    def get_do_annotation_avg_gltraf(column, color):
-        def do_annotation_avg_gltraf(ax):
-            ax.axhline(y=csvDict[column][0], linewidth=1, color=color, alpha=1.0, linestyle='--')
-        return do_annotation_avg_gltraf
-    
-    annotations = []    
-    for (column, color) in ((csvColumnGLAvgHard, 'blue'),
-                           (csvColumnGLAvgDiDiC, 'red'),
-                           (csvColumnGLAvgRand, 'green')):    
-        annotations += [get_do_annotation_avg_gltraf(column, color)]
-
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
-
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-    
-    def axisYFormatterFun(x, pos=0):        
-        return '%s%3d %s' % (fontsizeTicks, x * 100., '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3.0f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
-    
-    do_gl_traf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                         [(csvColumnGLtrafHard, 'blue', fontsizeLegend + r'Hardcoded 4', '-', ''),
-                                          (csvColumnGLtrafDiDiC, 'red', fontsizeLegend + r'DiDiC 4', '-', ''),
-                                          (csvColumnGLtrafRand, 'green', fontsizeLegend + r'Random 4', '-', '')],
-                                          csvFloats=(csvColumnGLtrafHard,
-                                                     csvColumnGLtrafDiDiC,
-                                                     csvColumnGLtrafRand),
-                                          annotations=annotations,
-                                          axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                          axisTickFontSize=axisTickFontSize, axisColor='k',
-                                          axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Percentage Global',
-                                          axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                          axisXScale='linear', axisYScale='linear',
-                                          legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                          legendFancybox=False, legendPos='upper right',
-                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_gl_traf_line]],
-                show=False,
-                fileName="gis4_long5_short95_g_l_traf.pdf")
+    csvFile = csvFolder + "gis4_long5_short95_gtraf.csv"
+         
+    glratio(csvFile,
+            legendNameHard='Hardcoded 4',
+            legendNameDiDiC='DiDiC 4',
+            legendNameRand='Random 4',
+            fileName='gis_g_l_traf_4.pdf')
 
 
 
-
-def fstree_search_load_balance_all_2():
+def fstree_load_balance_all_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
     csvFile = csvFolder + "tree2_search_balance.csv" 
     
-    csvColumnPartition = "partitions"
+    legends = [r'Hardcoded 2',
+               r'DiDiC 2',
+               r'Random 2']
     
-    csvColumnRelsHard = "rels_hard"
-    csvColumnRelsDiDiC = "rels_didic"
-    csvColumnRelsRand = "rels_rand"
+    barWidth = defBarWidth / 3.0
     
-    csvColumnNodesHard = "nodes_hard"
-    csvColumnNodesDiDiC = "nodes_didic"
-    csvColumnNodesRand = "nodes_rand"
-    
-    csvColumnTrafHard = "traf_hard"
-    csvColumnTrafDiDiC = "traf_didic"
-    csvColumnTrafRand = "traf_rand"
-    
-    legendAlpha = 0.8 
-    maxY = 100
-    reducedBarWidth = barWidth / 3.0
-    axisGrid = False
-    
-    def do_annotation_avg_gltraf(ax):
-        ax.axhline(y=50, linewidth=1, color='black', alpha=1.0, linestyle='--')
-    
-    annotations = [do_annotation_avg_gltraf]    
+    load_balance_all(csvFile, legends,
+                     fileName="fstree2_bal_all.pdf",
+                     horizontalLineY=50,
+                     barWidth=barWidth)
 
-    def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%s' % (fontsizeTicks, x)    
-    
-#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
-    
-    do_fstree2_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                               [(csvColumnRelsHard, 'blue', None),
-                                                (csvColumnRelsDiDiC, 'red', None),
-                                                (csvColumnRelsRand, 'green', None)],
-                                                [
-                                                 fontsizeLegend + r'Hardcoded 2',
-                                                 fontsizeLegend + r'DiDiC 2',
-                                                 fontsizeLegend + r'Random 2',
-                                                 ],
-                                                csvFloats=(csvColumnRelsHard,
-                                                           csvColumnRelsDiDiC,
-                                                           csvColumnRelsRand),
-                                                annotations=annotations,
-                                                barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                                barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                                barLog=True,
-                                                axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                axisYLabel=fontsizeLabels + r'Edges', # axisXLabel=None,
-                                                axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                                axisYLim=(0, maxY),
-                                                legendAlpha=legendAlpha, legendShadow=False,
-                                                legendColor='w', legendFancybox=False, legendPos='upper right',
-                                                legendCols=3,
-                                                )
-    
-    do_fstree2_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                                [(csvColumnNodesHard, 'blue', None),
-                                                 (csvColumnNodesDiDiC, 'red', None),
-                                                 (csvColumnNodesRand, 'green', None)],
-                                                 [
-#                                                  fontsizeLegend + r'Hardcoded 2',
-#                                                  fontsizeLegend + r'DiDiC 2',
-#                                                  fontsizeLegend + r'Random 2',
-                                                  ],
-                                                 csvFloats=(csvColumnNodesHard,
-                                                            csvColumnNodesDiDiC,
-                                                            csvColumnNodesRand),
-                                                 annotations=annotations,
-                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                                 barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                                 barLog=True,
-                                                 axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                 axisYLabel=fontsizeLabels + r'Vertices', # axisXLabel=None,
-                                                 axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                                 axisYLim=(0, maxY),
-                                                 legendAlpha=legendAlpha, legendShadow=False,
-                                                 legendColor='w', legendFancybox=False, legendPos=None
-                                                 )
-    
-    do_fstree2_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                                [(csvColumnTrafHard, 'blue', None),
-                                                 (csvColumnTrafDiDiC, 'red', None),
-                                                 (csvColumnTrafRand, 'green', None)],
-                                                 [
-#                                                  fontsizeLegend + r'Hardcoded 2',
-#                                                  fontsizeLegend + r'DiDiC 2',
-#                                                  fontsizeLegend + r'Random 2',
-                                                  ],
-                                                 csvFloats=(csvColumnTrafHard,
-                                                            csvColumnTrafDiDiC,
-                                                            csvColumnTrafRand),
-                                                 annotations=annotations,
-                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                                 barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                                 barLog=True,
-                                                 axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                 axisYLabel=fontsizeLabels + r'Traffic',
-                                                 axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                                 axisYLim=(0, maxY),
-                                                 legendAlpha=legendAlpha, legendShadow=False,
-                                                 legendColor='w', legendFancybox=False, legendPos=None
-                                                 )
-    
-    show_plots([
-                [do_fstree2_rel_bal_bar],
-                [do_fstree2_node_bal_bar],
-                [do_fstree2_traf_bal_bar]],
-                show=False,
-                figHSpace=0.3,
-                fileName="fstree2_bal_all.pdf")
-
-def fstree_search_load_balance_all_4():
+def fstree_load_balance_all_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
     csvFile = csvFolder + "tree4_search_balance.csv" 
     
-    csvColumnPartition = "partitions"
+    legends = [r'Hardcoded 4',
+               r'DiDiC 4',
+               r'Random 4']
     
-    csvColumnRelsHard = "rels_hard"
-    csvColumnRelsDiDiC = "rels_didic"
-    csvColumnRelsRand = "rels_rand"
+    barWidth = defBarWidth
     
-    csvColumnNodesHard = "nodes_hard"
-    csvColumnNodesDiDiC = "nodes_didic"
-    csvColumnNodesRand = "nodes_rand"
-    
-    csvColumnTrafHard = "traf_hard"
-    csvColumnTrafDiDiC = "traf_didic"
-    csvColumnTrafRand = "traf_rand"
-    
-    legendAlpha = 0.8 
-    maxY = 50
-    axisGrid = False
-        
-    def do_annotation_avg_gltraf(ax):
-        ax.axhline(y=25, linewidth=1, color='black', alpha=1.0, linestyle='--')
-    
-    annotations = [do_annotation_avg_gltraf]
-        
-    def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%s' % (fontsizeTicks, x)    
-    
-#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
-    
-    do_fstree4_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                               [(csvColumnRelsHard, 'blue', None),
-                                                (csvColumnRelsDiDiC, 'red', None),
-                                                (csvColumnRelsRand, 'green', None)],
-                                                [
-                                                 fontsizeLegend + r'Hardcoded 4',
-                                                 fontsizeLegend + r'DiDiC 4',
-                                                 fontsizeLegend + r'Random 4',
-                                                 ],
-                                                csvFloats=(csvColumnRelsHard,
-                                                           csvColumnRelsDiDiC,
-                                                           csvColumnRelsRand),
-                                                annotations=annotations,
-                                                barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                                barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                                barLog=True,
-                                                axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                axisYLabel=fontsizeLabels + r'Edges', # axisXLabel=None,
-                                                axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                                axisYLim=(0, maxY),
-                                                legendAlpha=legendAlpha, legendShadow=False,
-                                                legendColor='w', legendFancybox=False, legendPos='upper right',
-                                                legendCols=3,
-                                                )
-    
-    do_fstree4_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                                [(csvColumnNodesHard, 'blue', None),
-                                                 (csvColumnNodesDiDiC, 'red', None),
-                                                 (csvColumnNodesRand, 'green', None)],
-                                                 [
-                                                  fontsizeLegend + r'Hardcoded 4',
-                                                  fontsizeLegend + r'DiDiC 4',
-                                                  fontsizeLegend + r'Random 4',
-                                                  ],
-                                                 csvFloats=(csvColumnNodesHard,
-                                                            csvColumnNodesDiDiC,
-                                                            csvColumnNodesRand),
-                                                 annotations=annotations,
-                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                                 barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                                 barLog=True,
-                                                 axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                 axisYLabel=fontsizeLabels + r'Vertices', # axisXLabel=None,
-                                                 axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                                 axisYLim=(0, maxY),
-                                                 legendAlpha=legendAlpha, legendShadow=False,
-                                                 legendColor='w', legendFancybox=False, legendPos=None
-                                                 )
-    
-    do_fstree4_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                                [(csvColumnTrafHard, 'blue', None),
-                                                 (csvColumnTrafDiDiC, 'red', None),
-                                                 (csvColumnTrafRand, 'green', None)],
-                                                 [
-#                                                  fontsizeLegend + r'Hardcoded 4',
-#                                                  fontsizeLegend + r'DiDiC 4',
-#                                                  fontsizeLegend + r'Random 4',
-                                                  ],
-                                                 csvFloats=(csvColumnTrafHard,
-                                                            csvColumnTrafDiDiC,
-                                                            csvColumnTrafRand),
-                                                 annotations=annotations,
-                                                 barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                                 barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                                 barLog=True,
-                                                 axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                 axisYLabel=fontsizeLabels + r'Traffic',
-                                                 axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                                 axisYLim=(0, maxY),
-                                                 legendAlpha=legendAlpha, legendShadow=False,
-                                                 legendColor='w', legendFancybox=False, legendPos=None
-                                                 )
-    
-    show_plots([
-                [do_fstree4_rel_bal_bar],
-                [do_fstree4_node_bal_bar],
-                [do_fstree4_traf_bal_bar]],
-                show=False,
-                figHSpace=0.3,
-                fileName="fstree4_bal_all.pdf")
+    load_balance_all(csvFile, legends,
+                     fileName="fstree4_bal_all.pdf",
+                     horizontalLineY=25,
+                     barWidth=barWidth)
 
 def fstree_traf():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/"
     csvFile = csvFolder + "fstree_traffic.csv"     
     
-    csvColumnIndex = "index"    
-    csvColumnTraf = "traffic"
-
-    def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3.1f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
+    fileName = "fstree_traf.pdf"
     
-    do_fstree2_gtraf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                               [(csvColumnTraf, 'blue', fontsizeLegend + r'Traffic', '-', ''), ],
-                                                csvInts=(csvColumnTraf),
-                                                annotations=[],
-                                                axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                                axisTickFontSize=axisTickFontSize, axisColor='k',
-                                                axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Traffic',
-                                                axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                                axisXFormatterFun=None, axisYFormatterFun=None,
-                                                axisXScale='linear', axisYScale='log',
-                                                legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                                legendFancybox=False, legendPos='upper right',
-                                                myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_fstree2_gtraf_line]],
-                show=False,
-                fileName="fstree_traf.pdf")
+    traf(csvFile,
+         legendName='FS-Tree Traffic',
+         fileName=fileName)        
 
-def fstree_search_perc_gtraf_2():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
-    csvFile = csvFolder + "tree2_search_perc_gtraf.csv"     
-    
-    csvColumnPerc = "perc_gtraf"    
-    csvColumnSearchHard = "hard"
-    csvColumnSearchDiDiC = "didic"
-    csvColumnSearchRand = "rand"
-        
-    def axisYFormatterFun(x, pos=0):
-        if x > 100:
-            return ""        
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-                            
-    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
-                                          [
-                                           (csvColumnSearchDiDiC, 'red', None),
-                                           (csvColumnSearchRand, 'green', None),
-                                           (csvColumnSearchHard, 'blue', None),
-                                           ],
-                                           [
-                                            fontsizeLegend + r'DiDiC 2',
-                                            fontsizeLegend + r'Random 2',
-                                            fontsizeLegend + r'Hardcoded 2',
-                                            ],
-                                            csvFloats=(
-                                                       csvColumnPerc,
-                                                       csvColumnSearchDiDiC,
-                                                       csvColumnSearchRand,
-                                                       csvColumnSearchHard,
-                                                       ),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                            barLog=True,
-                                            axisGrid=True, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                            axisYLabel=fontsizeLabels + r'Percentage of Operations',
-                                            axisXLabel=fontsizeLabels + r'Amount of Global Traffic',
-                                            axisYFormatterFun=axisYFormatterFun,
-                                            axisXFormatterFun=axisXFormatterFun,
-                                            axisYLim=(0, 130),
-                                            legendAlpha=0.8, legendShadow=False,
-                                            legendColor='w', legendFancybox=False, legendPos='upper right'
-                                            )
-
-    show_plots([[do_perc_gtraf_bar]],
-                show=False,
-                fileName="fstree2_search_perc_gtraf.pdf")
-
-def fstree_search_perc_gtraf_4():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
-    csvFile = csvFolder + "tree4_search_perc_gtraf.csv"     
-    
-    csvColumnPerc = "perc_gtraf"    
-
-    csvColumnSearchHard = "hard"
-    csvColumnSearchDiDiC = "didic"
-    csvColumnSearchRand = "rand"
-    
-    def axisYFormatterFun(x, pos=0):
-        if x > 100:
-            return ""        
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-                            
-    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
-                                          [
-                                           (csvColumnSearchDiDiC, 'red', None),
-                                           (csvColumnSearchRand, 'green', None),
-                                           (csvColumnSearchHard, 'blue', None),
-                                           ],
-                                           [
-                                            fontsizeLegend + r'DiDiC 4',
-                                            fontsizeLegend + r'Random 4',
-                                            fontsizeLegend + r'Hardcoded 4',
-                                            ],
-                                            csvFloats=(
-                                                       csvColumnPerc,
-                                                       csvColumnSearchDiDiC,
-                                                       csvColumnSearchRand,
-                                                       csvColumnSearchHard,
-                                                       ),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                            barLog=True,
-                                            axisGrid=True, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                            axisYLabel=fontsizeLabels + r'Percentage of Operations',
-                                            axisXLabel=fontsizeLabels + 'Amount of Global Traffic',
-                                            axisYFormatterFun=axisYFormatterFun,
-                                            axisXFormatterFun=axisXFormatterFun,
-                                            axisYLim=(0, 130),
-                                            legendAlpha=0.8, legendShadow=False,
-                                            legendColor='w', legendFancybox=False, legendPos='upper right'
-                                            )
-
-    show_plots([[do_perc_gtraf_bar]],
-                show=False,
-                fileName="fstree4_search_perc_gtraf.pdf")
-
-def fstree_search_glratio_2():
+def fstree_glratio_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
     csvFile = csvFolder + "tree2_search_gtraf.csv"     
     
-    csvColumnIndex = "index"    
+    glratio(csvFile,
+            legendNameHard='Hardcoded 2',
+            legendNameDiDiC='DiDiC 2',
+            legendNameRand='Random 2',
+            fileName='fstree_g_l_traf_2.pdf',
+            axisYLimUpper=None)
 
-    csvColumnGLtrafHard = "g_l_hard"
-    csvColumnGLtrafDiDiC = "g_l_didic"
-    csvColumnGLtrafRand = "g_l_rand"
-    
-    csvFileAnnotate = csvFolder + "tree2_search_gtraf.csv"
-    csvColumnGLAvgHard = "g_l_avg_hard"
-    csvColumnGLAvgDiDiC = "g_l_avg_didic"
-    csvColumnGLAvgRand = "g_l_avg_rand"
-    
-    csvDict = csv_to_dict(csvFileAnnotate,
-                          (csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand),
-                          floats=(csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand))
-
-    def get_do_annotation_avg_gltraf(column, color):
-        def do_annotation_avg_gltraf(ax):
-            ax.axhline(y=csvDict[column][0], linewidth=1, color=color, alpha=1.0, linestyle='--')
-        return do_annotation_avg_gltraf
-    
-    annotations = []    
-    for (column, color) in ((csvColumnGLAvgHard, 'blue'),
-                           (csvColumnGLAvgDiDiC, 'red'),
-                           (csvColumnGLAvgRand, 'green')):    
-        annotations += [get_do_annotation_avg_gltraf(column, color)]
-        
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
-
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-    
-    def axisYFormatterFun(x, pos=0):        
-        return '%s%3d %s' % (fontsizeTicks, x * 100., '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3.0f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
-    
-    do_gl_traf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                         [(csvColumnGLtrafHard, 'blue', fontsizeLegend + r'Hardcoded 2', '-', ''),
-                                          (csvColumnGLtrafDiDiC, 'red', fontsizeLegend + r'DiDiC 2', '-', ''),
-                                          (csvColumnGLtrafRand, 'green', fontsizeLegend + r'Random 2', '-', '')],
-                                          csvFloats=(csvColumnGLtrafHard,
-                                                     csvColumnGLtrafDiDiC,
-                                                     csvColumnGLtrafRand),
-                                          annotations=annotations,
-                                          axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                          axisTickFontSize=axisTickFontSize, axisColor='k',
-                                          axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Percentage Global',
-                                          axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                          axisXScale='linear', axisYScale='linear',
-                                          legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                          legendFancybox=False, legendPos='upper right',
-                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_gl_traf_line]],
-                show=False,
-                fileName="fstree2_search_g_l_traf.pdf")
-
-def fstree_search_glratio_4():
+def fstree_glratio_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
     csvFile = csvFolder + "tree4_search_gtraf.csv"     
     
-    csvColumnIndex = "index"    
-
-    csvColumnGLtrafHard = "g_l_hard"
-    csvColumnGLtrafDiDiC = "g_l_didic"
-    csvColumnGLtrafRand = "g_l_rand"
-    
-    csvFileAnnotate = csvFolder + "tree4_search_gtraf.csv"
-    csvColumnGLAvgHard = "g_l_avg_hard"
-    csvColumnGLAvgDiDiC = "g_l_avg_didic"
-    csvColumnGLAvgRand = "g_l_avg_rand"
-    
-    csvDict = csv_to_dict(csvFileAnnotate,
-                          (csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand),
-                          floats=(csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand))
-
-    def get_do_annotation_avg_gltraf(column, color):
-        def do_annotation_avg_gltraf(ax):
-            ax.axhline(y=csvDict[column][0], linewidth=1, color=color, alpha=1.0, linestyle='--')
-        return do_annotation_avg_gltraf
-    
-    annotations = []    
-    for (column, color) in ((csvColumnGLAvgHard, 'blue'),
-                           (csvColumnGLAvgDiDiC, 'red'),
-                           (csvColumnGLAvgRand, 'green')):    
-        annotations += [get_do_annotation_avg_gltraf(column, color)]
-    
-    def axisYFormatterFun(x, pos=0):        
-        return '%s%3d %s' % (fontsizeTicks, x * 100., '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3.0f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
-    
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
-
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-    
-    do_gl_traf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                         [(csvColumnGLtrafHard, 'blue', fontsizeLegend + r'Hardcoded 4', '-', ''),
-                                          (csvColumnGLtrafDiDiC, 'red', fontsizeLegend + r'DiDiC 4', '-', ''),
-                                          (csvColumnGLtrafRand, 'green', fontsizeLegend + r'Random 4', '-', '')],
-                                          csvFloats=(csvColumnGLtrafHard,
-                                                     csvColumnGLtrafDiDiC,
-                                                     csvColumnGLtrafRand),
-                                          annotations=annotations,
-                                          axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                          axisTickFontSize=axisTickFontSize, axisColor='k',
-                                          axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Percentage Global',
-                                          axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                          axisXScale='linear', axisYScale='linear',
-                                          legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                          legendFancybox=False, legendPos='upper right',
-                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_gl_traf_line]],
-                show=False,
-                fileName="fstree4_search_g_l_traf.pdf")
+    glratio(csvFile,
+            legendNameHard='Hardcoded 4',
+            legendNameDiDiC='DiDiC 4',
+            legendNameRand='Random 4',
+            fileName='fstree_g_l_traf_4.pdf',
+            axisYLimUpper=0.40)
 
 
 
@@ -1036,481 +149,336 @@ def twitter_load_balance_all_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Static/"
     csvFile = csvFolder + "twitter2_balance.csv" 
     
-    csvColumnPartition = "partitions"
+    legends = [r'Hardcoded 2',
+               r'DiDiC 2',
+               r'Random 2']
     
-    csvColumnRelsDiDiC = "rels_didic"
-    csvColumnRelsRand = "rels_rand"
+    barWidth = defBarWidth / 3.0
     
-    csvColumnNodesDiDiC = "nodes_didic"
-    csvColumnNodesRand = "nodes_rand"
-    
-    csvColumnTrafDiDiC = "traf_didic"
-    csvColumnTrafRand = "traf_rand"
-    
-    legendAlpha = 0.8 
-    maxY = 100
-    reducedBarWidth = barWidth / 3.0
-    axisGrid = False
-    
-    def do_annotation_avg_gltraf(ax):
-        ax.axhline(y=50, linewidth=1, color='black', alpha=1.0, linestyle='--')
-    
-    annotations = [do_annotation_avg_gltraf]    
-    
-    def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%s' % (fontsizeTicks, x)    
-    
-#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
-    
-    do_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                       [
-                                        (csvColumnRelsDiDiC, 'red', None),
-                                        (csvColumnRelsRand, 'green', None)],
-                                        [
-                                         fontsizeLegend + r'DiDiC 2',
-                                         fontsizeLegend + r'Random 2',
-                                         ],
-                                         csvFloats=(
-                                                    csvColumnRelsDiDiC,
-                                                    csvColumnRelsRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Edges', # axisXLabel=None,
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos='upper right',
-                                         legendCols=2,
-                                         )
-    
-    do_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                        [
-                                         (csvColumnNodesDiDiC, 'red', None),
-                                         (csvColumnNodesRand, 'green', None)],
-                                         [],
-                                         csvFloats=(
-                                                    csvColumnNodesDiDiC,
-                                                    csvColumnNodesRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Vertices', # axisXLabel=None,
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos=None
-                                         )
-    
-    do_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
-                                        [
-                                         (csvColumnTrafDiDiC, 'red', None),
-                                         (csvColumnTrafRand, 'green', None)],
-                                         [],
-                                         csvFloats=(
-                                                    csvColumnTrafDiDiC,
-                                                    csvColumnTrafRand,
-                                                    ),
-                                         annotations=annotations,
-                                         barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Traffic',
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
-                                         legendAlpha=legendAlpha, legendShadow=False,
-                                         legendColor='w', legendFancybox=False, legendPos=None
-                                         )
-    
-    show_plots([
-                [do_rel_bal_bar],
-                [do_node_bal_bar],
-                [do_traf_bal_bar]],
-                show=False,
-                figHSpace=0.3,
-                fileName="twitter2_bal_all.pdf")
+    load_balance_all(csvFile, legends,
+                     fileName="twitter2_bal_all.pdf",
+                     horizontalLineY=50,
+                     barWidth=barWidth)
 
 def twitter_load_balance_all_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Static/"
     csvFile = csvFolder + "twitter4_balance.csv" 
     
+    legends = [r'Hardcoded 4',
+               r'DiDiC 4',
+               r'Random 4']
+    
+    barWidth = defBarWidth
+    
+    load_balance_all(csvFile, legends,
+                     fileName="twitter4_bal_all.pdf",
+                     horizontalLineY=25,
+                     barWidth=barWidth)
+
+def twitter_traf():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/"
+    csvFile = csvFolder + "twitter_traffic.csv"     
+    
+    fileName = "twitter_traf.pdf"
+    
+    traf(csvFile,
+         legendName='Twitter Traffic',
+         fileName=fileName)        
+    
+def twitter_glratio_2():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Static/"
+    csvFile = csvFolder + "twitter2_gtraf.csv"     
+    
+    glratio(csvFile,
+            legendNameHard='Hardcoded 2',
+            legendNameDiDiC='DiDiC 2',
+            legendNameRand='Random 2',
+            fileName='twitter_g_l_traf_2.pdf',
+            axisYLimUpper=None,
+            csvColumnGLtrafHard=None)
+
+def twitter_glratio_4():
+    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Static/"
+    csvFile = csvFolder + "twitter4_gtraf.csv"     
+    
+    glratio(csvFile,
+            legendNameHard='Hardcoded 4',
+            legendNameDiDiC='DiDiC 4',
+            legendNameRand='Random 4',
+            fileName='twitter_g_l_traf_4.pdf',
+            axisYLimUpper=None,
+            csvColumnGLtrafHard=None)
+
+
+
+def load_balance_all(csvFile, legends,
+                     fileName='output_bal_all.pdf',
+                     legendAlpha=0.8,
+                     horizontalLineY=50,
+                     barWidth=defBarWidth,
+                     axisGrid=False,
+                     figLeftSpace=defFigLeftSpaceAll,
+                     figBottomSpace=defFigBottomSpaceAll,
+                     figRightSpace=defFigRightSpaceAll,
+                     figTopSpace=defFigTopSpaceAll,
+                     figWidth=defFigWidthAll,
+                     figHeight=defFigHeightAll                     
+                     ):
+    
     csvColumnPartition = "partitions"
     
+    csvColumnRelsHard = "rels_hard"
     csvColumnRelsDiDiC = "rels_didic"
     csvColumnRelsRand = "rels_rand"
     
+    csvColumnNodesHard = "nodes_hard"
     csvColumnNodesDiDiC = "nodes_didic"
     csvColumnNodesRand = "nodes_rand"
     
+    csvColumnTrafHard = "traf_hard"
     csvColumnTrafDiDiC = "traf_didic"
-    csvColumnTrafRand = "traf_rand"
-    
-    legendAlpha = 0.8 
-    maxY = 50
-    reducedBarWidth = barWidth
-    axisGrid = False
-    
-    def do_annotation_avg_gltraf(ax):
-        ax.axhline(y=25, linewidth=1, color='black', alpha=1.0, linestyle='--')
-    
-    annotations = [do_annotation_avg_gltraf]    
+    csvColumnTrafRand = "traf_rand"    
         
+    def do_annotation_avg_gltraf(ax):
+        ax.axhline(y=horizontalLineY, linewidth=1, color='black', alpha=1.0, linestyle='--')
+    
+    annotations = []
+    if horizontalLineY != None:
+        annotations = [do_annotation_avg_gltraf]    
+
     def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
+        return '%3d\,%s' % (x, '$\%$')    
 
     def axisXFormatterFun(x, pos=0):
-        return '%s%s' % (fontsizeTicks, x)    
-    
-#    patterns = ('-', '+', 'x', '\\', '*', 'o', 'O', '.')
+        return '%s' % (x)    
     
     do_rel_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
                                        [
+                                        (csvColumnRelsHard, 'blue', None),
                                         (csvColumnRelsDiDiC, 'red', None),
-                                        (csvColumnRelsRand, 'green', None)],
-                                        [
-                                         fontsizeLegend + r'DiDiC 4',
-                                         fontsizeLegend + r'Random 4',
-                                         ],
-                                         csvFloats=(
-                                                    csvColumnRelsDiDiC,
-                                                    csvColumnRelsRand,
-                                                    ),
+                                        (csvColumnRelsRand, 'green', None),
+                                        ],
+                                        legends,
+                                        csvFloats=(
+                                                   csvColumnRelsHard,
+                                                   csvColumnRelsDiDiC,
+                                                   csvColumnRelsRand,
+                                                   ),
                                          annotations=annotations,
                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Edges', # axisXLabel=None,
+                                         barAlign='center', barOrientation='vertical', barWidth=barWidth,
+                                         barLog=False,
+                                         axisGrid=axisGrid, axisColor='k',
+                                         axisYLabel=r'Edges', axisXLabel=None,
                                          axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
+                                         axisYLim=(0, None),
                                          legendAlpha=legendAlpha, legendShadow=False,
                                          legendColor='w', legendFancybox=False, legendPos='upper right',
-                                         legendCols=2,
+                                         legendCols=1,
                                          )
     
     do_node_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
                                         [
+                                         (csvColumnNodesHard, 'blue', None),
                                          (csvColumnNodesDiDiC, 'red', None),
-                                         (csvColumnNodesRand, 'green', None)],
+                                         (csvColumnNodesRand, 'green', None),
+                                         ],
                                          [],
                                          csvFloats=(
+                                                    csvColumnNodesHard,
                                                     csvColumnNodesDiDiC,
                                                     csvColumnNodesRand,
                                                     ),
                                          annotations=annotations,
                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Vertices', # axisXLabel=None,
+                                         barAlign='center', barOrientation='vertical', barWidth=barWidth,
+                                         barLog=False,
+                                         axisGrid=axisGrid, axisColor='k',
+                                         axisYLabel=r'Vertices', axisXLabel=None,
                                          axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
+                                         axisYLim=(0, None),
                                          legendAlpha=legendAlpha, legendShadow=False,
                                          legendColor='w', legendFancybox=False, legendPos=None
                                          )
     
     do_traf_bal_bar = get_bar_from_file(csvFile, csvColumnPartition,
                                         [
+                                         (csvColumnTrafHard, 'blue', None),
                                          (csvColumnTrafDiDiC, 'red', None),
-                                         (csvColumnTrafRand, 'green', None)],
+                                         (csvColumnTrafRand, 'green', None),
+                                         ],
                                          [],
                                          csvFloats=(
+                                                    csvColumnTrafHard,
                                                     csvColumnTrafDiDiC,
                                                     csvColumnTrafRand,
                                                     ),
                                          annotations=annotations,
                                          barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                         barAlign='center', barOrientation='vertical', barWidth=reducedBarWidth,
-                                         barLog=True,
-                                         axisGrid=axisGrid, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                         axisYLabel=fontsizeLabels + r'Traffic',
-                                         axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, maxY),
+                                         barAlign='center', barOrientation='vertical', barWidth=barWidth,
+                                         barLog=False,
+                                         axisGrid=axisGrid, axisColor='k',
+                                         axisYLabel=r'Traffic',
+                                         axisYFormatterFun=axisYFormatterFun,
+                                         axisXFormatterFun=axisXFormatterFun,
+                                         axisYLim=(0, None),
                                          legendAlpha=legendAlpha, legendShadow=False,
                                          legendColor='w', legendFancybox=False, legendPos=None
                                          )
     
-    show_plots([
-                [do_rel_bal_bar],
+    
+    figSize = (figWidth / 2.54, figHeight / 2.54)
+
+    show_plots([[do_rel_bal_bar],
                 [do_node_bal_bar],
                 [do_traf_bal_bar]],
                 show=False,
-                figHSpace=0.3,
-                fileName="twitter4_bal_all.pdf")
+                fileName=fileName,
+                figWSpace=0.2,
+                figHSpace=0.2,
+                figLeftSpace=figLeftSpace,
+                figRightSpace=figRightSpace,
+                figBottomSpace=figBottomSpace,
+                figTopSpace=figTopSpace,
+                figSize=figSize)
 
-def twitter_traf():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/"
-    csvFile = csvFolder + "twitter_traffic.csv"     
+def traf(csvFile,
+         legendName='Traffic',
+         fileName='output_traf.pdf',
+         figLeftSpace=defFigLeftSpaceOne,
+         figBottomSpace=defFigBottomSpaceOne,
+         figRightSpace=defFigRightSpaceOne,
+         figTopSpace=defFigTopSpaceOne,
+         figWidth=defFigWidthOne,
+         figHeight=defFigHeightOne):
     
     csvColumnIndex = "index"    
     csvColumnTraf = "traffic"
 
     def axisYFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
+        return '%3d\,%s' % (x, '$\%$')    
 
     def axisXFormatterFun(x, pos=0):
-        return '%s%3.1f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
+        return '%3.1f\,%s' % ((float(x) / 10000.) * 100., '$\%$')    
     
-    do_traf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                      [(csvColumnTraf, 'blue', fontsizeLegend + r'Traffic', '-', ''), ],
-                                      csvInts=(csvColumnTraf),
-                                      annotations=[],
-                                      axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                      axisTickFontSize=axisTickFontSize, axisColor='k',
-                                      axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Traffic',
-                                      axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                      axisXFormatterFun=None, axisYFormatterFun=None,
-                                      axisXScale='linear', axisYScale='log',
-                                      legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                      legendFancybox=False, legendPos='upper right',
-                                      myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    do_fun = get_line_from_file_multi_x(csvFile,
+                                        [(csvColumnIndex, csvColumnTraf, 'blue', legendName, '-', '')],
+                                        csvInts=(csvColumnTraf),
+                                        annotations=[],
+                                        axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
+                                        axisColor='k',
+                                        axisXLabel=r'Operations', axisYLabel=r'Traffic',
+                                        axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
+                                        axisXFormatterFun=None, axisYFormatterFun=None,
+                                        axisXScale='linear', axisYScale='log',
+                                        legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                        legendFancybox=False, legendPos='upper right', legendTop=False,
+                                        myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
-    show_plots([[do_traf_line]],
+    figSize = (figWidth / 2.54, figHeight / 2.54)
+    
+    show_plots([[do_fun]],
                 show=False,
-                fileName="twitter_traf.pdf")
-
-def twitter_perc_gtraf_2():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/InitialPartitioning/"
-    csvFile = csvFolder + "twitter2_perc_gtraf.csv"     
+                fileName=fileName,
+                figWSpace=0.2,
+                figHSpace=0.2,
+                figLeftSpace=figLeftSpace,
+                figRightSpace=figRightSpace,
+                figBottomSpace=figBottomSpace,
+                figTopSpace=figTopSpace,
+                figSize=figSize)                
     
-    csvColumnPerc = "perc_gtraf"    
-
-    csvColumnGlobalDiDiC = "didic"
-    csvColumnGlobalRand = "rand"
+def glratio(csvFile,
+            legendNameHard='Hardcoded 2',
+            legendNameDiDiC='DiDiC 2',
+            legendNameRand='Random 2',
+            axisYLimUpper=None,
+            fileName='output_g_l_traf.pdf',
+            figLeftSpace=defFigLeftSpaceOne,
+            figBottomSpace=defFigBottomSpaceOne,
+            figRightSpace=defFigRightSpaceOne,
+            figTopSpace=defFigTopSpaceOne,
+            figWidth=defFigWidthOne,
+            figHeight=defFigHeightOne,
+            csvColumnGLtrafHard="g_l_hard",
+            csvColumnGLtrafDiDiC="g_l_didic",
+            csvColumnGLtrafRand="g_l_rand",
+            csvColumnIndex="index"):            
     
-    def axisYFormatterFun(x, pos=0):
-        if x > 100:
-            return ""        
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-        
-    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
-                                          [
-                                           (csvColumnGlobalDiDiC, 'red', None),
-                                           (csvColumnGlobalRand, 'green', None),
-                                           ],
-                                           [
-                                            fontsizeLegend + r'DiDiC 2',
-                                            fontsizeLegend + r'Random 2',
-                                            ],
-                                            csvFloats=(
-                                                       csvColumnPerc,
-                                                       csvColumnGlobalDiDiC,
-                                                       csvColumnGlobalRand,
-                                                       ),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                            barLog=True,
-                                            axisGrid=True, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                            axisYLabel=fontsizeLabels + r'Percentage of Operations',
-                                            axisXLabel=fontsizeLabels + r'Amount of Global Traffic',
-                                            axisYFormatterFun=axisYFormatterFun,
-                                            axisXFormatterFun=axisXFormatterFun,
-                                            axisYLim=(0, 100),
-                                            legendAlpha=0.8, legendShadow=False,
-                                            legendColor='w', legendFancybox=False, legendPos='upper right'
-                                            )
-
-    show_plots([[do_perc_gtraf_bar]],
-                show=False,
-                fileName="twitter2_perc_gtraf.pdf")
-
-def twitter_perc_gtraf_4():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/InitialPartitioning/"
-    csvFile = csvFolder + "twitter4_perc_gtraf.csv"     
+    baseLines = [(csvColumnIndex, csvColumnGLtrafHard, 'blue', legendNameHard, '-', ''),
+                 (csvColumnIndex, csvColumnGLtrafDiDiC, 'red', legendNameDiDiC, '-', ''),
+                 (csvColumnIndex, csvColumnGLtrafRand, 'green', legendNameRand, '-', '')]
     
-    csvColumnPerc = "perc_gtraf"    
-
-    csvColumnGlobalDiDiC = "didic"
-    csvColumnGlobalRand = "rand"
+    lines = [(x, y, color, legend, lineType, markerType) for 
+             (x, y, color, legend, lineType, markerType) in baseLines 
+             if y != None]
     
-    def axisYFormatterFun(x, pos=0):
-        if x > 100:
-            return ""        
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3d %s' % (fontsizeTicks, x, '$\%$')    
-        
-    do_perc_gtraf_bar = get_bar_from_file(csvFile, csvColumnPerc,
-                                          [
-                                           (csvColumnGlobalDiDiC, 'red', None),
-                                           (csvColumnGlobalRand, 'green', None),
-                                           ],
-                                           [
-                                            fontsizeLegend + r'DiDiC 4',
-                                            fontsizeLegend + r'Random 4',
-                                            ],
-                                            csvFloats=(
-                                                       csvColumnPerc,
-                                                       csvColumnGlobalDiDiC,
-                                                       csvColumnGlobalRand,
-                                                       ),
-                                            annotations=[],
-                                            barEdgecolor='gray', barHisttype='bar', barAlpha=0.9,
-                                            barAlign='center', barOrientation='vertical', barWidth=barWidth,
-                                            barLog=True,
-                                            axisGrid=True, axisTickFontSize=axisTickFontSize, axisColor='k',
-                                            axisYLabel=fontsizeLabels + r'Percentage of Operations',
-                                            axisXLabel=fontsizeLabels + r'Amount of Global Traffic',
-                                            axisYFormatterFun=axisYFormatterFun,
-                                            axisXFormatterFun=axisXFormatterFun,
-                                            axisYLim=(0, 100),
-                                            legendAlpha=0.8, legendShadow=False,
-                                            legendColor='w', legendFancybox=False, legendPos='upper right'
-                                            )
-
-    show_plots([[do_perc_gtraf_bar]],
-                show=False,
-                fileName="twitter4_perc_gtraf.pdf")
+    csvFloats = [y for (_, y, _, _, _, _) in lines if y != None] + [csvColumnIndex]
     
-def twitter_glratio_2():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Static/"
-    csvFile = csvFolder + "twitter2_gtraf.csv"     
-    
-    csvColumnIndex = "index"    
-
-    csvColumnGLtrafDiDiC = "g_l_didic"
-    csvColumnGLtrafRand = "g_l_rand"
-
-    csvFileAnnotate = csvFolder + "twitter2_gtraf.csv"
-    csvColumnGLAvgHard = "g_l_avg_hard"
-    csvColumnGLAvgDiDiC = "g_l_avg_didic"
-    csvColumnGLAvgRand = "g_l_avg_rand"
-    
-    csvDict = csv_to_dict(csvFileAnnotate,
-                          (csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand),
-                          floats=(csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand))
+    csvDict = csv_to_dict(csvFile,
+                          (csvColumnGLtrafHard, csvColumnGLtrafDiDiC, csvColumnGLtrafRand),
+                          floats=tuple(csvFloats))
 
     def get_do_annotation_avg_gltraf(column, color):
         def do_annotation_avg_gltraf(ax):
-            ax.axhline(y=csvDict[column][0], linewidth=1, color=color, alpha=1.0, linestyle='--')
+            ax.axhline(y=numpy.mean(csvDict[column]),
+                       linewidth=1, color=color, alpha=1.0, linestyle='--')
         return do_annotation_avg_gltraf
     
+    def get_do_annotation_std_gltraf(column, color):
+        def do_annotation_std_gltraf(ax):
+            std_low = numpy.min(numpy.mean(csvDict[column]) - numpy.std(csvDict[column]), 0)
+            std_high = numpy.max(numpy.mean(csvDict[column]) + numpy.std(csvDict[column]), 100)
+#            ax.axhline(y=std_low,
+#                       linewidth=1, color=color, alpha=1.0, linestyle='--')
+#            ax.axhline(y=std_high,
+#                       linewidth=1, color=color, alpha=1.0, linestyle='--')
+#            ax.axhspan(std_low, std_high, facecolor=color, alpha=0.3)            
+        return do_annotation_std_gltraf
+
+    
     annotations = []    
-    for (column, color) in ((csvColumnGLAvgHard, 'blue'),
-                           (csvColumnGLAvgDiDiC, 'red'),
-                           (csvColumnGLAvgRand, 'green')):    
+    for (column, color) in [(column, color) 
+                            for (_, column, color, _, _, _) in lines 
+                            if y != None]:
         annotations += [get_do_annotation_avg_gltraf(column, color)]
     
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
+    for (column, color) in [(column, color) 
+                            for (_, column, color, _, _, _) in lines 
+                            if y != None]:    
+        annotations += [get_do_annotation_std_gltraf(column, color)]
 
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-
-    def axisYFormatterFun(x, pos=0):        
-        return '%s%3d %s' % (fontsizeTicks, x * 100., '$\%$')    
-
-    def axisXFormatterFun(x, pos=0):
-        return '%s%3.0f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
         
-    do_gl_traf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                         [
-                                          (csvColumnGLtrafDiDiC, 'red', fontsizeLegend + r'DiDiC 2', '-', ''),
-                                          (csvColumnGLtrafRand, 'green', fontsizeLegend + r'Random 2', '-', ''),
-                                          ],
-                                          csvFloats=(
-                                                     csvColumnGLtrafDiDiC,
-                                                     csvColumnGLtrafRand,
-                                                     ),
-                                          annotations=annotations,
-                                          axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                          axisTickFontSize=axisTickFontSize, axisColor='k',
-                                          axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Percentage Global',
-                                          axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                          axisXScale='linear', axisYScale='linear',
-                                          legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                          legendFancybox=False, legendPos='upper right',
-                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    show_plots([[do_gl_traf_line]],
-                show=False,
-                fileName="twitter2_g_l_traf.pdf")
-
-def twitter_glratio_4():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Static/"
-    csvFile = csvFolder + "twitter4_gtraf.csv"     
-    
-    csvColumnIndex = "index"    
-
-    csvColumnGLtrafDiDiC = "g_l_didic"
-    csvColumnGLtrafRand = "g_l_rand"
-    
-    csvFileAnnotate = csvFolder + "twitter4_gtraf.csv"
-    csvColumnGLAvgHard = "g_l_avg_hard"
-    csvColumnGLAvgDiDiC = "g_l_avg_didic"
-    csvColumnGLAvgRand = "g_l_avg_rand"
-    
-    csvDict = csv_to_dict(csvFileAnnotate,
-                          (csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand),
-                          floats=(csvColumnGLAvgHard, csvColumnGLAvgDiDiC, csvColumnGLAvgRand))
-
-    def get_do_annotation_avg_gltraf(column, color):
-        def do_annotation_avg_gltraf(ax):
-            ax.axhline(y=csvDict[column][0], linewidth=1, color=color, alpha=1.0, linestyle='--')
-        return do_annotation_avg_gltraf
-    
-    annotations = []    
-    for (column, color) in ((csvColumnGLAvgHard, 'blue'),
-                           (csvColumnGLAvgDiDiC, 'red'),
-                           (csvColumnGLAvgRand, 'green')):    
-        annotations += [get_do_annotation_avg_gltraf(column, color)]
-    
-#linestyles
-# ('-',solid)('--',dashed)('-.',dash-dot)(':',dotted)
-
-#markers
-#('.',point)(',',pixel)('o',circle)('v',triangle_down)('^',triangle_up)
-#('<',triangle_left)('>',triangle_right)('1',tri_down)('2',tri_up)
-#('3',tri_left)('4',tri_right)('s',square)('p',pentagon)
-#('*',star)('h',hexagon1)('H',hexagon2)('+',plus)('x',x)
-#('D',diamond)('d',thin_diamond)('|',vline)('_',hline)
-    
     def axisYFormatterFun(x, pos=0):        
-        return '%s%3d %s' % (fontsizeTicks, x * 100., '$\%$')    
+        return '%3d\,%s' % (x * 100., '$\%$')    
 
     def axisXFormatterFun(x, pos=0):
-        return '%s%3.0f %s' % (fontsizeTicks, (float(x) / 10000.) * 100., '$\%$')    
+        return '%3d\,%s' % ((float(x) / 10000.) * 100., '$\%$')    
     
-    do_gl_traf_line = get_line_from_file(csvFile, csvColumnIndex,
-                                         [
-                                          (csvColumnGLtrafDiDiC, 'red', fontsizeLegend + r'DiDiC 4', '-', ''),
-                                          (csvColumnGLtrafRand, 'green', fontsizeLegend + r'Random 4', '-', ''),
-                                          ],
-                                          csvFloats=(
-                                                     csvColumnGLtrafDiDiC,
-                                                     csvColumnGLtrafRand,
-                                                     ),
-                                          annotations=annotations,
-                                          axisLineWidth=2.0, axisGrid=True, axisLineAntialiased=True,
-                                          axisTickFontSize=axisTickFontSize, axisColor='k',
-                                          axisXLabel=fontsizeLabels + r'Operations', axisYLabel=fontsizeLabels + r'Percentage Global',
-                                          axisTitle='', axisXLim=(None, None), axisYLim=(None, None),
-                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                          axisXScale='linear', axisYScale='linear',
-                                          legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                          legendFancybox=False, legendPos='upper right',
-                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
+    do_fun = get_line_from_file_multi_x(csvFile,
+                                        lines,
+                                        csvFloats=csvFloats,
+                                        annotations=annotations,
+                                        axisLineWidth=1.0, axisGrid=False, axisLineAntialiased=True,
+                                        axisColor='k',
+                                        axisXLabel=r'Operations', axisYLabel=r'Percentage Global',
+                                        axisTitle='', axisXLim=(-1, None), axisYLim=(0, axisYLimUpper),
+                                        axisXFormatterFun=axisXFormatterFun,
+                                        axisYFormatterFun=axisYFormatterFun,
+                                        axisXScale='linear', axisYScale='linear',
+                                        legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                        legendFancybox=False, legendPos='upper right', legendTop=False,
+                                        myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
-    show_plots([[do_gl_traf_line]],
+    figSize = (figWidth / 2.54, figHeight / 2.54)
+    
+    show_plots([[do_fun]],
                 show=False,
-                fileName="twitter4_g_l_traf.pdf")
+                fileName=fileName,
+                figWSpace=0.2,
+                figHSpace=0.2,
+                figLeftSpace=figLeftSpace,
+                figRightSpace=figRightSpace,
+                figBottomSpace=figBottomSpace,
+                figTopSpace=figTopSpace,
+                figSize=figSize)
