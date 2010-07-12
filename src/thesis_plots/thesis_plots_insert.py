@@ -1,32 +1,20 @@
 from matplotlib import rc
 from matplotlib_scripts.matplotlib_scripts import *
 
-#defFigWidth = 8.0
-#defFigHeight = 7.0
+defFigWidth3 = 9.0
+defFigHeight3 = 9.0
+defFigLeftSpace3 = 0.14
+defFigBottomSpace3 = 0.10
+defFigRightSpace3 = 0.99
+defFigTopSpace3 = 0.86
 
-#defFigLeftSpace = 0.16
-#defFigBottomSpace = 0.14
-#defFigRightSpace = 0.97
-#defFigTopSpace = 0.75
+defFigWidth2 = 9.0
+defFigHeight2 = 7.0
+defFigLeftSpace2 = 0.16
+defFigBottomSpace2 = 0.13
+defFigRightSpace2 = 0.98
+defFigTopSpace2 = 0.83
 
-defFigWidth = 9.0
-defFigHeight = 9.0
-
-defFigLeftSpace = 0.16
-defFigBottomSpace = 0.11
-defFigRightSpace = 0.98
-defFigTopSpace = 0.83
-
-
-def gis_insert_gl_traf_4():
-    csvFolder = r"/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Insert/read_results_5_95/"
-    csvFile = csvFolder + "gis4_insert_gl_traf.csv"
-    filename = 'gis4_insert_g_l_traf.pdf'    
-    def axisYFormatterFun(x, pos=0):
-        return '%3.1f' % (x)    
-
-    insert_gl_traf_4_line(csvFolder, csvFile, filename=filename,
-                          axisYFormatterFun=axisYFormatterFun)     
 
 def gis_insert_std_all_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Insert/read_results_5_95/"
@@ -40,7 +28,7 @@ def gis_insert_std_all_4():
     def axisYFormatterFunRel(x, pos=0):
         return '%3.1f' % (x)
     def axisYFormatterFunTraf(x, pos=0):
-        return '%3.1f' % (x)
+        return '%3.2f' % (x)
         
     insert_std_all_4_line(csvFolder, 
                           csvFileNode, csvFileRel, csvFileTraf,
@@ -48,6 +36,7 @@ def gis_insert_std_all_4():
                           axisYFormatterFunRel=axisYFormatterFunRel,
                           axisYFormatterFunTraf=axisYFormatterFunTraf,
                           axisYLimNode=(-0.01,None),
+                          axisYLimTraf=(0.04, None),
                           filename=filename)     
 
 def gis_insert_comms_all_4():
@@ -64,19 +53,11 @@ def gis_insert_comms_all_4():
     insert_comms_all_4_line(csvFolder, csvFileEdgeCut, csvFileGLTraf,
                           axisYFormatterFunEdgeCut=axisYFormatterFunEdgeCut,
                           axisYFormatterFunGLTraf=axisYFormatterFunGLTraf,
-                          filename=filename)     
+                          filename=filename,
+                          axisYLimGLTraf=(None, None))     
 
 
 
-def fstree_insert_gl_traf_4():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Insert/"
-    csvFile = csvFolder + "tree4_insert_gl_traf.csv"    
-    filename = 'fstree4_insert_g_l_traf.pdf'    
-    def axisYFormatterFun(x, pos=0):
-        return '%3.0f' % (x)
-        
-    insert_gl_traf_4_line(csvFolder, csvFile, filename=filename,
-                          axisYFormatterFun=axisYFormatterFun)     
 
 def fstree_insert_std_all_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Insert/"
@@ -96,9 +77,9 @@ def fstree_insert_std_all_4():
                           axisYFormatterFunNode=axisYFormatterFunNode,
                           axisYFormatterFunRel=axisYFormatterFunRel,
                           axisYFormatterFunTraf=axisYFormatterFunTraf,
-                          axisYLimNode=(-0.02,0.9),
+                          axisYLimNode=(-0.02,None),
                           axisYLimRel=(None,0.65),
-                          axisYLimTraf=(None,0.37),
+                          axisYLimTraf=(0.09,None),
                           filename=filename)     
 
 def fstree_insert_comms_all_4():
@@ -119,16 +100,6 @@ def fstree_insert_comms_all_4():
 
 
 
-def twitter_insert_gl_traf_4():
-    csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Insert/"
-    csvFile = csvFolder + "twitter4_insert_gl_traf.csv"    
-    filename = 'twitter4_insert_g_l_traf.pdf'    
-    def axisYFormatterFun(x, pos=0):
-        return '%3.1f' % (x)
-        
-    insert_gl_traf_4_line(csvFolder, csvFile, filename=filename,
-                          axisYFormatterFun=axisYFormatterFun,
-                          figLeftSpace=0.18)     
 
 def twitter_insert_std_all_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Insert/"
@@ -173,52 +144,6 @@ def twitter_insert_comms_all_4():
 
 
 
-def insert_gl_traf_4_line(csvFolder, csvFile, filename='output.pdf',
-                           axisYFormatterFun=None,
-                           axisXLim=(-0.2, 26), axisYLim=(None, None),
-                           figLeftSpace=defFigLeftSpace,
-                           figBottomSpace=defFigBottomSpace,
-                           figRightSpace=defFigRightSpace,
-                           figTopSpace=defFigTopSpace,
-                           figWidth=defFigWidth,
-                           figHeight=defFigHeight):
-    csvColumnChurn = "churn"    
-    csvColumnSize = "size"
-    csvColumnRand = "rand"
-    csvColumnTraf = "traf"
-    
-    def axisXFormatterFun(x, pos=0):
-        return '%3d\,%s' % (x, '$\%$')    
-    
-    do_fun = get_line_from_file_multi_x(csvFile,
-                                        [(csvColumnChurn, csvColumnSize, 'blue', r'Vertex Count', '-', 'o'),
-                                         (csvColumnChurn, csvColumnRand, 'red',  r'Random', '-', 'v'),
-                                         (csvColumnChurn, csvColumnTraf, 'green', r'Traffic', '-', 'd')],
-                                         csvFloats=(csvColumnChurn,
-                                                    csvColumnSize,
-                                                    csvColumnRand,
-                                                    csvColumnTraf,),
-                                         annotations=[],
-                                         axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k',
-                                         axisXLabel=r'Churn', axisYLabel=r'Percentage Global',
-                                         axisTitle='', axisXLim=axisXLim, axisYLim=axisYLim,
-                                         axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                         axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                         legendFancybox=False, legendPos='upper right',
-                                         myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-
-    figSize = (figWidth / 2.54, figHeight / 2.54)
-        
-    show_plots([[do_fun]],
-                show=False,
-                fileName=filename,
-                figLeftSpace=figLeftSpace,
-                figRightSpace=figRightSpace,
-                figBottomSpace=figBottomSpace,
-                figTopSpace=figTopSpace,
-                figSize=figSize)
 
 def insert_std_all_4_line(csvFolder, 
                           csvFileNode, csvFileRel, csvFileTraf,
@@ -230,12 +155,12 @@ def insert_std_all_4_line(csvFolder,
                           axisYLimNode=(None, None),
                           axisYLimRel=(None, None),
                           axisYLimTraf=(None, None),
-                          figLeftSpace=defFigLeftSpace,
-                          figBottomSpace=defFigBottomSpace,
-                          figRightSpace=defFigRightSpace,
-                          figTopSpace=defFigTopSpace,
-                          figWidth=defFigWidth,
-                          figHeight=defFigHeight):
+                          figLeftSpace=defFigLeftSpace3,
+                          figBottomSpace=defFigBottomSpace3,
+                          figRightSpace=defFigRightSpace3,
+                          figTopSpace=defFigTopSpace3,
+                          figWidth=defFigWidth3,
+                          figHeight=defFigHeight3):
     
     csvColumnChurn = "churn"    
     csvColumnSize = "size"
@@ -255,13 +180,14 @@ def insert_std_all_4_line(csvFolder,
                                                     csvColumnTraf,),
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k',
+                                         axisColor='k',
                                          axisXLabel=None, axisYLabel='Vertex',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimNode,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunNode,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                         legendFancybox=False, legendPos='upper right', legendBorderPad=0.0,
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendFancybox=False, legendPos='upper right', 
+                                         legendBorderPad=0.3, legendLabelSpace=0.2,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
     do_fun2 = get_line_from_file_multi_x(csvFileRel,
@@ -274,12 +200,12 @@ def insert_std_all_4_line(csvFolder,
                                                     csvColumnTraf,),
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k', 
+                                         axisColor='k', 
                                          axisXLabel=None, axisYLabel=r'Edge',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimRel,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunRel,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                          legendFancybox=False, legendPos=None,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)
         
@@ -293,12 +219,12 @@ def insert_std_all_4_line(csvFolder,
                                                     csvColumnTraf,),
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k', 
+                                         axisColor='k', 
                                          axisXLabel=r'Churn', axisYLabel=r'Traffic',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimTraf,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunTraf,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                          legendFancybox=False, legendPos=None,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)
         
@@ -325,12 +251,12 @@ def insert_comms_all_4_line(csvFolder,
                             axisXLim=(-0.2, 26), 
                             axisYLimEdgeCut=(None, None),
                             axisYLimGLTraf=(None, None),
-                            figLeftSpace=defFigLeftSpace,
-                            figBottomSpace=defFigBottomSpace,
-                            figRightSpace=defFigRightSpace,
-                            figTopSpace=defFigTopSpace,
-                            figWidth=defFigWidth,
-                            figHeight=defFigHeight):
+                            figLeftSpace=defFigLeftSpace2,
+                            figBottomSpace=defFigBottomSpace2,
+                            figRightSpace=defFigRightSpace2,
+                            figTopSpace=defFigTopSpace2,
+                            figWidth=defFigWidth2,
+                            figHeight=defFigHeight2):
     
     csvColumnChurn = "churn"    
     csvColumnSize = "size"
@@ -350,13 +276,13 @@ def insert_comms_all_4_line(csvFolder,
                                                     csvColumnTraf,),
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k', 
+                                         axisColor='k', 
                                          axisXLabel=None, axisYLabel='Edge Cut',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimEdgeCut,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunEdgeCut,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                         legendFancybox=False, legendPos='upper right', legendBorderPad=0.0,
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendFancybox=False, legendPos='upper right', legendBorderAxesPad=0.0,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
     do_fun2 = get_line_from_file_multi_x(csvFileGLTraf,
@@ -369,13 +295,13 @@ def insert_comms_all_4_line(csvFolder,
                                                     csvColumnTraf,),
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k',
+                                         axisColor='k',
                                          axisXLabel=r'Churn', 
                                          axisYLabel=r'Global Traffic',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimGLTraf,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunGLTraf,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                          legendFancybox=False, legendPos=None,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)
                 

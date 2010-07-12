@@ -113,8 +113,8 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
             print "\tlayout from coords..."
 
             print "\t\tget lat_coord bounds..."
-            min_lat_coord = 180
-            max_lat_coord = -180                 
+            min_lat_coord = 180.0
+            max_lat_coord = -180.0                 
             zero_lat_points = 0       
             for a_lat_coord in g.vs["lat"]:
                 if a_lat_coord == 0:
@@ -123,12 +123,12 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
                     min_lat_coord = a_lat_coord
                 if a_lat_coord > max_lat_coord and a_lat_coord != 0 :
                     max_lat_coord = a_lat_coord
-            med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2)
+            med_lat_coord = max_lat_coord - ((max_lat_coord - min_lat_coord) / 2.0)
             
             # Comment out if want absolute imgH control
-            imgH = (max_lat_coord - min_lat_coord) * 1
+#            imgH = (max_lat_coord - min_lat_coord) * 100.0
             
-            print "\t\tlat: median %d, min %d, max %d" % (med_lat_coord, min_lat_coord, max_lat_coord)
+            print "\t\tlat: median %f, min %f, max %f" % (med_lat_coord, min_lat_coord, max_lat_coord)
             print "\t\t%d zero_lat_coords found" % (zero_lat_points)             
                     
             print "\t\tget lon_coord bounds..."
@@ -145,9 +145,9 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
             med_lon_coord = max_lon_coord - ((max_lon_coord - min_lon_coord) / 2)
             
             # Comment out if want absolute imgW control
-            imgW = (max_lon_coord - min_lon_coord) * 1
+#            imgW = (max_lon_coord - min_lon_coord) * 100.0
 
-            print "\t\tlon: median %d, min %d, max %d" % (med_lon_coord, min_lon_coord, max_lon_coord)             
+            print "\t\tlon: median %f, min %f, max %f" % (med_lon_coord, min_lon_coord, max_lon_coord)             
             print "\t\t%d zero_lon_coords found" % (zero_lon_points)             
                     
             print "\t\tget lat_coords..."
@@ -184,7 +184,7 @@ def viz_result(gmlFile, imgFile, imgLayout="fr", imgFormat="png", default_layout
         print "\treuse previous layout..."        
     visual_style["layout"] = default_layout
     
-    print "\twindow size..."
+    print "\twindow size[width=%f, height=%f]..." % (imgW, imgH)
     visual_style["bbox"] = (imgW, imgH)
     print "\t", timeToStr(time() - elapsedTime)
     elapsedTime = time()

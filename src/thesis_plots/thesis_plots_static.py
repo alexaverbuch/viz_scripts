@@ -11,13 +11,12 @@ defFigBottomSpaceAll = 0.06
 defFigRightSpaceAll = 0.98
 defFigTopSpaceAll = 0.84
 
-defFigWidthOne = 9.0
-defFigHeightOne = 7.0
-defFigLeftSpaceOne = 0.15
-defFigBottomSpaceOne = 0.15
+defFigWidthOne = 6.0
+defFigHeightOne = 5.0
+defFigLeftSpaceOne = 0.22
+defFigBottomSpaceOne = 0.19
 defFigRightSpaceOne = 0.92
 defFigTopSpaceOne = 0.93
-
 
 def gis_load_balance_all_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
@@ -57,7 +56,9 @@ def gis_traf():
     
     traf(csvFile,
          legendName='GIS Traffic',
-         fileName=fileName)        
+         fileName=fileName,
+         figLeftSpace=0.20,
+         figRightSpace=0.91)
 
 def gis_glratio_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
@@ -67,7 +68,7 @@ def gis_glratio_2():
             legendNameHard='Hardcoded 2',
             legendNameDiDiC='DiDiC 2',
             legendNameRand='Random 2',
-            fileName='gis_g_l_traf_2.pdf')
+            fileName='gis2_g_l_traf.pdf')
 
 def gis_glratio_4():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Static/"
@@ -77,7 +78,7 @@ def gis_glratio_4():
             legendNameHard='Hardcoded 4',
             legendNameDiDiC='DiDiC 4',
             legendNameRand='Random 4',
-            fileName='gis_g_l_traf_4.pdf')
+            fileName='gis4_g_l_traf.pdf')
 
 
 
@@ -119,7 +120,9 @@ def fstree_traf():
     
     traf(csvFile,
          legendName='FS-Tree Traffic',
-         fileName=fileName)        
+         fileName=fileName,
+         figLeftSpace=0.20,
+         figRightSpace=0.91)        
 
 def fstree_glratio_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Static/"
@@ -129,7 +132,7 @@ def fstree_glratio_2():
             legendNameHard='Hardcoded 2',
             legendNameDiDiC='DiDiC 2',
             legendNameRand='Random 2',
-            fileName='fstree_g_l_traf_2.pdf',
+            fileName='fstree2_g_l_traf.pdf',
             axisYLimUpper=None)
 
 def fstree_glratio_4():
@@ -140,7 +143,7 @@ def fstree_glratio_4():
             legendNameHard='Hardcoded 4',
             legendNameDiDiC='DiDiC 4',
             legendNameRand='Random 4',
-            fileName='fstree_g_l_traf_4.pdf',
+            fileName='fstree4_g_l_traf.pdf',
             axisYLimUpper=0.40)
 
 
@@ -183,7 +186,9 @@ def twitter_traf():
     
     traf(csvFile,
          legendName='Twitter Traffic',
-         fileName=fileName)        
+         fileName=fileName,
+         figLeftSpace=0.20,
+         figRightSpace=0.91)        
     
 def twitter_glratio_2():
     csvFolder = "/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Static/"
@@ -193,7 +198,7 @@ def twitter_glratio_2():
             legendNameHard='Hardcoded 2',
             legendNameDiDiC='DiDiC 2',
             legendNameRand='Random 2',
-            fileName='twitter_g_l_traf_2.pdf',
+            fileName='twitter2_g_l_traf.pdf',
             axisYLimUpper=None,
             csvColumnGLtrafHard=None)
 
@@ -205,7 +210,7 @@ def twitter_glratio_4():
             legendNameHard='Hardcoded 4',
             legendNameDiDiC='DiDiC 4',
             legendNameRand='Random 4',
-            fileName='twitter_g_l_traf_4.pdf',
+            fileName='twitter4_g_l_traf.pdf',
             axisYLimUpper=None,
             csvColumnGLtrafHard=None)
 
@@ -222,8 +227,13 @@ def load_balance_all(csvFile, legends,
                      figRightSpace=defFigRightSpaceAll,
                      figTopSpace=defFigTopSpaceAll,
                      figWidth=defFigWidthAll,
-                     figHeight=defFigHeightAll                     
-                     ):
+                     figHeight=defFigHeightAll,
+                     legendFontsize=8,
+                     legendBorderPad=0.3,
+                     axisYLimRel=(0, None),
+                     axisYLimNode=(0, None),
+                     axisYLimTraf=(0, None)
+                 ):
     
     csvColumnPartition = "partitions"
     
@@ -271,8 +281,9 @@ def load_balance_all(csvFile, legends,
                                          axisGrid=axisGrid, axisColor='k',
                                          axisYLabel=r'Edges', axisXLabel=None,
                                          axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, None),
+                                         axisYLim=axisYLimRel,
                                          legendAlpha=legendAlpha, legendShadow=False,
+                                         legendFontsize=legendFontsize, legendBorderPad=legendBorderPad,
                                          legendColor='w', legendFancybox=False, legendPos='upper right',
                                          legendCols=1,
                                          )
@@ -296,8 +307,9 @@ def load_balance_all(csvFile, legends,
                                          axisGrid=axisGrid, axisColor='k',
                                          axisYLabel=r'Vertices', axisXLabel=None,
                                          axisYFormatterFun=axisYFormatterFun, axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, None),
+                                         axisYLim=axisYLimNode,
                                          legendAlpha=legendAlpha, legendShadow=False,
+                                         legendFontsize=legendFontsize, legendBorderPad=legendBorderPad,
                                          legendColor='w', legendFancybox=False, legendPos=None
                                          )
     
@@ -321,8 +333,9 @@ def load_balance_all(csvFile, legends,
                                          axisYLabel=r'Traffic',
                                          axisYFormatterFun=axisYFormatterFun,
                                          axisXFormatterFun=axisXFormatterFun,
-                                         axisYLim=(0, None),
+                                         axisYLim=axisYLimTraf,
                                          legendAlpha=legendAlpha, legendShadow=False,
+                                         legendFontsize=legendFontsize, legendBorderPad=legendBorderPad,
                                          legendColor='w', legendFancybox=False, legendPos=None
                                          )
     
@@ -373,6 +386,7 @@ def traf(csvFile,
                                         axisXScale='linear', axisYScale='log',
                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                         legendFancybox=False, legendPos='upper right', legendTop=False,
+                                        legendBorderPad=0.3, legendLabelSpace=0.1,
                                         myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
     figSize = (figWidth / 2.54, figHeight / 2.54)
@@ -403,7 +417,7 @@ def glratio(csvFile,
             csvColumnGLtrafHard="g_l_hard",
             csvColumnGLtrafDiDiC="g_l_didic",
             csvColumnGLtrafRand="g_l_rand",
-            csvColumnIndex="index"):            
+            csvColumnIndex="index"):     
     
     baseLines = [(csvColumnIndex, csvColumnGLtrafHard, 'blue', legendNameHard, '-', ''),
                  (csvColumnIndex, csvColumnGLtrafDiDiC, 'red', legendNameDiDiC, '-', ''),
@@ -468,6 +482,7 @@ def glratio(csvFile,
                                         axisXScale='linear', axisYScale='linear',
                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                         legendFancybox=False, legendPos='upper right', legendTop=False,
+                                        legendBorderPad=0.3, legendLabelSpace=0.1,
                                         myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
     figSize = (figWidth / 2.54, figHeight / 2.54)

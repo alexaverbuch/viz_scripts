@@ -1,33 +1,20 @@
 from matplotlib import rc
 from matplotlib_scripts.matplotlib_scripts import *
 
-#defFigWidth = 8.0
-#defFigHeight = 7.0
-#
-#defFigLeftSpace = 0.16
-#defFigBottomSpace = 0.17
-#defFigRightSpace = 0.97
-#defFigTopSpace = 0.8
+defFigWidth3 = 9.0
+defFigHeight3 = 9.0
+defFigLeftSpace3 = 0.16
+defFigBottomSpace3 = 0.10
+defFigRightSpace3 = 0.99
+defFigTopSpace3 = 0.86
 
-defFigWidth = 9.0
-defFigHeight = 9.0
+defFigWidth2 = 9.0
+defFigHeight2 = 7.0
+defFigLeftSpace2 = 0.16
+defFigBottomSpace2 = 0.13
+defFigRightSpace2 = 0.98
+defFigTopSpace2 = 0.83
 
-defFigLeftSpace = 0.16
-defFigBottomSpace = 0.11
-defFigRightSpace = 0.98
-defFigTopSpace = 0.86
-
-
-def gis_dynamic_gl_traf_4():
-    csvFolder = r"/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Dynamic/"
-    csvFile = csvFolder + "gis4_dynamic_gl_traf.csv"
-    filename = 'gis4_dynamic_g_l_traf.pdf'    
-    def axisYFormatterFun(x, pos=0):
-        return '%3.1f' % (x)    
-
-    dynamic_gl_traf_4_line(csvFolder, csvFile, filename=filename,
-                           axisYFormatterFun=axisYFormatterFun, 
-                           axisYLim=(None, None))     
 
 def gis_dynamic_std_all_4():
     csvFolder = r"/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/GIS/Dynamic/"
@@ -49,7 +36,6 @@ def gis_dynamic_std_all_4():
                           axisYFormatterFunRel=axisYFormatterFunRel,
                           axisYFormatterFunTraf=axisYFormatterFunTraf,
                           axisYLimNode=(0.195,0.25),
-                          axisYLimTraf=(None,0.35),
                           filename=filename)     
 
 def gis_dynamic_comms_all_4():
@@ -70,17 +56,6 @@ def gis_dynamic_comms_all_4():
 
 
 
-def fstree_dynamic_gl_traf_4():
-    csvFolder = r"/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Dynamic/"
-    csvFile = csvFolder + "tree4_dynamic_gl_traf.csv"
-    filename = 'fstree4_dynamic_g_l_traf.pdf'    
-    def axisYFormatterFun(x, pos=0):
-        return '%3.1f' % (x)    
-
-    dynamic_gl_traf_4_line(csvFolder, csvFile, filename=filename,
-                           axisYFormatterFun=axisYFormatterFun,
-                           axisYLim=(None, None),
-                           figLeftSpace=0.18)     
 
 def fstree_dynamic_std_all_4():
     csvFolder = r"/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/FSTree/Dynamic/"
@@ -101,7 +76,7 @@ def fstree_dynamic_std_all_4():
                           axisYFormatterFunNode=axisYFormatterFunNode,
                           axisYFormatterFunRel=axisYFormatterFunRel,
                           axisYFormatterFunTraf=axisYFormatterFunTraf,
-                          axisYLimNode=(None,0.075),
+                          axisYLimNode=(None,0.071),
                           axisYLimTraf=(None,None),
                           filename=filename)     
 
@@ -122,17 +97,6 @@ def fstree_dynamic_comms_all_4():
                           filename=filename)     
 
 
-def twitter_dynamic_gl_traf_4():
-    csvFolder = r"/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Dynamic/"
-    csvFile = csvFolder + "twitter4_dynamic_gl_traf.csv"
-    filename = 'twitter4_dynamic_g_l_traf.pdf'    
-    def axisYFormatterFun(x, pos=0):
-        return '%3.0f' % (x)    
-
-    dynamic_gl_traf_4_line(csvFolder, csvFile, filename=filename,
-                           axisYFormatterFun=axisYFormatterFun,
-                           axisYLim=(None, None))     
-
 def twitter_dynamic_std_all_4():
     csvFolder = r"/home/alex/Dropbox/Neo_Thesis/Notes/evaluation results/Twitter/Dynamic/"
     csvFileNode = csvFolder + "twitter4_dynamic_std_nodes.csv"
@@ -145,14 +109,15 @@ def twitter_dynamic_std_all_4():
     def axisYFormatterFunRel(x, pos=0):
         return '%3.0f' % (x)
     def axisYFormatterFunTraf(x, pos=0):
-        return '%3.1f' % (x)
+        return '%3.0f' % (x)
         
     dynamic_std_all_4_line(csvFolder, 
                           csvFileNode, csvFileRel, csvFileTraf,
                           axisYFormatterFunNode=axisYFormatterFunNode,
                           axisYFormatterFunRel=axisYFormatterFunRel,
                           axisYFormatterFunTraf=axisYFormatterFunTraf,
-                          axisYLimNode=(None,None),
+                          axisYLimNode=(1.75,3.05),
+                          axisYLimRel=(None,27),
                           axisYLimTraf=(None,None),
                           filename=filename)     
 
@@ -174,51 +139,6 @@ def twitter_dynamic_comms_all_4():
 
 
 
-def dynamic_gl_traf_4_line(csvFolder, csvFile, filename='output.pdf',
-                           axisYFormatterFun=None,
-                           axisXLim=(-0.2, 26), axisYLim=(None, None),
-                           figLeftSpace=defFigLeftSpace,
-                           figBottomSpace=defFigBottomSpace,
-                           figRightSpace=defFigRightSpace,
-                           figTopSpace=defFigTopSpace,
-                           figWidth=defFigWidth,
-                           figHeight=defFigHeight):
-    csvColumnChurnRand = "churn_rand"    
-    csvColumnRand = "rand"
-    csvColumnChurnDiDiC = "churn_didic"    
-    csvColumnDiDiC = "didic"
-    
-    def axisXFormatterFun(x, pos=0):
-        return '%3d %s' % (x, '$\%$')    
-    
-    do_fun = get_line_from_file_multi_x(csvFile,
-                                        [(csvColumnChurnRand, csvColumnRand, 'blue', r'Churn', '-', 'o'),
-                                         (csvColumnChurnDiDiC, csvColumnDiDiC, 'red', r'Churn + DiDiC', '-', 'v'), ],
-                                         csvFloats=(csvColumnChurnRand,
-                                                    csvColumnRand,
-                                                    csvColumnChurnDiDiC,
-                                                    csvColumnDiDiC,),
-                                         annotations=[],
-                                         axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=12, axisColor='k',
-                                         axisXLabel=r'Churn', axisYLabel=r'Percentage Global',
-                                         axisTitle='', axisXLim=axisXLim, axisYLim=axisYLim,
-                                         axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFun,
-                                         axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=12, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                         legendFancybox=False, legendPos='upper right',
-                                         myShareAxis=None, shareAxisX=None, shareAxisY=None)    
-    
-    figSize = (figWidth / 2.54, figHeight / 2.54)
-        
-    show_plots([[do_fun]],
-                show=False,
-                fileName=filename,
-                figLeftSpace=figLeftSpace,
-                figRightSpace=figRightSpace,
-                figBottomSpace=figBottomSpace,
-                figTopSpace=figTopSpace,
-                figSize=figSize)
 
 def dynamic_std_all_4_line(csvFolder, 
                           csvFileNode, csvFileRel, csvFileTraf,
@@ -230,12 +150,12 @@ def dynamic_std_all_4_line(csvFolder,
                           axisYLimNode=(None, None),
                           axisYLimRel=(None, None),
                           axisYLimTraf=(None, None),
-                          figLeftSpace=defFigLeftSpace,
-                          figBottomSpace=defFigBottomSpace,
-                          figRightSpace=defFigRightSpace,
-                          figTopSpace=defFigTopSpace,
-                          figWidth=defFigWidth,
-                          figHeight=defFigHeight):
+                          figLeftSpace=defFigLeftSpace3,
+                          figBottomSpace=defFigBottomSpace3,
+                          figRightSpace=defFigRightSpace3,
+                          figTopSpace=defFigTopSpace3,
+                          figWidth=defFigWidth3,
+                          figHeight=defFigHeight3):
     
     csvColumnChurnRand = "churn_rand"    
     csvColumnRand = "rand"
@@ -258,13 +178,14 @@ def dynamic_std_all_4_line(csvFolder,
                                          csvFloats=csvFloats,
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k',
+                                        axisColor='k',
                                          axisXLabel=None, axisYLabel='Vertex',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimNode,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunNode,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                         legendFancybox=False, legendPos='upper right', legendBorderPad=0.0,
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendFancybox=False, legendPos='upper right', legendBorderAxesPad=0.0,
+                                         legendBorderPad=0.3, legendLabelSpace=0.2,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
     do_fun2 = get_line_from_file_multi_x(csvFileRel,
@@ -272,12 +193,12 @@ def dynamic_std_all_4_line(csvFolder,
                                          csvFloats=csvFloats,
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k', 
+                                         axisColor='k', 
                                          axisXLabel=None, axisYLabel=r'Edge',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimRel,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunRel,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                          legendFancybox=False, legendPos=None,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)
         
@@ -286,12 +207,12 @@ def dynamic_std_all_4_line(csvFolder,
                                          csvFloats=csvFloats,
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k', 
+                                         axisColor='k', 
                                          axisXLabel=r'Churn', axisYLabel=r'Traffic',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimTraf,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunTraf,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                          legendFancybox=False, legendPos=None,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)
         
@@ -318,12 +239,12 @@ def dynamic_comms_all_4_line(csvFolder,
                             axisXLim=(-0.2, 26), 
                             axisYLimEdgeCut=(None, None),
                             axisYLimGLTraf=(None, None),
-                            figLeftSpace=defFigLeftSpace,
-                            figBottomSpace=defFigBottomSpace,
-                            figRightSpace=defFigRightSpace,
-                            figTopSpace=defFigTopSpace,
-                            figWidth=defFigWidth,
-                            figHeight=defFigHeight):
+                            figLeftSpace=defFigLeftSpace2,
+                            figBottomSpace=defFigBottomSpace2,
+                            figRightSpace=defFigRightSpace2,
+                            figTopSpace=defFigTopSpace2,
+                            figWidth=defFigWidth2,
+                            figHeight=defFigHeight2):
     
     csvColumnChurnRand = "churn_rand"    
     csvColumnRand = "rand"
@@ -346,13 +267,14 @@ def dynamic_comms_all_4_line(csvFolder,
                                          csvFloats=csvFloats,
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k', 
+                                         axisColor='k', 
                                          axisXLabel=None, axisYLabel='Edge Cut',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimEdgeCut,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunEdgeCut,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
-                                         legendFancybox=False, legendPos='upper right', legendBorderPad=0.0,
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendFancybox=False, legendPos='upper right', legendBorderAxesPad=0.0,
+                                         legendBorderPad=0.3, legendLabelSpace=0.2,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)    
     
     do_fun2 = get_line_from_file_multi_x(csvFileGLTraf,
@@ -360,13 +282,13 @@ def dynamic_comms_all_4_line(csvFolder,
                                          csvFloats=csvFloats,
                                          annotations=[],
                                          axisLineWidth=1.0, axisGrid=True, axisLineAntialiased=True,
-                                         axisFontSize=10, axisColor='k',
+                                         axisColor='k',
                                          axisXLabel=r'Churn', 
                                          axisYLabel=r'Global Traffic',
                                          axisTitle='', axisXLim=axisXLim, axisYLim=axisYLimGLTraf,
                                          axisXFormatterFun=axisXFormatterFun, axisYFormatterFun=axisYFormatterFunGLTraf,
                                          axisXScale='linear', axisYScale='linear',
-                                         legendFontsize=10, legendAlpha=0.8, legendShadow=False, legendColor='w',
+                                         legendAlpha=0.8, legendShadow=False, legendColor='w',
                                          legendFancybox=False, legendPos=None,
                                          myShareAxis=None, shareAxisX=None, shareAxisY=None)
                 
